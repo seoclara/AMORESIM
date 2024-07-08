@@ -1,0 +1,26 @@
+#!/bin/bash -f
+
+workdir="@AMORESIM_WORK_DIR@"
+
+if [ "x$1" = "x" ]; then
+  if [ "x$SGE_TASK_ID" = "x" ]; then
+    echo "WRONG CONFIGURATION"
+    exit
+  else
+    runid=`expr $SGE_TASK_ID`
+  fi
+else
+  runid=$1
+fi
+
+export CupDATA=$workdir"/CupSim/data"
+export AmoreDATA=$workdir"/AmoreSim/data"
+
+cd $workdir
+
+target_run=`awk NR==$runid ./AmoreSim/run/rerun_target`
+target_run=`expr $target_run - 1`
+
+$workdir/AmoreSim/run/run_I_muon.sh $target_run
+
+exit
