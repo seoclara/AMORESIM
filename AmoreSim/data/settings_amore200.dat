@@ -1,0 +1,41 @@
+################################################################
+# This is an input file for GLG4param.
+# It consists of simple indentifier/floating point value pairs, one to a line.
+# Lines beginning with "#" are ignored; blank lines are also ignored.
+# Anything after the identifier/value pair on a line is ignored.
+################################################################
+# Note: the following geometry parameters should only be changed immediately
+# prior to a geometry build or re-build.
+################################################################
+
+# values -- lengths in millimeters
+# Updated by J.Seo 2024.04.01.
+
+rockshell_thickness 1000
+airbuffer_radius 700
+airbuffer_height 2905
+
+PE_shield_thickness 700 
+lead_housing_thickness 0
+lead_shield_thickness 200
+thin_lead_shield_thickness 50 
+boricacid_thickness 10
+boricacidcase_thickness 20
+
+plastic_scintillator_thickness 15
+plastic_veto_thickness 61  # veto panel thickness : 4.5 cm
+plastic_veto_width 310 # veto panel width     : 30 cm 
+al_plate_thickness 0.3
+
+nShield_hatWallThickness 700
+nShield_hatGapFromLead 300 
+nShield_GapFromCeiling 40
+
+cavern_sphere_radius    12000
+rock_shell_radius    	25000 #15000     # min thickness of rock around cavern
+
+Cu1Gap 15
+Cu2Gap 15
+Cu3Gap 15
+Cu4Gap 15
+TRGap 100 #50

@@ -1,0 +1,5 @@
+#!/bin/bash
+
+workdir="@AMORESIM_WORK_DIR@"
+export CupDATA=$workdir"/CupSim/data"
+export AmoreDATA=$workdir"/AmoreSim/data"

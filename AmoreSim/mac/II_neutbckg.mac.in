@@ -1,0 +1,120 @@
+#######################
+## Hadronic processes
+#######################
+/cupdebug/cupparam omit_hadronic_processes 0.0
+
+/detGeometry/DebugMode false
+/detGeometry/OverlapCheck false
+
+####################
+## Select Detector
+####################
+/detector/select AmoreDetector
+/detGeometry/select amore200
+
+#############################
+## Select Detector Geometry
+#############################
+/detGeometry/200/selectPhase AMoRE200_Phase1 #AMoRE200_Phase1, AMoRE200_Phase2
+/detGeometry/200/selectSimType RealMode #RackGammaMode, NeutronMode, IdealMode, RealMode
+/detGeometry/200/selectNSDesign Design5 #Design1, Design2, Design3, Design4, Design5
+/detGeometry/AdditionalPE true
+
+/detGeometry/EnableOrigGeom true
+/detGeometry/EnableScint true
+/detGeometry/EnableGantry true
+/detGeometry/EnableInnerDet true
+/detGeometry/EnableInnermost true
+/detGeometry/EnableNeutronShield true
+/detGeometry/NeutronMode true
+
+
+####################
+## Set Ntuple Contents (On/Off) default:0
+####################
+/ntuple/primary 1
+/ntuple/track 1
+/ntuple/step 1
+/ntuple/muon 1
+/ntuple/photon 0
+/ntuple/scint 0
+
+/ntuple/recordWithCut false
+/ntuple/recordPrimaries false
+
+###################
+## Set cut values
+###################
+#/Cup/phys/CutsAll 0.1 mm
+#!#/Cup/phys/DetectorCuts 0.001 mm
+
+######################
+## Select physics process
+######################
+/Cup/phys/Physics amorephysicsHad
+
+########################
+## verboseLevel option
+########################
+/run/verbose 0
+/event/verbose 0
+#/control/verbose 1
+/control/verbose 0
+#/tracking/verbose 2
+/tracking/verbose 0
+/tracking/storeTrajectory 0
+
+###############
+## Initialize
+###############
+/run/initialize
+
+#####################
+## Output Root File
+#####################
+/event/output_file OUTPUT
+
+##########################
+## Scintillation Verbose
+##########################
+#!#/cupscint/verbose 0
+
+####################
+## PMTOpticalModel
+####################
+#/PMTOpticalModel/verbose 1
+#/PMTOpticalModel/verbose 0
+#/PMTOpticalModel/luxlevel 3
+
+############################
+## RadioactiveDecay Option
+############################
+#/grdm/applyICM false
+#/grdm/applyARM false
+
+####################
+## Debug messenger
+####################
+#/cupdebug/dumpmat
+/cupdebug/dumpgeom
+#/cupdebug/cupparam_dump
+
+
+/generator/event_window 1e8
+/generator/rates 38 1.0
+/generator/disablePileup true
+/generator/vtx/set 18 NEUTPATH
+
+/event/primary/enablePrimarySkew false
+
+#########
+## Seed
+#########
+/cupdebug/setseed SEED
+
+
+#/tracking/verbose 2
+########
+## Run
+########
+/run/beamOn NEVENTS
