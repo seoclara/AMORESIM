@@ -113,10 +113,7 @@ G4LogicalVolume *AmoreDetectorConstruction::ConstructAMoRE200_OD()
 	G4double boricacid_thickness = db["boricacid_thickness"];
 	G4double boricacidcase_thickness = db["boricacidcase_thickness"]; // su-yeon
 
-	// G4double plastic_scintillator_thickness = db["plastic_scintillator_thickness"];
 	G4double plastic_veto_thickness = db["plastic_veto_thickness"];
-	// G4double plastic_veto_width        = db["plastic_veto_width"];
-	// G4double al_plate_thickness        = db["al_plate_thickness"];
 
 	G4double PE_shield_thickness = db["PE_shield_thickness"];
 	G4double thin_lead_shield_thickness = db["thin_lead_shield_thickness"];
@@ -286,7 +283,9 @@ G4LogicalVolume *AmoreDetectorConstruction::ConstructAMoRE200_OD()
 	// HAT Air ----------
 	G4Box *shieldHatAirBox = new G4Box("HatAir_Box", HatInnerX, HatInnerY, HatInnerZ / 2.);
 	G4Box *shieldHatAirBox1 = new G4Box("HatAir_Box1",
-										HatInnerX + waterhousing_thickness, HatInnerY + waterhousing_thickness, HatInnerZ / 2.);
+										HatInnerX + waterhousing_thickness, HatInnerY + waterhousing_thickness, HatInnerZ + waterhousing_thickness);
+	G4Box *shieldHatAirBox2 = new G4Box("HatAir_Box2",
+										HatInnerX + waterhousing_thickness + tyvek_thickness, HatInnerY + waterhousing_thickness + tyvek_thickness, HatInnerZ + waterhousing_thickness + tyvek_thickness);
 
 	// Hat Water Cerenkov Housing  -------------------
 	G4Box *shieldWaterHousingBox = new G4Box("WaterHousing_Box",
@@ -298,13 +297,23 @@ G4LogicalVolume *AmoreDetectorConstruction::ConstructAMoRE200_OD()
 	G4LogicalVolume *shieldWaterHousingLV = new G4LogicalVolume(HatWaterHousingSolid, _stainless, "HatWaterHousing_LV");
 	shieldWaterHousingLV->SetVisAttributes(stainlessVis);
 
+	// Hat reflector --------------------------------
+	G4Box *shieldWaterReflectorBox = new G4Box("WCReflector_Box",
+											   HatInnerX + waterhousing_thickness + watertank_thickness + tyvek_thickness,
+											   HatInnerY + waterhousing_thickness + watertank_thickness + tyvek_thickness,
+											   (HatInnerZ + watertank_top_thickness + PMTroom_thickness + tyvek_thickness*2) / 2.);
+	G4VSolid *HatWaterReflectorSolid = new G4SubtractionSolid("WCReflector_Solid", shieldWaterReflectorBox, shieldHatAirBox1, 0,
+														G4ThreeVector(0, 0, -shieldWaterReflectorBox->GetZHalfLength()));
+	G4LogicalVolume *shieldWaterReflectorLV = new G4LogicalVolume(HatWaterReflectorSolid, _tyvek, "HatWaterReflector_LV");
+	shieldWaterReflectorLV->SetVisAttributes("G4_WHITE");
+
 	// Air in Water Cerenkov Housing ----------------
 	G4Box *shieldWaterAirBox = new G4Box("WCAir_Box",
 										 HatInnerX + waterhousing_thickness + watertank_thickness,
 										 HatInnerY + waterhousing_thickness + watertank_thickness,
 										 (HatInnerZ + watertank_top_thickness + PMTroom_thickness) / 2.);
-	G4VSolid *HatWaterAirSolid = new G4SubtractionSolid("WCAir_Solid", shieldWaterAirBox, shieldHatAirBox1, 0,
-														G4ThreeVector(0, 0, -shieldWaterAirBox->GetZHalfLength() + shieldHatAirBox1->GetZHalfLength()));
+	G4VSolid *HatWaterAirSolid = new G4SubtractionSolid("WCAir_Solid", shieldWaterAirBox, shieldHatAirBox2, 0,
+														G4ThreeVector(0, 0, -shieldWaterAirBox->GetZHalfLength()));
 	G4LogicalVolume *shieldWaterTankAirLV = new G4LogicalVolume(HatWaterAirSolid, _air, "HatWaterTankAir_LV");
 	shieldWaterTankAirLV->SetVisAttributes(G4VisAttributes::GetInvisible);
 
@@ -313,8 +322,8 @@ G4LogicalVolume *AmoreDetectorConstruction::ConstructAMoRE200_OD()
 										  HatInnerX + waterhousing_thickness + watertank_thickness,
 										  HatInnerY + waterhousing_thickness + watertank_thickness,
 										  (HatInnerZ + watertank_top_thickness) / 2.);
-	G4VSolid *HatWaterTankSolid = new G4SubtractionSolid("HatWaterTank_Solid", shieldWaterTankBox, shieldHatAirBox1, 0,
-														 G4ThreeVector(0, 0, -shieldWaterTankBox->GetZHalfLength() + shieldHatAirBox1->GetZHalfLength()));
+	G4VSolid *HatWaterTankSolid = new G4SubtractionSolid("HatWaterTank_Solid", shieldWaterTankBox, shieldHatAirBox2, 0,
+														 G4ThreeVector(0, 0, -shieldWaterTankBox->GetZHalfLength()));
 	G4LogicalVolume *shieldWaterTankLV = new G4LogicalVolume(HatWaterTankSolid, _water, "HatWaterTank_LV");
 	shieldWaterTankLV->SetVisAttributes(shieldWaterTank_VisAttr);
 
@@ -592,6 +601,7 @@ G4LogicalVolume *AmoreDetectorConstruction::ConstructAMoRE200_OD()
 			hatTlate = G4ThreeVector(0, 0, plasticVetoHousing1Box->GetZHalfLength() * 2 + nShield_hatGapFromLead + nShield_GapFromCeiling);
 			barrelTlate = G4ThreeVector(0, 0, plasticVetoHousing1Box->GetZHalfLength());
 			bottomTlate = G4ThreeVector(0, 0, rock_floor_thickness - HBeam_size - plasticVetoHousing2Box->GetZHalfLength());
+			// bottomTlate = G4ThreeVector(0, 0, - HBeam_size - plasticVetoHousing2Box->GetZHalfLength());
 			break;
 		case kRealMode:
 			hatTlate = -roomTlate + G4ThreeVector(0, 0, -cavernLoafBox->GetZHalfLength() + plasticVetoHousing1Box->GetZHalfLength() * 2 
@@ -599,6 +609,7 @@ G4LogicalVolume *AmoreDetectorConstruction::ConstructAMoRE200_OD()
 			barrelTlate = -roomTlate + G4ThreeVector(0, 0, -cavernLoafBox->GetZHalfLength() + plasticVetoHousing1Box->GetZHalfLength());
 			// bottomTlate = G4ThreeVector(room_dist_x, -room_dist_y,
 			bottomTlate = G4ThreeVector(0, 0, rock_floor_thickness - HBeam_size - plasticVetoHousing2Box->GetZHalfLength());
+			// bottomTlate = -roomTlate + G4ThreeVector(0, 0, -cavernLoafBox->GetZHalfLength() - HBeam_size - plasticVetoHousing2Box->GetZHalfLength());
 			break;
 		default:
 			G4cout << "Error: Invalid simulation type" << G4endl;
@@ -609,7 +620,9 @@ G4LogicalVolume *AmoreDetectorConstruction::ConstructAMoRE200_OD()
 									hatTlate + G4ThreeVector(0,0,shieldWaterHousingBox->GetZHalfLength()+solidBooleanTol),
 									shieldWaterHousingLV, "HatWaterHousing_PV", logiCavern, false, 0, OverlapCheck);
 	new G4PVPlacement(nullptr, {0, 0, 0},
-			shieldWaterTankAirLV, "HatWaterTankAir_PV", shieldWaterHousingLV, false, 0, OverlapCheck);
+			shieldWaterReflectorLV, "HatWaterReflector_PV", shieldWaterHousingLV, false, 0, OverlapCheck);
+	new G4PVPlacement(nullptr, {0, 0, 0},
+			shieldWaterTankAirLV, "HatWaterTankAir_PV", shieldWaterReflectorLV, false, 0, OverlapCheck);
 	shieldWaterTankPV = new G4PVPlacement(nullptr, {0, 0,
 								-shieldWaterHousingBox->GetZHalfLength() + waterhousing_thickness 
 									+ shieldWaterTankBox->GetZHalfLength()},
@@ -642,7 +655,7 @@ G4LogicalVolume *AmoreDetectorConstruction::ConstructAMoRE200_OD()
 		case kIdealMode:
 		case kRealMode:
 			new G4PVPlacement(nullptr, bottomTlate,
-								plasticVetoHousing2LV, "PlasticVetoHousing2_PV", logiCavern, false, 0, OverlapCheck);
+								plasticVetoHousing2LV, "PlasticVetoHousing2_PV", logiFloor, false, 0, OverlapCheck);
 			break;
 		default:
 			break;
@@ -1309,7 +1322,7 @@ G4LogicalVolume *AmoreDetectorConstruction::ConstructAMoRE200_OD()
 			hbeamPos[0] -= dist[i] + HBeam_size;
 			new G4PVPlacement(nullptr, hbeamPos, HbeamH_LV, "HbeamH_PV", HbeamHousingLV, false, 0, OverlapCheck);
 		}
-		for (int i = 0; i < 4; i++)
+		for (int i = 0; i < 3; i++)
 		{
 			vbeamPos[1] -= len[i] + HBeam_size;
 			new G4PVPlacement(nullptr, vbeamPos, HbeamV_LV, "HbeamV_PV", HbeamHousingLV, false, 0, OverlapCheck);

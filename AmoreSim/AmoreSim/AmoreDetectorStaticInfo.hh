@@ -826,6 +826,7 @@ namespace AmoreDetectorStaticInfo {
 		constexpr G4double watertank_thickness = 700. * mm;
 		constexpr G4double watertank_top_thickness = 800. * mm;
 		constexpr G4double PMTroom_thickness = 250. * mm;
+		constexpr G4double tyvek_thickness = 275 * um;
 
 		// Hat Inner Size & H-beam
 		constexpr G4double HatInnerX = 5000 * mm / 2.;
