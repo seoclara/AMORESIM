@@ -1071,10 +1071,11 @@ namespace AmoreDetectorStaticInfo {
 		constexpr G4double plateGap2    = 101.892 * mm ; //10. * cm; //5.0 * cm;
 		constexpr G4double cumcp_height = 27. * mm / 2; //3. * cm / 2;
 		constexpr G4double cup1_zsize   = 30. * mm / 2.; //2. * cm /2; //0.5 * cm / 2;
-		constexpr G4double cup2_zsize   = 3. * mm / 2.;
-		constexpr G4double cup3_zsize   = 25. * mm / 2.; //2. *cm /2; // 1. * cm / 2;
-		constexpr G4double pbp1_zsize   = 8. * cm / 2;
-		constexpr G4double pbp2_zsize   = 1. * cm / 2;
+		constexpr G4double cup2_zsize   = 25. * mm / 2.;
+		constexpr G4double cup3_zsize   = 3. * mm / 2.; //2. *cm /2; // 1. * cm / 2;
+		constexpr G4double pbp1_zsize   = 10. * cm / 2;
+		constexpr G4double pbp2_zsize   = 5. * cm / 2;
+		constexpr G4double pbp3_zsize   = 1. * cm / 2;
 
 	} // namespace AMoRE_200
 } // namespace AmoreDetectorStaticInfo
