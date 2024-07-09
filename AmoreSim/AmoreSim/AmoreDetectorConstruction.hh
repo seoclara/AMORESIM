@@ -37,7 +37,6 @@ class AmoreDetectorConstruction : public CupDetectorConstruction {
 		G4bool fEnable_NeutronShield;
 
 		G4bool fNeutronMode;
-		// G4bool fRockgammaMode;
 		G4bool fAdditionalPE;
 
 		G4bool fDbgMsgOn;
@@ -247,7 +246,6 @@ class AmoreDetectorConstruction : public CupDetectorConstruction {
 		inline void SetEnableInnermost(G4bool a) { fEnable_Innermost = a; }
 		inline void SetEnableRealConf(G4bool a) { fEnable_NeutronShield = a; }
 		inline void SetNeutronMode(G4bool a) { fNeutronMode = a; }
-		// inline void SetRockgammaMode(G4bool a) { fRockgammaMode = a; }
 		inline void SetAdditionalPE(G4bool a) { fAdditionalPE = a; }
 		inline void SetOverlapCheck(G4bool a) { OverlapCheck = a; }
 		inline void SetDebugMessage(G4bool a) { fDbgMsgOn = a; }
@@ -259,7 +257,6 @@ class AmoreDetectorConstruction : public CupDetectorConstruction {
 		inline G4bool GetEnableInnermost() const { return fEnable_Innermost; }
 		inline G4bool GetEnableNeutronShield() const { return fEnable_NeutronShield; }
 		inline G4bool GetNeutronMode() const { return fNeutronMode; }
-		// inline G4bool GetRockgammaMode() const { return fRockgammaMode; }
 		inline G4bool GetAdditionalPE() const { return fAdditionalPE; }
 		inline G4bool GetOverlapCheck() const { return OverlapCheck; }
 		inline G4bool GetDebugMessage() const { return fDbgMsgOn; } 

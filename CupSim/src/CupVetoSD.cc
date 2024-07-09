@@ -55,9 +55,11 @@ G4bool CupVetoSD::ProcessHits(G4Step *aStep, G4TouchableHistory * /*ROhist*/) {
     G4StepPoint *preStepPoint            = aStep->GetPreStepPoint();
     G4TouchableHandle theTouchable       = preStepPoint->GetTouchableHandle();
     G4int copyNo                         = theTouchable->GetCopyNumber();
-    G4int motherCopyNo                   = theTouchable->GetCopyNumber(2); // JW: for amore muon ps changed 1->2
+    // G4int motherCopyNo                   = theTouchable->GetCopyNumber(2); // JW: for amore muon ps changed 1->2
+    G4int motherCopyNo                   = theTouchable->GetCopyNumber(1); // JW: for amore-I 
     G4VPhysicalVolume *thePhysical       = theTouchable->GetVolume();
-    G4VPhysicalVolume *theMotherPhysical = theTouchable->GetVolume(2); // JW: for amore muon ps changed 1->2
+    G4VPhysicalVolume *theMotherPhysical = theTouchable->GetVolume(1); // JW: for amore-I 
+    // G4VPhysicalVolume *theMotherPhysical = theTouchable->GetVolume(2); // JW: for amore muon ps changed 1->2
     G4String motherVolName               = theMotherPhysical->GetName();
 
     if ((strstr(motherVolName, "Envelope")) != NULL) copyNo = motherCopyNo;

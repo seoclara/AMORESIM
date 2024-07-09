@@ -33,7 +33,7 @@ set(CMAKE_CXX_STANDARD 17)
 # Add variables for run scripts and macros
 #----------------------------------------------------------------------------
 set(MUON_PATH "/proj/internal_group/cup_mc/data/spectrum/Muon/muGen/atHandeok_BIGNUM")
-set(NEUTRON_PATH "/proj/internal_group/cup_mc/data/spectrum/Neutron/nGen/dist6000")
+set(NEUTRON_PATH "/proj/internal_group/cup_mc/data/spectrum/Neutron/nGen/dist3500")
 
 set(AMORESIM_JOB_NAME "scratch" CACHE STRING "Representative name for this compilation")
 if("${AMORESIM_JOB_NAME}" STREQUAL "")

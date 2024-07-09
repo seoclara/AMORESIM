@@ -31,50 +31,51 @@ AmoreParallelWorldConstruction::~AmoreParallelWorldConstruction() {;}
 // CONSTRUCT PARALLAL DETECTOR WORLD
 //
 void AmoreParallelWorldConstruction::Construct(){
-    G4cout << "========================================" << G4endl;
-    G4cout << "Construct Parallel World....." << G4endl;
-    G4cout << "========================================" << G4endl;
-    G4cout << G4endl;
 
     CupParam &db(CupParam::GetDB());
     G4double nShield_hatGapFromLead = db["nShield_hatGapFromLead"];
+    eDetGeometry whichDetGeometry = AmoreDetectorConstruction::GetDetGeometryType();
     eSimulationType SimType = AmoreDetectorConstruction::GetSimType();
- 
+
     // Call the realworld to get the world volume
     G4VPhysicalVolume* ghostWorld = GetWorld();
     G4LogicalVolume* ghostLogical = ghostWorld->GetLogicalVolume();
     //ghostLogical->SetMaterial(0); // The material of real world will be used for ghost volume.
 
-    // Materials
-    dummyMat  = 0;
-    fWater = G4Material::GetMaterial("Water");
-    fBlackAcryl = G4Material::GetMaterial("Acrylic");
-    fGlass = G4Material::GetMaterial("Glass");
-    fStainless = G4Material::GetMaterial("StainlessSteel");
-    fPMT_Vac = G4Material::GetMaterial("PMT_Vac");
-
-    // Create Para volume
-    G4Box* paraBox = new G4Box("paraBox", 6600./2.*mm, 6600./2.*mm, 3300./2.*mm);
-    G4LogicalVolume* paraLogical = new G4LogicalVolume(paraBox, dummyMat, "paraLogical");
-    if (SimType == eSimulationType::kRockGammaMode){
-        new G4PVPlacement(0, G4ThreeVector(0,0,paraBox->GetZHalfLength()+nShield_hatGapFromLead), paraLogical, "paraPhysical", ghostLogical, false, 0);
-    } else if (SimType == eSimulationType::kNeutronMode){
-        new G4PVPlacement(0, G4ThreeVector(0,0,paraBox->GetZHalfLength()+nShield_hatGapFromLead), paraLogical, "paraPhysical", ghostLogical, false, 0);
-    } else {
-        new G4PVPlacement(0, G4ThreeVector(0,0,5880), paraLogical, "paraPhysical", ghostLogical, false, 0);
-    }
-
-    
- 
-    ////////////////////////////////////////////////////
-    // --- put in the Inner Detector PMTs, and details
-    switch (AmoreDetectorConstruction::GetDetGeometryType()){
+    switch (whichDetGeometry){
         case eDetGeometry::kDetector_AMoRE200:
+        {
+            G4cout << "========================================" << G4endl;
             G4cout << "Constructing AMoRE200 parallel world" << G4endl;
-            ConstructAMoRE200_ParallelWorldForWCMD();
+            G4cout << "========================================" << G4endl;
+
+            // Materials
+            dummyMat  = 0;
+            fWater = G4Material::GetMaterial("Water");
+            fBlackAcryl = G4Material::GetMaterial("Acrylic");
+            fGlass = G4Material::GetMaterial("Glass");
+            fStainless = G4Material::GetMaterial("StainlessSteel");
+            fPMT_Vac = G4Material::GetMaterial("PMT_Vac");
+
+            // Create Para volume
+            G4Box* paraBox = new G4Box("paraBox", 6600./2.*mm, 6600./2.*mm, 3300./2.*mm);
+            G4LogicalVolume* paraLogical = new G4LogicalVolume(paraBox, dummyMat, "paraLogical");
+            if (SimType == eSimulationType::kRockGammaMode){
+                new G4PVPlacement(0, G4ThreeVector(0,0,paraBox->GetZHalfLength()+nShield_hatGapFromLead), paraLogical, "paraPhysical", ghostLogical, false, 0);
+            } else if (SimType == eSimulationType::kNeutronMode){
+                new G4PVPlacement(0, G4ThreeVector(0,0,paraBox->GetZHalfLength()+nShield_hatGapFromLead), paraLogical, "paraPhysical", ghostLogical, false, 0);
+            } else {
+                new G4PVPlacement(0, G4ThreeVector(0,0,5880), paraLogical, "paraPhysical", ghostLogical, false, 0);
+            }
+
+            ConstructAMoRE200_ParallelWorldForWCMD(); // put in the PMTs and details
+
             break;
-        default:
+        }
+        default: 
+        {
             break;
+        }
     }
 }
 

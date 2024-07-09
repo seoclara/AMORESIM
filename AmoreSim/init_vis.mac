@@ -9,18 +9,20 @@
 
 /detector/select AmoreDetector
 /detGeometry/select amore200 #amore200, amoreI, amorepilot, mydetector
-#/detGeometry/select amoreI
-
 /detGeometry/DebugMode false
 /detGeometry/OverlapCheck false
+
+### AMoRE II options ###############
 /detGeometry/AdditionalPE true
 /detGeometry/200/selectPhase AMoRE200_Phase1 #AMoRE200_Phase1, AMoRE200_Phase2
 /detGeometry/200/selectSimType RealMode #RackGammaMode, NeutronMode, IdealMode, RealMode
 /detGeometry/200/selectNSDesign Design5 #Design1, Design2, Design3, Design4, Design5
 
+### AMoRE Pilot options ############
 /detGeometry/Pilot/EnableMumetal false
 /detGeometry/Pilot/EnableTargetRoom true
 
+### AMoRE I options ################
 /detGeometry/I/EnableSuperCMagneticShield true
 /detGeometry/I/EnableCrystalArray true
 

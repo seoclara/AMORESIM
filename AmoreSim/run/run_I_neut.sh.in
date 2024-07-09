@@ -20,6 +20,7 @@ cd $workdir
 
 # path to muon flux data
 pathmf="@NEUTRON_PATH@"
+ebin="bin6"
 mfname="NeutSpectrum_dist3500_run"$runid
 
 # number of events (will be setted automatically)
@@ -38,9 +39,10 @@ outdir="@SIMOUT_PATH@"
 
 exe=$workdir/AmoreSim/amoresim
 
-mufilepath="$pathmf/$mfname"
+mufilepath="$pathmf/$ebin/$mfname"
 evtwc=`wc -l $mufilepath | cut -d' ' -f1`
-nevt=`expr $evtwc / 2`
+#nevt=`expr $evtwc / 2`
+nevt=10
 
 rout="$outdir/root"
 output="$rout/amoreI_$setup-run$runid"
