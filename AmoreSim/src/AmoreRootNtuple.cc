@@ -280,7 +280,6 @@ void AmoreRootNtuple::SetMDSD(const G4Event *aEvent) {
 		default: break;
 	}
 }
-/*
 void AmoreRootNtuple::SetMuonSD(const G4Event *a_event){
     G4SDManager *SDman = G4SDManager::GetSDMpointer();
     CupVetoSD *muonSD = (CupVetoSD *)(SDman->FindSensitiveDetector("/CupDet/MuonVetoSD"));
@@ -306,7 +305,6 @@ void AmoreRootNtuple::SetMuonSD(const G4Event *a_event){
     // G4double eDep;
 	// G4double eDepQuenched;
 }
-*/
 
 void AmoreRootNtuple::SetTGSD(const G4Event *a_event) {
 	//////////////////////////
