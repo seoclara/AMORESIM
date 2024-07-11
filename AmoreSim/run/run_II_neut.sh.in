@@ -34,7 +34,7 @@ export AmoreDATA=$workdir"/AmoreSim/data"
 
 cd $workdir
 
-# path to muon flux data
+# path to neutron flux data
 pathmf="@NEUTRON_PATH@/$nowbin"
 mfname="NeutSpectrum_dist3500_run"$runid
 
