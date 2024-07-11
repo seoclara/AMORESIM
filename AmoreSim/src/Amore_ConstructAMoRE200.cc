@@ -1,13 +1,15 @@
 #include "globals.hh"
 
 #include "AmoreSim/AmoreDetectorConstruction.hh" // the DetectorConstruction class header
+#include "AmoreSim/AmoreVetoSD.hh"
 #include "CupSim/CupPMTSD.hh"
-#include "CupSim/CupParam.hh"
+// #include "CupSim/CupParam.hh"
 #include "CupSim/CupScintSD.hh"            // for making sensitive photocathodes
-#include "CupSim/CupVetoSD.hh"             // for making sensitive photocathodes
-#include "CupSim/CupTorusStack.hh"         // for making the cavern and LSC envelope
-#include "CupSim/Cup_PMT_LogicalVolume.hh" // for making PMT assemblies
+// #include "CupSim/CupVetoSD.hh"             // for making sensitive photocathodes
+// #include "CupSim/CupTorusStack.hh"         // for making the cavern and LSC envelope
+// #include "CupSim/Cup_PMT_LogicalVolume.hh" // for making PMT assemblies
 
+/*
 #include "G4Box.hh"
 #include "G4Element.hh"
 #include "G4IntersectionSolid.hh"
@@ -17,22 +19,23 @@
 #include "G4SubtractionSolid.hh"
 #include "G4Tubs.hh"
 #include "G4UnionSolid.hh"
+*/
 
 //#include "CLHEP/Matrix/Matrix.h"
-#include "G4Colour.hh"
-#include "G4LogicalBorderSurface.hh"
+// #include "G4Colour.hh"
+// #include "G4LogicalBorderSurface.hh"
 #include "G4LogicalVolume.hh"
-#include "G4PVPlacement.hh"
-#include "G4RotationMatrix.hh"
+// #include "G4PVPlacement.hh"
+// #include "G4RotationMatrix.hh"
 #include "G4SDManager.hh"
-#include "G4SmartVoxelHeader.hh"
+// #include "G4SmartVoxelHeader.hh"
 #include "G4ThreeVector.hh"
-#include "G4VPhysicalVolume.hh"
-#include "G4VisAttributes.hh"
+// #include "G4VPhysicalVolume.hh"
+// #include "G4VisAttributes.hh"
 
-#include "G4ios.hh"
+// #include "G4ios.hh"
 
-#include "G4Types.hh"
+// #include "G4Types.hh"
 
 #include <sstream>
 
@@ -75,13 +78,15 @@ void AmoreDetectorConstruction::ConstructAMoRE200_SDandField() {
 		f200_logiCrystalCell[i]->SetSensitiveDetector(TGSD);
 	}
 
-	CupVetoSD *PSMD = new CupVetoSD(SDname = "/cupdet/MuonVetoSD", f200_TotPSNum);
+	// CupVetoSD *PSOMD = new CupVetoSD(SDname = "/CupDet/MuonVetoSD", f200_TotPSNum);
+	AmoreVetoSD *PSMD = new AmoreVetoSD(SDname = "/CupDet/MuonVetoSD", f200_TotPSNum*2);
 	SDman->AddNewDetector(PSMD);
-	// f200_logiVetoPSO->SetSensitiveDetector(PSMD);
-	// f200_logiVetoPSI->SetSensitiveDetector(PSMD);
 	auto PSO_PV = CupDetectorConstruction::GetPhysicalVolumeByName("PlasticScintO_PV");
 	auto PSO_LV = PSO_PV->GetLogicalVolume();
 	PSO_LV->SetSensitiveDetector(PSMD);
+
+	// CupVetoSD *PSIMD = new CupVetoSD(SDname = "/CupDet/MuonVetoSD", f200_TotPSNum);
+	// SDman->AddNewDetector(PSIMD);
 	auto PSI_PV = CupDetectorConstruction::GetPhysicalVolumeByName("PlasticScintI_PV");
 	auto PSI_LV = PSI_PV->GetLogicalVolume();
 	PSI_LV->SetSensitiveDetector(PSMD);

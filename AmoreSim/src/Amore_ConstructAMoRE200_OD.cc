@@ -1060,7 +1060,6 @@ G4LogicalVolume *AmoreDetectorConstruction::ConstructAMoRE200_OD()
 			boricAcidCoverBoxLV = new G4LogicalVolume(boricAcidCoverBoxSolid, _polyethylene, "BoricAcidCoverBox_LV");
 			boricAcidCoverBoxLV -> SetVisAttributes(boricAcidCoverBoxVisAttr);
 
-			cout << "JW: Where?? " << endl;
 			boricAcidCover = new G4Box("BoricAcidCover_Box",
 									airbuffer_radius - boricacid_thickness - 1./2.*cm, 
 									airbuffer_radius - boricacid_thickness - 1./2.*cm, 

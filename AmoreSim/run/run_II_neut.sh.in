@@ -36,10 +36,7 @@ cd $workdir
 
 # path to muon flux data
 pathmf="@NEUTRON_PATH@/$nowbin"
-mfname="NeutSpectrum_dist6000_run"$runid
-
-# number of events (will be setted automatically)
-#set nevt = 800
+mfname="NeutSpectrum_dist3500_run"$runid
 
 # detector setup
 setup="neut"

@@ -9,6 +9,7 @@
 #include "G4HadronElasticPhysics.hh"
 #include "G4HadronElasticPhysicsHP.hh"
 #include "G4HadronPhysicsQGSP_BERT_HP.hh"
+#include "G4HadronPhysicsFTFP_BERT_HP.hh"
 #include "G4ThermalNeutrons.hh"
 
 #include "G4ParallelWorldProcess.hh"
@@ -129,12 +130,13 @@ void AmorePhysicsList::AddPhysicsList(const G4String &name) {
 	OpPhysList = new AmorePhysicsOp();
 	opIsRegisted = true;
     // Had physics
-    } else if (name == "amorephysicsHad" && !hadIsRegisted) {
+    // } else if (name == "amorephysicsHad" && !hadIsRegisted) {
+    } else if (name == "amorephysicsHad") {
         fHadName = name;
 	hadronPhys.push_back(new G4HadronElasticPhysicsHP());
-	//hadronPhys.push_back(new G4HadronElasticPhysics());
-	hadronPhys.push_back(new G4HadronPhysicsQGSP_BERT_HP());
-	hadronPhys.push_back(new G4ThermalNeutrons(0));
+	// hadronPhys.push_back(new G4HadronPhysicsQGSP_BERT_HP());
+    hadronPhys.push_back(new G4HadronPhysicsFTFP_BERT_HP());
+	hadronPhys.push_back(new G4ThermalNeutrons(0)); 
 	hadIsRegisted = true;
     } else {
         G4cout << "AmorePhysicsList::AddPhysicsList: <" << name << ">"

@@ -1,9 +1,3 @@
-#######################
-## Hadronic processes
-#######################
-/cupdebug/cupparam omit_hadronic_processes  1.0
-/cupdebug/cupparam omit_neutron_hp  1.0
-
 /detGeometry/DebugMode false
 /detGeometry/OverlapCheck false
 
@@ -36,6 +30,7 @@
 /ntuple/primary 1
 /ntuple/track 1
 /ntuple/step 1
+/ntuple/muon 0
 /ntuple/photon 0
 /ntuple/scint 0
 
@@ -51,9 +46,7 @@
 ######################
 ## Select EM process
 ######################
-/Cup/phys/Physics livermore
-#/Cup/phys/Physics emstandardNR
-#/Cup/phys/Physics amorephysicsOp
+/Cup/phys/Physics livermore # livermore, emstandardNR, amorephysicsOp
 
 ########################
 ## verboseLevel option

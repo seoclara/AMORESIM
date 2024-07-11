@@ -160,7 +160,7 @@ void AmoreDetectorConstruction::ConstructAMoRE200_PSMD()
 
 		// name this PS
 		char PSname[64];
-		sprintf(PSname, "physMuonVetoPS_Envelope%d", ith);
+		sprintf(PSname, "MuonVeto_Envelope%d", ith);
 
 		// position the PS
 		G4ThreeVector pos(cood_x, cood_y, cood_z);

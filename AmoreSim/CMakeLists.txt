@@ -65,22 +65,16 @@ set(RUN_SCRIPTS
     run_II_muon.sh
     run_II_neut.sh
     run_II_decay.sh
-    run_I_muon.sh
     run_I_neut.sh
     run_I_decay.sh
-    run_Pilot_muon.sh
-    run_Pilot_neut.sh
     run_Pilot_decay.sh
     )
 set(SIM_MACROS
     II_muonbckg.mac
     II_neutbckg.mac
     II_dc_internal.mac
-    I_muonbckg.mac
     I_neutbckg.mac
     I_dc_internal.mac
-    Pilot_muonbckg.mac
-    Pilot_neutbckg.mac
     Pilot_dc_external-pmt.mac
     Pilot_dc_internal.mac
     )
