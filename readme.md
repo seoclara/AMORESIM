@@ -2,6 +2,7 @@
 
 ## Set your simulation environment
 The requirement of this project,
+
     GEANT4 version = v11.1.3
     ROOT version > v6.22
 
@@ -9,14 +10,18 @@ The requirement of this project,
     >> git clone https://github.com/seoclara/AMORESIM.git
     >> cd AMORESIM
     >> mkdir build; cd build;
-    >> cmake ../.
+    >> ccmake ../.
+    >> cd AmoresSim
+    >> source environment.sh
     >> make -j[NCPU]
 
 ## Execution
-You have to set LD_LIBRARY_PATH before running.
-
-    >> export LD_LIBRARY_PATH=[build directory/MCObjs]:$LD_LIBRARY_PATH
-
-And, just in the build directory
+There are some macros in the AmoreSim directory. In order to check the geometry, you can turn on the gui window and draw the detectors by 
 
     >>./amoresim gui.mac
+
+If you want run the simulation, you need to move run directory and execute one of the macro. 
+
+run_II_[simulation mode].sh is for AMoRE-II, run_I_[simulation mode].sh is for AMoRE-I, run_Pilot_[simulation mode].sh is for AMoRE-Pilot simulation .
+
+    >>./run_I_decay.sh 0 10
