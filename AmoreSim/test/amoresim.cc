@@ -52,8 +52,8 @@ int main(int argc, char **argv) {
     if (argc == 2 && strcmp(argv[1], "git") == 0) return 0;
 	
 	// Run manager
-    // auto* theRunManager = G4RunManagerFactory::CreateRunManager(G4RunManagerType::SerialOnly);
-    auto* theRunManager = G4RunManagerFactory::CreateRunManager(G4RunManagerType::Default);
+    auto* theRunManager = G4RunManagerFactory::CreateRunManager(G4RunManagerType::SerialOnly);
+    // auto* theRunManager = G4RunManagerFactory::CreateRunManager(G4RunManagerType::Default);
     // auto theRunManager = new G4MTRunManager;
     theRunManager->SetNumberOfThreads(1);
     // auto theRunManager = new G4RunManager;
