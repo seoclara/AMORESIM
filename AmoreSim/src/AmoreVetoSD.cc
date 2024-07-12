@@ -79,12 +79,12 @@ G4bool AmoreVetoSD::ProcessHits(G4Step *aStep, G4TouchableHistory * /*ROhist*/)
             break;
 
     }
-    // G4cout << "             VolName= " << VolName << G4endl;
-    // G4cout << "             motherCopyNo= " << motherCopyNo << G4endl;
-    // G4cout << "             motherVolName= " << motherVolName << G4endl;
-    // G4cout << "             envelopeCopyNo= " << envelopeCopyNo << G4endl;
-    // G4cout << "             envelopeVolName= " << envelopeVolName << G4endl;
-    // G4cout << "      changed CopyNo = " << copyNo << G4endl;
+    G4cout << "             VolName= " << VolName << G4endl;
+    G4cout << "             motherCopyNo= " << motherCopyNo << G4endl;
+    G4cout << "             motherVolName= " << motherVolName << G4endl;
+    G4cout << "             envelopeCopyNo= " << envelopeCopyNo << G4endl;
+    G4cout << "             envelopeVolName= " << envelopeVolName << G4endl;
+    G4cout << "      changed CopyNo = " << copyNo << G4endl;
 
     CupVetoHit *aHit = (*hitsCollection)[copyNo];
     if (!(aHit->GetLogV())) {
