@@ -96,7 +96,7 @@ class AmoreRootNtuple : public CupRootNtuple {
     virtual void RecordBeginOfEvent(const G4Event *);
     virtual void RecordEndOfEvent(const G4Event *);
     virtual void SetTGSD(const G4Event *a_event);
-    // virtual void SetMuonSD(const G4Event *a_event);
+    virtual void SetMuonSD(const G4Event *a_event);
     virtual void SetMDSD(const G4Event *a_event);
     virtual void OpenFile(const G4String filename, G4bool outputMode);
     virtual void CloseFile();

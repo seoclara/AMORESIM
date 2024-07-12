@@ -4,6 +4,7 @@
 #include "AmoreSim/AmoreDetectorStaticInfo.hh"
 #include "AmoreSim/AmoreModuleHit.hh"
 #include "AmoreSim/AmoreModuleSD.hh"
+#include "AmoreSim/AmoreVetoSD.hh"
 #include "CupSim/CupPMTOpticalModel.hh"    // for same PMT optical model as main sim
 #include "CupSim/CupPMTSD.hh"              // for making sensitive photocathodes
 #include "CupSim/CupVetoSD.hh"             // for making sensitive photocathodes
@@ -8612,10 +8613,13 @@ void AmoreDetectorConstruction::Construct_I_SDandField() {
 			nowLV->SetSensitiveDetector(moduleSD);
 	}
 
-	CupVetoSD *MuonScintSD = nullptr;
-	auto checkAndCreateSD  = [&]() -> CupVetoSD * {
+	// CupVetoSD *MuonScintSD = nullptr;
+	// auto checkAndCreateSD  = [&]() -> CupVetoSD * {
+	AmoreVetoSD *MuonScintSD = nullptr;
+	auto checkAndCreateSD  = [&]() -> AmoreVetoSD * {
 		if (MuonScintSD == nullptr) {
-			MuonScintSD = new CupVetoSD("/CupDet/MuonVetoSD",
+			MuonScintSD = new AmoreVetoSD("/CupDet/MuonVetoSD",
+			// MuonScintSD = new CupVetoSD("/CupDet/MuonVetoSD",
 					2 + 4 + 4 + 4 + 4 + 2); // Top 2, SideX 4, SideY 4, MufflerSideX 4, MufflerLR 4, ground 2
 			SDman->AddNewDetector(MuonScintSD);
 		}

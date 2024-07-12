@@ -36,8 +36,8 @@ add_subdirectory(MCObjs EXCLUDE_FROM_ALL)
 add_subdirectory(CupSim EXCLUDE_FROM_ALL)
 add_dependencies(CupSimL MCObjs)
 
-add_subdirectory(AmoreSim)   #CHANGE THIS
-add_dependencies(AmoreSimL CupSimL)   #CHANGE THIS
+add_subdirectory(AmoreSim)
+add_dependencies(AmoreSimL CupSimL)
 
 #----------------------------------------------------------------------------
 # Setup the main include directories

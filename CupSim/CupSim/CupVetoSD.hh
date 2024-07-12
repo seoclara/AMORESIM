@@ -11,8 +11,6 @@ class G4TouchableHistory;
 
 class CupVetoSD : public G4VSensitiveDetector {
     // EJ:
-  protected:
-    int max_tgs;
 
   public:
     CupVetoSD(G4String name, int max_tgs = 1000);
@@ -22,9 +20,14 @@ class CupVetoSD : public G4VSensitiveDetector {
     virtual G4bool ProcessHits(G4Step *aStep, G4TouchableHistory *ROhist);
     virtual void EndOfEvent(G4HCofThisEvent *HCE);
 
-  private:
+  protected:
+    int max_tgs;
     CupVetoHitsCollection *hitsCollection;
     G4int HCID;
+
+  // private:
+    // CupVetoHitsCollection *hitsCollection;
+    // G4int HCID;
 };
 
 #endif

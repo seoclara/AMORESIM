@@ -36,7 +36,6 @@ void CupVetoSD::Initialize(G4HCofThisEvent *HCE) {
 }
 
 G4bool CupVetoSD::ProcessHits(G4Step *aStep, G4TouchableHistory * /*ROhist*/) {
-    G4cout << "JW: CupVetoSD::ProcessHits" << G4endl;
     G4EmSaturation *emSaturation = G4LossTableManager::Instance()->EmSaturation();
 
 #if G4VERSION_NUMBER <= 1020
@@ -45,7 +44,6 @@ G4bool CupVetoSD::ProcessHits(G4Step *aStep, G4TouchableHistory * /*ROhist*/) {
     G4double edep_quenched =
         emSaturation->VisibleEnergyDepositionAtAStep(aStep); // for geant4.10.4.2
 #endif
-    G4cout << "JW: CupVetoSD::ProcessHits edep_quenched= " << edep_quenched << G4endl;
     G4double edep                      = aStep->GetTotalEnergyDeposit();
     G4ParticleDefinition *particleType = aStep->GetTrack()->GetDefinition();
     G4String particleName              = particleType->GetParticleName();
@@ -55,15 +53,12 @@ G4bool CupVetoSD::ProcessHits(G4Step *aStep, G4TouchableHistory * /*ROhist*/) {
     G4StepPoint *preStepPoint            = aStep->GetPreStepPoint();
     G4TouchableHandle theTouchable       = preStepPoint->GetTouchableHandle();
     G4int copyNo                         = theTouchable->GetCopyNumber();
-    G4int motherCopyNo                   = theTouchable->GetCopyNumber(2); // JW: for amore muon ps changed 1->2
+    G4int motherCopyNo                   = theTouchable->GetCopyNumber(1);
     G4VPhysicalVolume *thePhysical       = theTouchable->GetVolume();
-    G4VPhysicalVolume *theMotherPhysical = theTouchable->GetVolume(2); // JW: for amore muon ps changed 1->2
+    G4VPhysicalVolume *theMotherPhysical = theTouchable->GetVolume(1);
     G4String motherVolName               = theMotherPhysical->GetName();
 
     if ((strstr(motherVolName, "Envelope")) != NULL) copyNo = motherCopyNo;
-    G4cout << "JW: MuonVeto copyNo= " << copyNo << G4endl;
-    G4cout << "             motherCopyNo= " << motherCopyNo << G4endl;
-    G4cout << "             motherVolName= " << motherVolName << G4endl;
 
     CupVetoHit *aHit = (*hitsCollection)[copyNo];
     // check if it is first touch

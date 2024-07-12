@@ -86,7 +86,7 @@ void AmoreDetectorConstruction::ConstructAMoRE200_ID(G4LogicalVolume *aWorkAreaL
 	G4double Cu2GapFromBot = db["Cu2Gap"];
 	G4double Cu3GapFromBot = db["Cu3Gap"];
 	G4double Cu4GapFromBot = db["Cu4Gap"];
-	G4double TRGapFromCuP6 = db["TRGap"];
+	G4double TRGapFromCuP5 = db["TRGap"];
 
 	///////////////////////////////////////////////////////
 	///// composite variables
@@ -296,17 +296,20 @@ void AmoreDetectorConstruction::ConstructAMoRE200_ID(G4LogicalVolume *aWorkAreaL
 	G4double CenterCuP3Z = CenterPbP2Z - pbp1_zsize - cup3_zsize;
 	G4ThreeVector PosCuP3 = G4ThreeVector(0., 0., CenterCuP3Z);
 
-	G4double CenterPbP3Z = CenterCuP3Z - cup3_zsize - pbp1_zsize;
+	G4double CenterPbP3Z = CenterCuP3Z - cup3_zsize - pbp2_zsize;
 	G4ThreeVector PosPbP3 = G4ThreeVector(0., 0., CenterPbP3Z);
 
-	G4double CenterCuP4Z = CenterPbP3Z - pbp1_zsize - cup2_zsize;
+	G4double CenterCuP4Z = CenterPbP3Z - pbp2_zsize - cup3_zsize;
 	G4ThreeVector PosCuP4 = G4ThreeVector(0., 0., CenterCuP4Z);
 
-	G4double CenterPbP4Z = CenterCuP4Z - cup2_zsize - pbp2_zsize;
+	G4double CenterPbP4Z = CenterCuP4Z - cup3_zsize - pbp3_zsize;
 	G4ThreeVector PosPbP4 = G4ThreeVector(0., 0., CenterPbP4Z);
 
-	G4double CenterCuP5Z = CenterPbP4Z - pbp2_zsize - cup1_zsize;
+	G4double CenterCuP5Z = CenterPbP4Z - pbp3_zsize - cup1_zsize;
 	G4ThreeVector PosCuP5 = G4ThreeVector(0., 0., CenterCuP5Z);
+
+	G4double CenterCuP6Z = CenterCuP5Z - cup1_zsize - TRGapFromCuP5 - pbp3_zsize; 
+	G4ThreeVector PosCuP6 = G4ThreeVector(0., 0., CenterCuP6Z);
 
 	///////////////////////////////////////////////////////
 	///// Build Cu and Lead Plates
@@ -317,12 +320,15 @@ void AmoreDetectorConstruction::ConstructAMoRE200_ID(G4LogicalVolume *aWorkAreaL
 	G4Tubs *CuPlate3 = new G4Tubs("CuPlate3", 0, inlead_radius, cup3_zsize, 0, 360. * deg);
 	G4Tubs *PbPlate1 = new G4Tubs("PbPlate1", 0, inlead_radius, pbp1_zsize, 0, 360. * deg);
 	G4Tubs *PbPlate2 = new G4Tubs("PbPlate2", 0, inlead_radius, pbp2_zsize, 0, 360. * deg);
+	G4Tubs *PbPlate3 = new G4Tubs("PbPlate3", 0, inlead_radius, pbp3_zsize, 0, 360. * deg);
 	G4LogicalVolume *logiCuMCP = new G4LogicalVolume(CuMCPlate, _copper, "logiCuMCP", 0, 0, 0);
-	G4LogicalVolume *logiCuP1 = new G4LogicalVolume(CuPlate1, _copper, "logiCuP1", 0, 0, 0);
-	G4LogicalVolume *logiCuP2 = new G4LogicalVolume(CuPlate2, _copper, "logiCuP2", 0, 0, 0);
-	G4LogicalVolume *logiCuP3 = new G4LogicalVolume(CuPlate3, _copper, "logiCuP3", 0, 0, 0);
-	G4LogicalVolume *logiPbP1 = new G4LogicalVolume(PbPlate1, _lead, "logiPbP1", 0, 0, 0);
-	G4LogicalVolume *logiPbP2 = new G4LogicalVolume(PbPlate2, _lead, "logiPbP2", 0, 0, 0);
+	G4LogicalVolume *logiCuP1 = new G4LogicalVolume(CuPlate1, _copper, "logiCuP1", 0, 0, 0); // top and bottom Cu
+	G4LogicalVolume *logiCuP2 = new G4LogicalVolume(CuPlate2, _copper, "logiCuP2", 0, 0, 0); // middle Cu
+	G4LogicalVolume *logiCuP3 = new G4LogicalVolume(CuPlate3, _copper, "logiCuP3", 0, 0, 0); // thin Cu
+	G4LogicalVolume *logiPbP1 = new G4LogicalVolume(PbPlate1, _lead, "logiPbP1", 0, 0, 0); // thick Pb
+	G4LogicalVolume *logiPbP2 = new G4LogicalVolume(PbPlate2, _lead, "logiPbP2", 0, 0, 0); // thin Pb
+	G4LogicalVolume *logiPbP3 = new G4LogicalVolume(PbPlate3, _lead, "logiPbP3", 0, 0, 0); // additional Pb
+	G4LogicalVolume *logiCuP4 = new G4LogicalVolume(PbPlate3, _copper, "logiCuP4", 0, 0, 0); // additional Cu
 
 	new G4PVPlacement(0, // no rotation
 					  PosCuMCP, logiCuMCP, "physCuMCP", logiCu1In, false, 0, OverlapCheck);
@@ -337,13 +343,15 @@ void AmoreDetectorConstruction::ConstructAMoRE200_ID(G4LogicalVolume *aWorkAreaL
 	new G4PVPlacement(0, // no rotation
 					  PosCuP3, logiCuP3, "physCuP3", logiCu1In, false, 0, OverlapCheck);
 	new G4PVPlacement(0, // no rotation
-					  PosPbP3, logiPbP1, "physPbP3", logiCu1In, false, 0, OverlapCheck);
+					  PosPbP3, logiPbP2, "physPbP3", logiCu1In, false, 0, OverlapCheck);
 	new G4PVPlacement(0, // no rotation
-					  PosCuP4, logiCuP2, "physCuP4", logiCu1In, false, 0, OverlapCheck);
+					  PosCuP4, logiCuP3, "physCuP4", logiCu1In, false, 0, OverlapCheck);
 	new G4PVPlacement(0, // no rotation
-					  PosPbP4, logiPbP2, "physPbP4", logiCu1In, false, 0, OverlapCheck);
+					  PosPbP4, logiPbP3, "physPbP4", logiCu1In, false, 0, OverlapCheck);
 	new G4PVPlacement(0, // no rotation
 					  PosCuP5, logiCuP1, "physCuP5", logiCu1In, false, 0, OverlapCheck);
+	new G4PVPlacement(0, // no rotation
+					  PosCuP6, logiCuP4, "physCuP6", logiCu1In, false, 0, OverlapCheck);
 
 	///////////////////////////////////////////////////////
 	// SC shield
@@ -365,7 +373,8 @@ void AmoreDetectorConstruction::ConstructAMoRE200_ID(G4LogicalVolume *aWorkAreaL
 	G4double TR_radius = inlead_radius;
 	G4double TR_height = 800. / 2.; // 900/2.; // This value should be changed !!!!!
 
-	G4ThreeVector PosTR = G4ThreeVector(0., 0., CenterCuP5Z - TR_height - cup1_zsize - TRGapFromCuP6);
+	// G4ThreeVector PosTR = G4ThreeVector(0., 0., CenterCuP5Z - TR_height - cup1_zsize - TRGapFromCuP5);
+	G4ThreeVector PosTR = G4ThreeVector(0., 0., CenterCuP6Z - pbp3_zsize - TR_height);
 	G4Tubs *TargetRoom = new G4Tubs("TargetRoom", 0, TR_radius, TR_height, 0, 360. * deg);
 	G4LogicalVolume *logiTargetRoom = new G4LogicalVolume(TargetRoom, _vacuum, "logiTargetRoom", 0, 0, 0);
 

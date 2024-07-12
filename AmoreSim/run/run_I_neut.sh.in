@@ -18,18 +18,13 @@ export AmoreDATA=$workdir"/AmoreSim/data"
 
 cd $workdir
 
-# path to muon flux data
+# path to neutron flux data
 pathmf="@NEUTRON_PATH@"
+ebin="bin6"
 mfname="NeutSpectrum_dist3500_run"$runid
-
-# number of events (will be setted automatically)
-#set nevt = 800
 
 # detector setup
 setup="neut"
-
-# run name
-jobname="@AMORESIM_JOB_NAME@"
 
 # output directory (must contain mac log root directory)
 outdir="@SIMOUT_PATH@"
@@ -38,12 +33,13 @@ outdir="@SIMOUT_PATH@"
 
 exe=$workdir/AmoreSim/amoresim
 
-mufilepath="$pathmf/$mfname"
+mufilepath="$pathmf/$ebin/$mfname"
 evtwc=`wc -l $mufilepath | cut -d' ' -f1`
-nevt=`expr $evtwc / 2`
+#nevt=`expr $evtwc / 2`
+nevt=10
 
 rout="$outdir/root"
-output="$rout/amoreI_$setup-run$runid"
+output="$rout/amoreI_$setup-run"$runid"_"$nevt
 
 mac=$outdir"/mac/amoreI-"$setup"_"$runid"_"$nevt".mac"
 log=$outdir"/log/amoreI-"$setup"_"$runid"_"$nevt".txt"
@@ -55,7 +51,7 @@ then
   rm -f $mac
 fi
 
-/bin/sed -e s#NEUTPATH#$mufilepath#g -e s#OUTPUT#$output#g -e s#NEVENTS#$nevt#g -e s#SEED#$timeseed#g $workdir/AmoreSim/mac/I_neutbckg.mac > $mac
+/usr/bin/sed -e s#NEUTPATH#$mufilepath#g -e s#OUTPUT#$output#g -e s#NEVENTS#$nevt#g -e s#SEED#$timeseed#g $workdir/AmoreSim/mac/I_neutbckg.mac > $mac
 
 $exe $mac &> $log
 #$exe $mac &> /dev/null

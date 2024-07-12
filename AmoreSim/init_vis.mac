@@ -7,31 +7,24 @@
 /tracking/verbose 1
 #/run/verbose 2
 
+/detector/select AmoreDetector
+/detGeometry/select amore200 #amore200, amoreI, amorepilot, mydetector
 /detGeometry/DebugMode false
 /detGeometry/OverlapCheck false
 
-####################
-## Select Detector
-####################
-/detector/select AmoreDetector
-/detGeometry/select amore200 #amore200, amoreI, amorepilot, mydetector
-
-#############################
-## Select Detector Geometry
-#############################
-# AMoRE-II detector option
+### AMoRE II options ###############
+/detGeometry/AdditionalPE true
 /detGeometry/200/selectPhase AMoRE200_Phase1 #AMoRE200_Phase1, AMoRE200_Phase2
 /detGeometry/200/selectSimType RealMode #RackGammaMode, NeutronMode, IdealMode, RealMode
 /detGeometry/200/selectNSDesign Design5 #Design1, Design2, Design3, Design4, Design5
-/detGeometry/AdditionalPE true
 
-# AMoRE-I option
-/detGeometry/I/EnableSuperCMagneticShield true
-/detGeometry/I/EnableCrystalArray true
-
-# AMoRE-Pilot option
+### AMoRE Pilot options ############
 /detGeometry/Pilot/EnableMumetal false
 /detGeometry/Pilot/EnableTargetRoom true
+
+### AMoRE I options ################
+/detGeometry/I/EnableSuperCMagneticShield true
+/detGeometry/I/EnableCrystalArray true
 
 /detGeometry/EnableOrigGeom true
 /detGeometry/EnableScint true
@@ -40,6 +33,7 @@
 /detGeometry/EnableInnermost true
 /detGeometry/EnableNeutronShield true
 /detGeometry/NeutronMode false
+
 /detGeometry/nShieldingToyConf PE20cm
 
 /ntuple/recordWithCut false

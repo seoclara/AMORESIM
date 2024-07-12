@@ -663,7 +663,6 @@ void CupRootNtuple::SetScintillation() {
 
 void CupRootNtuple::SetMuonSD(const G4Event *a_event) {
     // G4SDManager *SDman = G4SDManager::GetSDMpointer();
-    G4cout << "JW: Setting the Muon Sensitive detector " << G4endl;
     CupVetoSD *muonSD = (CupVetoSD *)(sdman->FindSensitiveDetector("/cupdet/MuonVetoSD"));
     G4cout << "nCollections= " << muonSD->GetNumberOfCollections() << G4endl;
     G4cout << "SD Name=" << muonSD->GetName() << G4endl;

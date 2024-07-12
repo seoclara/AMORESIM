@@ -55,7 +55,7 @@ int main(int argc, char **argv) {
     auto* theRunManager = G4RunManagerFactory::CreateRunManager(G4RunManagerType::SerialOnly);
     // auto* theRunManager = G4RunManagerFactory::CreateRunManager(G4RunManagerType::Default);
     // auto theRunManager = new G4MTRunManager;
-    theRunManager->SetNumberOfThreads(2);
+    theRunManager->SetNumberOfThreads(1);
     // auto theRunManager = new G4RunManager;
 
     // -- database
