@@ -3,47 +3,13 @@
 #include "AmoreSim/AmoreDetectorConstruction.hh" // the DetectorConstruction class header
 #include "AmoreSim/AmoreVetoSD.hh"
 #include "CupSim/CupPMTSD.hh"
-// #include "CupSim/CupParam.hh"
 #include "CupSim/CupScintSD.hh"            // for making sensitive photocathodes
-// #include "CupSim/CupVetoSD.hh"             // for making sensitive photocathodes
-// #include "CupSim/CupTorusStack.hh"         // for making the cavern and LSC envelope
-// #include "CupSim/Cup_PMT_LogicalVolume.hh" // for making PMT assemblies
 
-/*
-#include "G4Box.hh"
-#include "G4Element.hh"
-#include "G4IntersectionSolid.hh"
-#include "G4Material.hh"
-#include "G4OpticalSurface.hh"
-#include "G4Sphere.hh" // for making spheres
-#include "G4SubtractionSolid.hh"
-#include "G4Tubs.hh"
-#include "G4UnionSolid.hh"
-*/
-
-//#include "CLHEP/Matrix/Matrix.h"
-// #include "G4Colour.hh"
-// #include "G4LogicalBorderSurface.hh"
 #include "G4LogicalVolume.hh"
-// #include "G4PVPlacement.hh"
-// #include "G4RotationMatrix.hh"
 #include "G4SDManager.hh"
-// #include "G4SmartVoxelHeader.hh"
 #include "G4ThreeVector.hh"
-// #include "G4VPhysicalVolume.hh"
-// #include "G4VisAttributes.hh"
-
-// #include "G4ios.hh"
-
-// #include "G4Types.hh"
-
 #include <sstream>
 
-//#include "Randomize.hh"                     // for G4UniformRand()
-
-//#include "fstream"
-//#include "strstream"
-//#include <stdio.h>
 
 // == Construct Geometry for AMoRE-200 ======================================
 // uses parameters from database or file
