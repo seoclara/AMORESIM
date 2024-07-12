@@ -282,7 +282,7 @@ void AmoreRootNtuple::SetMDSD(const G4Event *aEvent) {
 }
 void AmoreRootNtuple::SetMuonSD(const G4Event *a_event){
     G4SDManager *SDman = G4SDManager::GetSDMpointer();
-    CupVetoSD *muonSD = (CupVetoSD *)(SDman->FindSensitiveDetector("/CupDet/MuonVetoSD"));
+    // CupVetoSD *muonSD = (CupVetoSD *)(SDman->FindSensitiveDetector("/CupDet/MuonVetoSD"));
     G4int MuSDHCID = SDman->GetCollectionID("MuonVetoSD/VetoSDColl");
     G4HCofThisEvent *HCE = a_event->GetHCofThisEvent();
     CupVetoHitsCollection *MuHC = 0;
@@ -293,17 +293,44 @@ void AmoreRootNtuple::SetMuonSD(const G4Event *a_event){
     int iHit = 0;
     double totalE = 0.;
     double totalEquenched = 0.;
-    int nTotCell = 0;
     double muTotEdep = 0.;
     double muTotEdepQuenched = 0.;
-    G4String logVolName;
-    int nCell = 0;
+    // G4String logVolName;
     TCell tcell;
 
-    nTotCell = MuHC->entries();
+    int nTotCell = MuHC->entries();
     G4cout << "JW: nTotMuonVeto= " << nTotCell << G4endl;
-    // G4double eDep;
-	// G4double eDepQuenched;
+    G4double eDep;
+	G4double eDepQuenched;
+
+	for (int ii = 0; ii<nTotCell; ii++){
+		CupVetoHit* aHit = (*MuHC)[ii];
+		eDep = aHit->GetEdep();
+		eDepQuenched = aHit->GetEdepQuenched();
+		tcell.SetEdep(eDep/MeV);
+		tcell.SetEdepQuenched(eDepQuenched/MeV);
+		tcell.SetCellID(ii);
+		if (eDep>0.){
+			iHit++;
+			totalE += eDep;
+			totalEquenched += eDepQuenched;
+			G4cout << "JW: MuonVetoSD: ii= " << ii << ", volumeName= " << aHit->GetLogV()->GetName()
+				<< ", eDep= " << eDep
+				<< ", eDepQuenched= " << eDepQuenched << G4endl;
+		}
+		muTotEdep = totalE;
+		muTotEdepQuenched = totalEquenched;
+
+		new ((*tclmuon)[ii]) TCell(tcell);
+	}
+	(void)muTotEdep;
+	(void)muTotEdepQuenched;
+	CMuSD->SetTotEdep(totalE);
+	CMuSD->SetTotEdepQuenched(totalEquenched);
+	CMuSD->SetNHit(iHit);
+	CMuSD->SetNTotCell(nTotCell);
+	G4cout << "JW: MuonVeto nHit: " << iHit << ", TotEdep: " << totalE << endl;
+
 }
 
 void AmoreRootNtuple::SetTGSD(const G4Event *a_event) {

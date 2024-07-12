@@ -73,7 +73,10 @@ G4bool AmoreVetoSD::ProcessHits(G4Step *aStep, G4TouchableHistory * /*ROhist*/)
         }
         case eDetGeometry::kDetector_AMoRE_I:{
             copyNo = (strstr(motherVolName, "Envelope")) ? motherCopyNo : copyNo;
+            break;
         }
+        default:
+            break;
 
     }
     // G4cout << "             VolName= " << VolName << G4endl;
