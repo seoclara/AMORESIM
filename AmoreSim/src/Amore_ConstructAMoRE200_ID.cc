@@ -131,9 +131,11 @@ void AmoreDetectorConstruction::ConstructAMoRE200_ID(G4LogicalVolume *aWorkAreaL
 									ss_radius, ss_inner_height_half, 0, 360. * deg);
 	G4VSolid *SSTop = new G4Box("SSTop",
 								sst_xsize_half, sst_ysize_half, sst_zsize_half);
-	G4VSolid *SSOVC0 = new G4UnionSolid("SSOVC0", SSCylinder, SSTop, nullptr,
-										{0, 0, ss_inner_height_half + sst_zsize_half});
-	G4LogicalVolume *logiSSOVC = new G4LogicalVolume(SSOVC0, _stainless, "logiSSOVC");
+	// G4VSolid *SSOVC0 = new G4UnionSolid("SSOVC0", SSCylinder, SSTop, nullptr,
+										// {0, 0, ss_inner_height_half + sst_zsize_half});
+	// G4LogicalVolume *logiSSOVC = new G4LogicalVolume(SSOVC0, _stainless, "logiSSOVC");
+	G4LogicalVolume *logiSSOVCTop = new G4LogicalVolume(SSTop, _aluminium, "logiSSOVCTop");
+	G4LogicalVolume *logiSSOVC = new G4LogicalVolume(SSCylinder, _stainless, "logiSSOVC");
 
 	///////////////////////////////////////////////////////
 	// For Radon Air
@@ -159,6 +161,8 @@ void AmoreDetectorConstruction::ConstructAMoRE200_ID(G4LogicalVolume *aWorkAreaL
 			f200_OVCPhysical = new G4PVPlacement(nullptr,
 											 {0, 0, -SSCylinder->GetZHalfLength() - nShield_GapFromCeiling + ovc_gap},
 											 logiSSOVC, "physSSOVC", logiWorkArea, false, 0, OverlapCheck);
+			new G4PVPlacement(nullptr, G4ThreeVector(0, 0, -SSCylinder->GetZHalfLength() - nShield_GapFromCeiling + ovc_gap + ss_inner_height_half + sst_zsize_half),
+					logiSSOVCTop, "physSSOVCTop", logiWorkArea, false, 0, OverlapCheck);
 			break;
 		case kIdealMode:{
 			G4double ovcPosZ = boricacid_thickness + thin_lead_shield_thickness + lead_shield_thickness +
@@ -166,6 +170,9 @@ void AmoreDetectorConstruction::ConstructAMoRE200_ID(G4LogicalVolume *aWorkAreaL
 			f200_OVCPhysical = new G4PVPlacement(nullptr,
 											 {0, 0, SSCylinder->GetZHalfLength() + ovcPosZ + ovc_gap},
 											 logiSSOVC, "physSSOVC", logiWorkArea, false, 0, OverlapCheck);
+			new G4PVPlacement(nullptr, G4ThreeVector(0, 0, SSCylinder->GetZHalfLength() + ovcPosZ + ovc_gap + ss_inner_height_half + sst_zsize_half),
+					logiSSOVCTop, "physSSOVCTop", logiWorkArea, false, 0, OverlapCheck);
+
 			// Radon Air ------
 			new G4PVPlacement(nullptr, {0, 0, radonAirBox->GetZHalfLength() + ovcPosZ},
 						  radonAirLV, "RadonAir_PV", logiWorkArea, false, 0, OverlapCheck);
@@ -181,6 +188,8 @@ void AmoreDetectorConstruction::ConstructAMoRE200_ID(G4LogicalVolume *aWorkAreaL
 		case kRealMode:{
 			f200_OVCPhysical = new G4PVPlacement(nullptr, RealModel_shield_topPos + G4ThreeVector(0, 0, -SSCylinder->GetZHalfLength() + ovc_gap + nShield_GapFromCeiling),
 											 logiSSOVC, "physSSOVC", logiWorkArea, false, 0, OverlapCheck);
+			new G4PVPlacement(nullptr, RealModel_shield_topPos + G4ThreeVector(0, 0, -SSCylinder->GetZHalfLength() + ovc_gap + nShield_GapFromCeiling + ss_inner_height_half + sst_zsize_half),
+					logiSSOVCTop, "physSSOVCTop", logiWorkArea, false, 0, OverlapCheck);
 
 			new G4PVPlacement(nullptr, RealModel_shield_topPos + G4ThreeVector(0, 0, -radonAirBox->GetZHalfLength() + nShield_GapFromCeiling - 11 * cm + ovc_gap),
 						  radonAirLV, "RadonAir_PV", logiWorkArea, false, 0, OverlapCheck);
@@ -671,6 +680,7 @@ void AmoreDetectorConstruction::ConstructAMoRE200_ID(G4LogicalVolume *aWorkAreaL
 
 	if (flagInvisible || flagOneCell){
 		logiSSOVC->SetVisAttributes(G4VisAttributes::Invisible);
+		logiSSOVCTop->SetVisAttributes(G4VisAttributes::Invisible);
 		logiCu4->SetVisAttributes(G4VisAttributes::Invisible);
 		logiCu3->SetVisAttributes(G4VisAttributes::Invisible);
 		logiCu2->SetVisAttributes(G4VisAttributes::Invisible);
@@ -694,11 +704,11 @@ void AmoreDetectorConstruction::ConstructAMoRE200_ID(G4LogicalVolume *aWorkAreaL
 		logiCuMCPVis->SetForceSolid(true);
 		logiCuP1Vis->SetForceSolid(true);
 		logiPbP2Vis->SetForceSolid(true);
-		// logiSSOVCVis->SetForceSolid(true);
 		// logiSourceVis->SetForceSolid(true);
 		// logiSourceHousingVis->SetForceSolid(true);
 
 		logiSSOVC->SetVisAttributes(logiSSOVCVis);
+		logiSSOVCTop->SetVisAttributes(logiSSOVCVis);
 		// logiSSOVCIn->SetVisAttributes(logiTargetRoomVis);
 		logiCu4->SetVisAttributes(logiCu4Vis);
 		// logiCu4In->SetVisAttributes(logiTargetRoomVis);

@@ -256,8 +256,8 @@ G4LogicalVolume *AmoreDetectorConstruction::ConstructAMoRE200_OD()
 																	boricAcidBox->GetZHalfLength() + lead_housing_thickness - IDspaceBox->GetZHalfLength()));
 
 	// G4LogicalVolume *boricAcidLV = new G4LogicalVolume(boricAcidSolid, _BoricAcidRubber, "BoricAcid_LV"); // su-yeon
-	// G4LogicalVolume *boricAcidLV = new G4LogicalVolume(boricAcidSolid, _BoricAcidPowder, "BoricAcid_LV"); // su-yeon
-	G4LogicalVolume *boricAcidLV = new G4LogicalVolume(boricAcidSolid, _air, "BoricAcid_LV"); // su-yeon
+	G4LogicalVolume *boricAcidLV = new G4LogicalVolume(boricAcidSolid, _BoricAcidPowder, "BoricAcid_LV"); // su-yeon
+	// G4LogicalVolume *boricAcidLV = new G4LogicalVolume(boricAcidSolid, _air, "BoricAcid_LV"); // su-yeon
 	boricAcidLV->SetVisAttributes(boricAcidVisAttr);
 
 
@@ -1201,11 +1201,11 @@ G4LogicalVolume *AmoreDetectorConstruction::ConstructAMoRE200_OD()
 	new G4PVPlacement(nullptr, {0, 0, lead_shield_thickness / 2.},
 					  ThinLeadShieldLV, "ThinLeadShield_PV", leadShieldLV, false, 0, OverlapCheck);
 
-/*
+// /*
 	// Boric Acid ----------
 	new G4PVPlacement(nullptr, {0, 0, thin_lead_shield_thickness / 2.},
 					  boricAcidLV, "InnerBoricAcid_PV", ThinLeadShieldLV, false, 0, OverlapCheck);
-					  */
+					//   */
 
 
 	//////////////////////////////////////////
