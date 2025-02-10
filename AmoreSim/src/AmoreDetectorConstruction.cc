@@ -319,16 +319,16 @@ void AmoreDetectorConstruction::ConstructMaterials() {
 
 	// ... insert any additional material definitions here
 	G4NistManager *nist = G4NistManager::Instance();
-	G4Isotope *Mo98 =
-		new G4Isotope(name = "Molybdenum98", iz = 42, n = 98, a = 97.9054073 * g / mole);
-	G4Element *_elementMo98 =
-		new G4Element(name = "enriched Molybdenum", symbol = "Mo", nisotope = 1);
+	G4Isotope *Mo98 = new G4Isotope(name = "Molybdenum98", iz = 42, n = 98, a = 97.9054073 * g / mole);
+	_elementMo98 = new G4Element(name = "enriched Molybdenum", symbol = "Mo", nisotope = 1);
 	_elementMo98->AddIsotope(Mo98, abundance = 100. * perCent);
 
 	_elementB = nist->FindOrBuildElement("B");
 	_elementW = nist->FindOrBuildElement("W");
 	_elementTh = nist->FindOrBuildElement("Th");
 
+	//////////////////////////////////
+	// ----- Thorium Dioxide (ThO2, density = 10.0 g/cm3)
 	name      = "ThO2";
 	density   = 10.0 * g / cm3;
 	nelements = 2;
@@ -337,6 +337,9 @@ void AmoreDetectorConstruction::ConstructMaterials() {
 	_ThoriumDioxide->AddElement(_elementTh, 1);
 	_ThoriumDioxide->AddElement(_elementO, 2);
 
+	//////////////////////////////////
+	// ----- Thoriated Tungsten Wire (W, 99% + ThO2, 1%, density = 19.36 g/cm3)
+	// for AmoRE-II calibration source system
 	name	=	"ThoriatedTungstenWire";
 	density = 19.36 * g / cm3;
 
@@ -344,12 +347,17 @@ void AmoreDetectorConstruction::ConstructMaterials() {
 	_ThWire->AddElement(_elementW, 0.99);
 	_ThWire->AddMaterial(_ThoriumDioxide, 0.01);
 
+	//////////////////////////////////
+	// ----- Co56 source (Co56, density = 7.89 g/cm3)
+	// One candidate for AmoRE-II calibration source system
 	name = "Co56source";
 	density = 7.89 * g / cm3;
 	
 	_FeWire = new G4Material(name, density, ncomponents = 1, G4State::kStateSolid);
 	_FeWire->AddElement(_elementFe, 1);
 
+	//////////////////////////////////
+	// ----- MuMetal (density = 7.87 g/cm3)
 	name      = "MuMetal";
 	density   = 7.87 * g / cm3;
 	nelements = 3;
@@ -359,24 +367,30 @@ void AmoreDetectorConstruction::ConstructMaterials() {
 	_mumetal->AddElement(_elementFe, 0.15);
 	_mumetal->AddElement(_elementMo98, 0.05);
 
+	//////////////////////////////////
+	// ----- Stycast (C18H18O5, density = 1.78 g/cm3)
+	name = "Stycast";
 	density   = 1.78 * g / cm3;
 	nelements = 3;
 
-	_stycast = new G4Material("Stycast", density, nelements);
+	_stycast = new G4Material(name, density, nelements);
 	_stycast->AddElement(_elementC, natoms = 18);
 	_stycast->AddElement(_elementH, natoms = 18);
 	_stycast->AddElement(_elementO, natoms = 5);
 
-
+	//////////////////////////////////
+	// ----- Araldite (C54H60O9, density = 1.18 g/cm3)
 	name      = "Araldite";
 	density   = 1.18 * g/cm3;
 	nelements = 3;
+
 	_araldite = new G4Material(name, density, nelements);
 	_araldite->AddElement(_elementC, natoms = 54);
 	_araldite->AddElement(_elementH, natoms = 60);
 	_araldite->AddElement(_elementO, natoms = 9);
 
-
+	//////////////////////////////////
+	// vinyltoluene scintillator (C9H10, density = 0.864 g/cm3)
 	_vinylt = nist->FindOrBuildMaterial("G4_PLASTIC_SC_VINYLTOLUENE");
 	_vinylt->GetIonisation()->SetBirksConstant(1.50e-2 * (g / (MeV * cm2)) / _vinylt->GetDensity());
 
@@ -393,8 +407,20 @@ void AmoreDetectorConstruction::ConstructMaterials() {
 	g10material->AddElement(_elementH, natoms = 3);
 
 	//////////////////////////////////
-	// Sillicon rubber
+	// Polyurethane (C25H42N2O6, density = 1.22 g/cm3)
+	// For AMoRE-II source driving system tube
+	name      = "Polyurethane";
+	density   = 1.23 * g / cm3;
+	nelements = 4;
+	_polyurethane = new G4Material(name, density, nelements);
+	_polyurethane->AddElement(_elementC, natoms = 25);
+	_polyurethane->AddElement(_elementH, natoms = 42);
+	_polyurethane->AddElement(_elementN, natoms = 2);
+	_polyurethane->AddElement(_elementO, natoms = 6);
+
+
 	//////////////////////////////////
+	// Sillicon rubber
 	name      = "Silicon rubber";
 	density   = 1.64 * g / cm3;
 	nelements = 4;
@@ -406,8 +432,16 @@ void AmoreDetectorConstruction::ConstructMaterials() {
 	_SiRubber->AddElement(_elementC, natoms = 2);
 
 	//////////////////////////////////
-	// B4C
+	// Thorium Di-Oxide sillicon rubber
+	name 	= "ThRubber";
+	density = 1.27 * g / cm3; 
+
+	_ThRubber = new G4Material(name, density, ncomponents = 2, G4State::kStateSolid);
+	_ThRubber->AddMaterial(_SiRubber, 123.9/174.5);
+	_ThRubber->AddMaterial(_ThoriumDioxide, 50.6/174.5);
+
 	//////////////////////////////////
+	// B4C
 	name      = "Boron Carbide";
 	density   = 2.52 * g / cm3;
 	nelements = 2;
@@ -418,7 +452,6 @@ void AmoreDetectorConstruction::ConstructMaterials() {
 
 	//////////////////////////////////
 	// Silicon rubber + 24% B4C
-	//////////////////////////////////
 	name    = "24% B4C + SiRubber";
 	density = 1.64 * g / cm3;
 
@@ -428,7 +461,6 @@ void AmoreDetectorConstruction::ConstructMaterials() {
 
 	//////////////////////////////////
 	// Boric acid powder(H3BO3)
-	//////////////////////////////////
 	name    = "Boric acid powder";
 	density = 1.435 * g / cm3;
 	density *= 0.9; // for powder
@@ -440,7 +472,6 @@ void AmoreDetectorConstruction::ConstructMaterials() {
 
 	/////////////////////////////////////////////
 	// Silicon rubber + Boric acid powder(H3BO3)
-	/////////////////////////////////////////////
 	name	=	"BoricAcidRubber";
 	density = 5.4 * g / 4 / cm3;
 
@@ -450,7 +481,6 @@ void AmoreDetectorConstruction::ConstructMaterials() {
 
 	//////////////////////////////////
 	// Pure boron
-	//////////////////////////////////
 	name    = "Pure boron";
 	density = 2.52 * g / cm3;
 
@@ -459,7 +489,6 @@ void AmoreDetectorConstruction::ConstructMaterials() {
 
 	//////////////////////////////////
 	// Borated PE (5% boron content by weight)
-	//////////////////////////////////
 	name                           = "Borated PE";
 	density                        = 1.01 * g / cm3;
 	G4double boron_ratio_in_weight = 5. * perCent;
