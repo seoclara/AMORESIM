@@ -165,6 +165,16 @@ void AmoreDetectorConstruction::ConstructAMoRE200_ID(G4LogicalVolume *aWorkAreaL
 				G4double x = coil_radius * cos(theta);
 				G4double y = coil_radius * sin(theta);
 				G4double z = SSCylinder->GetZHalfLength()/2/nSegments * iseg;
+				G4double angle = asin(SSCylinder->GetZHalfLength()/2/nSegments / segment_length);
+
+				G4RotationMatrix *rot = new G4RotationMatrix();
+				rot->rotateX(90*deg);
+				rot->rotateX(angle);
+				rot->rotateZ(theta);
+
+				G4ThreeVector pos = G4ThreeVector(x, y, z) + G4ThreeVector(0, 0, -SSCylinder->GetZHalfLength()/1.6);
+				new G4PVPlacement(G4Transform3D(*rot, pos), logiSourceHousing, "physSourceHousing" + to_string(iseg), radonAirLV, false, 0, OverlapCheck);
+			}
 			break;}
 		case kRealMode:{
 			f200_OVCPhysical = new G4PVPlacement(nullptr, RealModel_shield_topPos + G4ThreeVector(0, 0, -SSCylinder->GetZHalfLength() + ovc_gap + nShield_GapFromCeiling),
