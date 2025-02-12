@@ -488,7 +488,7 @@ void AmoreDetectorConstruction::ConstructAMoRE200_ID(G4LogicalVolume *aWorkAreaL
 		cout << " (length: mm, weight: kg, global coordinate) \n"
 			 << endl;
 		cout << " OVC " << endl;
-		cout << "     mass            : " << logiSSOVC->GetMass(true, false) / kg << endl;
+		cout << "     mass            : " << logiSSOVC->GetMass(true, false) / kg << "(" << logiSSOVCTop->GetMass(true, false)/kg << ")" << endl;
 		cout << "     dimension (rxh) : " << SSCylinder->GetOuterRadius() << " x " << SSCylinder->GetZHalfLength() * 2 << endl;
 		cout << "     thickness       : " << OVCthick << "(" << OVCthickB << ")" << endl;
 		cout << "     coordinate      : " << globalPos_OVC << endl;
