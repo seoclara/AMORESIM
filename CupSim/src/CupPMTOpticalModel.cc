@@ -11,6 +11,7 @@
 #include "CupSim/CupPMTSD.hh"
 #include "G4Version.hh"
 
+#include "G4ParallelWorldProcess.hh"
 #include "G4LogicalBorderSurface.hh"
 #include "G4MaterialPropertiesTable.hh"
 #include "G4OpticalPhoton.hh"
@@ -27,6 +28,9 @@
 
 #include "G4GeometryTolerance.hh" // for kCarTolerance
 
+using namespace std;
+using namespace CLHEP;
+
 G4UIdirectory *CupPMTOpticalModel::fgCmdDir = NULL;
 
 // constructor -- also handles all initialization
@@ -41,7 +45,6 @@ CupPMTOpticalModel::CupPMTOpticalModel(G4String modelName, G4VPhysicalVolume *en
                                                           // G4LogicalVolume to G4Region EJ: end
 {
 
-    _verbosity= 0;
     // _verbosity= 1;
     //  _luxlevel= 3;
     // get material properties vectors
@@ -239,23 +242,50 @@ void CupPMTOpticalModel::DoIt(const G4FastTrack &fastTrack, G4FastStep &fastStep
     //  ipmt=fastTrack.GetEnvelopePhysicalVolume()->GetMother()->GetCopyNo();
     //   G4cout << "EJ test: ipmt= " << ipmt << G4endl;
     // so we do this:
-    {
+    const G4Step* hStep = G4ParallelWorldProcess::GetHyperStep();
+    if(_verbosity > 0){
+        G4cout << "JW: hyperstep= " << hStep << G4endl;
+    }
+    if(hStep != nullptr){ // for AMoRE-II parallel world
+        const G4VTouchable *touch = hStep->GetPreStepPoint()->GetTouchable();
+        int nd = touch->GetHistoryDepth();
+        if(_verbosity > 0){
+            G4cout << "JW: hyperstep nd= " << nd << G4endl;
+        }
+        for (int id = 0; id < nd; id ++) {
+            if(_verbosity > 0){
+                G4cout << "JW: ne= " << nd << ", id= " << id << ", GetVolume= " << touch->GetVolume(id)->GetName() << ", envelope= " << fastTrack.GetEnvelopePhysicalVolume()->GetName() << G4endl;
+            }
+            if (strstr(touch->GetVolume(id)->GetName(), "physWCPMT") != NULL) {
+                ipmt = touch->GetReplicaNumber(id);
+                break;
+            }
+            // if (touch->GetVolume(id) == fastTrack.GetEnvelopePhysicalVolume()) {
+                // ipmt = touch->GetReplicaNumber(id + 1);
+                // break;
+            // }
+        }
+        if (_verbosity > 0) {
+            G4cout << "JW: ipmt= " << ipmt << G4endl;
+        }
+    }
+    else {
         const G4VTouchable *touch = fastTrack.GetPrimaryTrack()->GetTouchable();
         int nd                    = touch->GetHistoryDepth();
         int id;
-	for (id = 0; id < nd; id++) {
+	    for (id = 0; id < nd; id++) {
             //G4cout << "EJ test: nd= " << nd << ", id= " << id << ", GetVolume= " << touch->GetVolume(id)->GetName() << ", envelope= " << fastTrack.GetEnvelopePhysicalVolume()->GetName() << G4endl;
-            //if (touch->GetVolume(id) == fastTrack.GetEnvelopePhysicalVolume()) { // EJ: commented out because they are different when applied to Parallel world volume
+            if (touch->GetVolume(id) == fastTrack.GetEnvelopePhysicalVolume()) { // EJ: commented out because they are different when applied to Parallel world volume
                 ipmt = touch->GetReplicaNumber(id + 1);
             //    G4cout << "EJ test: ipmt= " << ipmt << G4endl;
-            //    break;
-            //}
+               break;
+            }
         }
-        if (ipmt < 0) {
-            // G4Exception("CupSim/CupPMTOpticalModel: could not find envelope -- where am I !?!");
-            G4Exception(" ", " ", JustWarning,
-                        "CupSim/CupPMTOpticalModel: could not find envelope -- where am I !?!");
-        }
+    }
+    if (ipmt < 0) {
+        // G4Exception("CupSim/CupPMTOpticalModel: could not find envelope -- where am I !?!");
+        G4Exception(" ", " ", JustWarning,
+                    "CupSim/CupPMTOpticalModel: could not find envelope -- where am I !?!");
     }
 
     // processTag: EJ: 2007-11-06 (2016-0914)
@@ -336,6 +366,10 @@ void CupPMTOpticalModel::DoIt(const G4FastTrack &fastTrack, G4FastStep &fastStep
                 }
                 pos += dist * dir;
                 time += dist * n_glass / c_light;
+                if (_verbosity >= 2){
+                    G4cout << " hit the envelope outer surface, not the inner surface\n";
+                    G4cout << " break hit loop\n";
+                }
                 break;
             }
             pos += dist * dir;
@@ -432,11 +466,14 @@ void CupPMTOpticalModel::DoIt(const G4FastTrack &fastTrack, G4FastStep &fastStep
     //    if (ranno_absorb < _efficiency) N_pe = 1;
         N_pe = 1; // EJ: for a test
         if (N_pe > 0) {
-            if (detector != NULL && detector->isActive())
+            if (detector != NULL && detector->isActive()){
+                // G4cout << "JW: (CupPMTOpticalModel) detector is active" << G4endl;
+                // G4cout << "JW: pmtid before SimpleHit = " << ipmt << G4endl;
                 ((CupPMTSD *)detector)
                     ->SimpleHit(ipmt, time, energy, pos, dir, pol, N_pe,
                                 processTag); // EJ
             //					    N_pe );
+            }
             if (_verbosity >= 2) {
                 G4cout << "CupSim/CupPMTOpticalModel made " << N_pe << " pe\n";
             }
@@ -504,6 +541,7 @@ void CupPMTOpticalModel::DoIt(const G4FastTrack &fastTrack, G4FastStep &fastStep
                << (whereAmI == kInVacuum ? " vacuum" : " glass") << ", pos=" << pos
                << ", dir=" << dir << ", weight=" << weight << ", pol=" << pol << ", iloop=" << iloop
                << "\n";
+        G4cout << "" << G4endl;
     }
 
     return;

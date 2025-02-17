@@ -167,7 +167,7 @@ void CupRootNtuple::CreateTree() {
     if (StatusStep) fROOTOutputTree->Branch("STEP", &(Cstep), 256000, 2);
     if (StatusPhoton) fROOTOutputTree->Branch("PHOTONHIT", &(Cphoton), 256000, 2);
     if (StatusScint) fROOTOutputTree->Branch("SCINT", &(Cscint), 256000, 2);
-    if (StatusMuon) fROOTOutputTree->Branch("MuonSD", &(CMuSD), 256000, 2);
+    // if (StatusMuon) fROOTOutputTree->Branch("MuonSD", &(CMuSD), 256000, 2);
 
     // TG Sensitive Detector
     sdman = G4SDManager::GetSDMpointer();
@@ -176,6 +176,11 @@ void CupRootNtuple::CreateTree() {
       if (tgsd) {
       fROOTOutputTree->Branch("TGSD", &(Ctgsd), 256000, 2);
       }
+    
+    CupVetoSD* vetosd = (CupVetoSD*)(sdman->FindSensitiveDetector("/cupdet/MuonVetoSD"));
+    if (StatusMuon && vetosd) {
+        fROOTOutputTree->Branch("MuonVetoSD", &(CMuSD), 256000, 2);
+    }
 
     AddPMTSD();
 }
@@ -641,6 +646,7 @@ void CupRootNtuple::SetPhoton() {
     G4cout << "n_op_cerenkov= " << n_op_cerenkov << ", n_op_scint= " << n_op_scint
            << ", n_op_reem= " << n_op_reem << G4endl;
     G4cout << "n_op_scint_test= " << n_op_scint_test << ", n_op_other= " << n_op_other << G4endl; // JW (2023.12.14) for debugging
+    G4cout << "" << G4endl;
 }
 
 void CupRootNtuple::SetScintillation() {

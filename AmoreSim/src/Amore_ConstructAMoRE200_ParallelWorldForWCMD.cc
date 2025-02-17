@@ -80,7 +80,7 @@ void AmoreParallelWorldConstruction::ConstructAMoRE200_ParallelWorldForWCMD()
 	}
 
 	// --- make the fundamental inner  PMT assembly
-	Cup_PMT_LogicalVolume *_logiWCPMT10 = new Cup_10inch_LogicalVolume("WCPMT",
+	Cup_PMT_LogicalVolume *_logiWCPMT10 = new Cup_10inch_LogicalVolume("WCPMT10",
 																	   fWater,
 																	   fGlass,
 																	   fPhotocathode_opsurf,
@@ -95,7 +95,7 @@ void AmoreParallelWorldConstruction::ConstructAMoRE200_ParallelWorldForWCMD()
 																	   // whichPmtStyle);
 																	   kPmtStyle_TorusStack);
 
-	Cup_PMT_LogicalVolume *_logiWCPMT8 = new Cup_8inch_LogicalVolume("WCPMT",
+	Cup_PMT_LogicalVolume *_logiWCPMT8 = new Cup_8inch_LogicalVolume("WCPMT8",
 																	   fWater,
 																	   fGlass,
 																	   fPhotocathode_opsurf,
