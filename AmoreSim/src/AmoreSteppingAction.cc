@@ -17,6 +17,7 @@
 #include "G4VisExtent.hh"
 #include "G4ios.hh"
 #include "globals.hh"
+#include "G4ParallelWorldProcess.hh"
 
 AmoreSteppingAction::AmoreSteppingAction(AmoreRootNtuple *r) : CupSteppingAction(r){}
 AmoreSteppingAction::AmoreSteppingAction(AmoreRootNtuple *r, CupPrimaryGeneratorAction *p)
@@ -26,6 +27,8 @@ void AmoreSteppingAction::UserSteppingAction(const G4Step *aStep) {
     CupSteppingAction::UserSteppingAction(aStep);
     G4Track* trk = aStep->GetTrack();
     const G4Step* pStep = &(*aStep);
+    const G4Step* hStep = G4ParallelWorldProcess::GetHyperStep();
+    if(hStep != nullptr) pStep = hStep;
 
     if(trk->GetDefinition()->GetParticleName() == "opticalphoton") {
         if(pStep->GetPostStepPoint()->GetStepStatus() == fGeomBoundary){

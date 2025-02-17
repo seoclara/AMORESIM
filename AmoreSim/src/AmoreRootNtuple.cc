@@ -329,12 +329,11 @@ void AmoreRootNtuple::SetMuonSD(const G4Event *a_event){
 
 		tcell.SetEdep(eDep/MeV);
 		tcell.SetEdepQuenched(eDepQuenched/MeV);
-		if (cellID!=-1){
-			tcell.SetCellID(cellID);
-		}
-		else{
-			tcell.SetCellID(ii);
-		}
+		tcell.SetCellID(cellID);
+
+		// if (cellID!=-1){
+		// 	tcell.SetCellID(cellID);
+		// }
 		if (aHit->GetLogV()!=0) {
 			G4cout << "JW: MuonVetoSD: ii= " << ii << G4endl;
 			G4cout << "        cellID=" << cellID <<  G4endl;
