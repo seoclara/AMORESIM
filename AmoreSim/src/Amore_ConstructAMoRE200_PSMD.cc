@@ -358,7 +358,7 @@ G4LogicalVolume *AmoreDetectorConstruction::MakePS(const G4String &type, G4VSens
 	////////////////////////////////////////////
 	// --- Muon Veto (Plastic scintillator)
 	////////////////////////////////////////////
-	G4bool OverlapCheck = false;
+	//OverlapCheck = false;
     CupParam &db ( CupParam::GetDB() );
 	G4double plastic_scintillator_thickness = db["plastic_scintillator_thickness"];
 	G4double plastic_veto_width        = db["plastic_veto_width"];
