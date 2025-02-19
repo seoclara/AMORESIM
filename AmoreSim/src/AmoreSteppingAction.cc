@@ -30,6 +30,15 @@ void AmoreSteppingAction::UserSteppingAction(const G4Step *aStep) {
     const G4Step* hStep = G4ParallelWorldProcess::GetHyperStep();
     if(hStep != nullptr) pStep = hStep;
 
+    G4StepPoint* postStepPoint = pStep->GetPostStepPoint();
+    // if(postStepPoint->GetStepStatus() == fWorldBoundary){
+    if(postStepPoint->GetPhysicalVolume() == nullptr){
+    // if(pStep->GetPostStepPoint()->GetPhysicalVolume() == nullptr) {
+        // trk->SetTrackStatus(fStopAndKill);
+        trk->SetTrackStatus(fKillTrackAndSecondaries);
+        return;
+    }
+
     if(trk->GetDefinition()->GetParticleName() == "opticalphoton") {
         if(pStep->GetPostStepPoint()->GetStepStatus() == fGeomBoundary){
     	    G4VPhysicalVolume* thePrePV  = pStep->GetPreStepPoint()->GetPhysicalVolume();
@@ -40,14 +49,17 @@ void AmoreSteppingAction::UserSteppingAction(const G4Step *aStep) {
     	    G4String postmatName = thePostPV->GetLogicalVolume()->GetMaterial()->GetName();
     	    if (prematName == "PMT_Vac" && postmatName == "PMT_Vac") {
               	trk->SetTrackStatus(fStopAndKill);
+                return;
         	}
         }
     }
+    /*
     G4VPhysicalVolume*  trkVolume = aStep->GetTrack()->GetNextVolume();
     if(trkVolume->GetName() == "physWorld") {
         trk->SetTrackStatus(fStopAndKill);
         return;
     }    
+    */
     /*
     const G4Track* trk = aStep->GetTrack();
     G4cout << "PreStep " << aStep->GetPreStepPoint()->GetPosition()
