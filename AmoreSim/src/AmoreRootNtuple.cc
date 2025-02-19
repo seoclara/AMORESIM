@@ -334,6 +334,7 @@ void AmoreRootNtuple::SetMuonSD(const G4Event *a_event){
 		// if (cellID!=-1){
 		// 	tcell.SetCellID(cellID);
 		// }
+		/*
 		if (aHit->GetLogV()!=0) {
 			G4cout << "JW: MuonVetoSD: ii= " << ii << G4endl;
 			G4cout << "        cellID=" << cellID <<  G4endl;
@@ -341,7 +342,7 @@ void AmoreRootNtuple::SetMuonSD(const G4Event *a_event){
 			G4cout << "        eDepQuenched= " << eDepQuenched << G4endl;
 			G4cout << "        volumeName= " << aHit->GetLogV()->GetName() << G4endl;
 			G4cout << "        cellID= " << cellID << G4endl;
-		}
+		}*/
 		if (eDep>0.){
 			iHit++;
 			totalE += eDep;
@@ -952,18 +953,12 @@ void AmoreRootNtuple::RecordEndOfEvent(const G4Event *a_event) {
 		fRecordedEvt++;
 	}
 
-	G4cout << "JW: record start" << G4endl;
 	if (kEvtMod != 0 && fRecordedEvt > kEvtMod) {
-		G4cout << "JW: flush" << G4endl;
 		fROOTOutputTree->FlushBaskets();
-		G4cout << "JW: flush done" << G4endl;
 		fROOTOutputTree->GetCurrentFile()->Flush();
-		G4cout << "JW: flush2 done" << G4endl;
 		fRecordedEvt = 0;
-		G4cout << "JW: record done" << G4endl;
 	}
 
-	G4cout << "JW: clearEvent start" << G4endl;
 	ClearEvent();
 
 	G4cout << "///////////////////////////////// End of Event "
