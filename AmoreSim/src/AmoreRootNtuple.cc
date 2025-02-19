@@ -289,8 +289,8 @@ void AmoreRootNtuple::SetMDSD(const G4Event *aEvent) {
 void AmoreRootNtuple::SetMuonSD(const G4Event *a_event){
 	G4cout << "" << G4endl;
     G4SDManager *SDman = G4SDManager::GetSDMpointer();
-    CupVetoSD *muonSD = (CupVetoSD *)(SDman->FindSensitiveDetector("/CupDet/MuonVetoSD"));
-	G4cout << "JW: nCollections=" << muonSD->GetNumberOfCollections() << G4endl;
+    //CupVetoSD *muonSD = (CupVetoSD *)(SDman->FindSensitiveDetector("/CupDet/MuonVetoSD"));
+	//G4cout << "JW: nCollections=" << muonSD->GetNumberOfCollections() << G4endl;
 	// G4cout << "JW: SD Name=" << muonSD->GetName() << G4endl;
     // G4int MuSDHCID = SDman->GetCollectionID("MuonVetoSD/VetoSDColl");
 	G4int MuSDHCID = SDman->GetCollectionID("MuonVetoSD/PSMDColl");
