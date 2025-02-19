@@ -952,12 +952,18 @@ void AmoreRootNtuple::RecordEndOfEvent(const G4Event *a_event) {
 		fRecordedEvt++;
 	}
 
+	G4cout << "JW: record start" << G4endl;
 	if (kEvtMod != 0 && fRecordedEvt > kEvtMod) {
+		G4cout << "JW: flush" << G4endl;
 		fROOTOutputTree->FlushBaskets();
+		G4cout << "JW: flush done" << G4endl;
 		fROOTOutputTree->GetCurrentFile()->Flush();
+		G4cout << "JW: flush2 done" << G4endl;
 		fRecordedEvt = 0;
+		G4cout << "JW: record done" << G4endl;
 	}
 
+	G4cout << "JW: clearEvent start" << G4endl;
 	ClearEvent();
 
 	G4cout << "///////////////////////////////// End of Event "
