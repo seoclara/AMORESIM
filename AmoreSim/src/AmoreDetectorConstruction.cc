@@ -393,6 +393,18 @@ void AmoreDetectorConstruction::ConstructMaterials() {
 	g10material->AddElement(_elementH, natoms = 3);
 
 	//////////////////////////////////
+	// Polyurethane (C25H42N206, density = 1.22 g/cm3)
+	// For AMoRE-II source driving system tube
+	name    = "Polyurethane";
+	density = 1.23 * g / cm3;
+	nelements = 4;
+	_polyurethane = new G4Material(name, density, nelements);
+	_polyurethane->AddElement(_elementC, natoms = 25);
+	_polyurethane->AddElement(_elementH, natoms = 42);
+	_polyurethane->AddElement(_elementN, natoms = 2);
+	_polyurethane->AddElement(_elementO, natoms = 6);
+
+	//////////////////////////////////
 	// Sillicon rubber
 	//////////////////////////////////
 	name      = "Silicon rubber";
@@ -404,6 +416,15 @@ void AmoreDetectorConstruction::ConstructMaterials() {
 	_SiRubber->AddElement(_elementO, natoms = 1);
 	_SiRubber->AddElement(_elementH, natoms = 6);
 	_SiRubber->AddElement(_elementC, natoms = 2);
+
+	//////////////////////////////////
+	// Thorium Di-Oxide silicon rubber
+	name   = "ThRubber";
+	density = 1.27 * g / cm3;
+
+	_ThRubber = new G4Material(name, density, ncomponents = 2, G4State::kStateSolid);
+	_ThRubber->AddMaterial(_SiRubber, 123.9/174.5);
+	_ThRubber->AddMaterial(_ThoriumDioxide, 50.6/174.5);
 
 	//////////////////////////////////
 	// B4C

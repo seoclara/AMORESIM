@@ -341,6 +341,8 @@ class AmoreDetectorConstruction : public CupDetectorConstruction {
 		G4Material *_iron1;
 		G4Material *_iron2;
 		G4Material *_rebar;
+		G4Material *_polyurethane;
+		G4Material *_ThRubber;
 
 		G4Element *_elementB;
 		G4Element *_elementPb210;
@@ -368,6 +370,8 @@ class AmoreDetectorConstruction : public CupDetectorConstruction {
 				G4Material *filmMat, G4int TowerNum, G4int ModuleNum);
 		G4LogicalVolume *MakeTower_phase2(G4Material *towerMat, G4Material *crystalMat, G4Material *reflectorMat, 
 				G4Material *frameMat, G4Material *clampMat, G4Material *waferMat, G4Material *filmMat, G4int TowerNum);
+		G4LogicalVolume *MakeSource(G4Material *sourceMat, G4Material *sourceHousingMat,
+				G4int nSegments, G4double source_length, G4double inner_radius, G4double outer_radius);
 		G4LogicalVolume *ConstructAMoRE200_OD(); ///< make the AMoRE200 outer detector
 		void ConstructAMoRE200_PSMD(); ///< make the AMoRE200 plastic scintillator muon detector
 		G4LogicalVolume *MakePS(const G4String &type, G4VSensitiveDetector *SD);
