@@ -27,7 +27,8 @@
 /vis/verbose errors
 #
 # Draw geometry:
-/vis/drawVolume
+#/vis/drawVolume
+/vis/drawVolume worlds # for drawing Parallel world
 #
 # Specify view angle:
 #

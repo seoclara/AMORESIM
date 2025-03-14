@@ -170,7 +170,7 @@ namespace AmoreDetectorStaticInfo {
 
 		//  Pb  Box
 		constexpr G4double leadBoxThickness        = 20. * cm;
-		constexpr G4double leadBoxHousingThickness = 0 * mm;
+		constexpr G4double leadBoxHousingThickness = 3 * mm;
 		constexpr G4double leadBoxXYinnerlength    = 80. * cm;
 		constexpr G4double leadBoxZinnerlength     = 162.1 * cm;
 		constexpr G4double verticalGapToMuVeto     = 885 * mm;

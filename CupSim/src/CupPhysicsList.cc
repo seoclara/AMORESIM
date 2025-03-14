@@ -937,6 +937,9 @@ void CupPhysicsList::ConstructGeneral() {
     const G4IonTable *theIonTable           = G4ParticleTable::GetParticleTable()->GetIonTable();
     G4RadioactiveDecay *theRadioactiveDecay = new G4RadioactiveDecay();
 
+    G4ParticleDefinition* triton = G4Triton::Definition();
+    triton->SetPDGStable(false);
+
     for (G4int i = 0; i < theIonTable->Entries(); i++) {
         G4String particleName = theIonTable->GetParticle(i)->GetParticleName();
         G4String particleType = theIonTable->GetParticle(i)->GetParticleType();
