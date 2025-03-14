@@ -67,10 +67,12 @@ void AmorePhysicsList::ConstructProcess() {
     }
     // -- ConstructOp
     if (opIsRegisted) OpPhysList->ConstructProcess();
+    /*
     else {
         ConstructOp();
         G4cout << "\n Op Physics is ConstructOp(): default! \n" << G4endl;
     }
+    */
 
     // -- ConstructHad
     if (hadIsRegisted) {
@@ -80,10 +82,10 @@ void AmorePhysicsList::ConstructProcess() {
         G4cout << "JW:  Had Physics " << i  << ": " << hadronPhys[i]->GetPhysicsName() << G4endl;
    	    hadronPhys[i]->ConstructProcess();
         }
-    } else {
+    } /*else {
     	ConstructHad();
         G4cout << "\n Had Physics is ConstructHad(): default! \n" << G4endl;
-    }	
+    }	*/
 
     // ConstructHad();
 

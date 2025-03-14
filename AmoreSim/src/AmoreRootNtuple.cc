@@ -119,6 +119,12 @@ void AmoreRootNtuple::CreateTree() {
 		fROOTOutputTree->Branch("MDSD", &fModuleArray, 512000, 2);
 	}
 
+	// Sensitive Detector for veto detectors
+	AmoreVetoSD *vetoSD = (AmoreVetoSD *)(CupRootNtuple::sdman->FindSensitiveDetector("/CupDet/MuonVetoSD"));
+	if (StatusMuon && vetoSD != nullptr){
+		fROOTOutputTree->Branch("PSMD", &(CMuSD), 256000, 2);
+	}
+
 	fROOTOutputTree->Branch("EndTrack", &EndTrackList);
 
 	if (fRecordPrimary) {
@@ -281,10 +287,21 @@ void AmoreRootNtuple::SetMDSD(const G4Event *aEvent) {
 	}
 }
 void AmoreRootNtuple::SetMuonSD(const G4Event *a_event){
+	G4cout << "" << G4endl;
     G4SDManager *SDman = G4SDManager::GetSDMpointer();
-    // CupVetoSD *muonSD = (CupVetoSD *)(SDman->FindSensitiveDetector("/CupDet/MuonVetoSD"));
-    G4int MuSDHCID = SDman->GetCollectionID("MuonVetoSD/VetoSDColl");
+    //CupVetoSD *muonSD = (CupVetoSD *)(SDman->FindSensitiveDetector("/CupDet/MuonVetoSD"));
+	//G4cout << "JW: nCollections=" << muonSD->GetNumberOfCollections() << G4endl;
+	// G4cout << "JW: SD Name=" << muonSD->GetName() << G4endl;
+    // G4int MuSDHCID = SDman->GetCollectionID("MuonVetoSD/VetoSDColl");
+	G4int MuSDHCID = SDman->GetCollectionID("MuonVetoSD/PSMDColl");
+	G4cout << "JW: MuSDHCID=" << MuSDHCID << G4endl;
     G4HCofThisEvent *HCE = a_event->GetHCofThisEvent();
+	// if (HCE) {
+	// 	G4cout << "JW: HCE=" << HCE << G4endl;
+	// 	G4cout << "JW: HCE->GetNumberOfCollections()=" << HCE->GetNumberOfCollections() << G4endl;
+	// 	G4cout << "JW: HCE #1 name=" << HCE->GetHC(0)->GetName() << G4endl;
+	// 	G4cout << "JW: HCE #3 name=" << HCE->GetHC(2)->GetName() << G4endl;
+	// }
     CupVetoHitsCollection *MuHC = 0;
 
     //if (!MuSDHCID) return;
@@ -299,22 +316,38 @@ void AmoreRootNtuple::SetMuonSD(const G4Event *a_event){
     TCell tcell;
 
     int nTotCell = MuHC->entries();
-    G4cout << "JW: nTotMuonVeto= " << nTotCell << G4endl;
+    G4cout << "JW: nTotMuonVeto= " << nTotCell/2 << G4endl;
     G4double eDep;
 	G4double eDepQuenched;
+	G4int cellID;
 
 	for (int ii = 0; ii<nTotCell; ii++){
 		CupVetoHit* aHit = (*MuHC)[ii];
 		eDep = aHit->GetEdep();
 		eDepQuenched = aHit->GetEdepQuenched();
+		cellID = aHit->GetCellID();
+
 		tcell.SetEdep(eDep/MeV);
 		tcell.SetEdepQuenched(eDepQuenched/MeV);
-		tcell.SetCellID(ii);
+		tcell.SetCellID(cellID);
+
+		// if (cellID!=-1){
+		// 	tcell.SetCellID(cellID);
+		// }
+		/*
+		if (aHit->GetLogV()!=0) {
+			G4cout << "JW: MuonVetoSD: ii= " << ii << G4endl;
+			G4cout << "        cellID=" << cellID <<  G4endl;
+			G4cout << "        eDep= " << eDep << G4endl;
+			G4cout << "        eDepQuenched= " << eDepQuenched << G4endl;
+			G4cout << "        volumeName= " << aHit->GetLogV()->GetName() << G4endl;
+			G4cout << "        cellID= " << cellID << G4endl;
+		}*/
 		if (eDep>0.){
 			iHit++;
 			totalE += eDep;
 			totalEquenched += eDepQuenched;
-			G4cout << "JW: MuonVetoSD: ii= " << ii << ", volumeName= " << aHit->GetLogV()->GetName()
+			G4cout << "JW: MuonVetoSD: ii= " << ii << ", cellID=" << cellID << ", volumeName= " << aHit->GetLogV()->GetName()
 				<< ", eDep= " << eDep
 				<< ", eDepQuenched= " << eDepQuenched << G4endl;
 		}
@@ -674,8 +707,7 @@ void AmoreRootNtuple::RecordStep(const G4Step *a_step) {
 				break;
 			case eDetGeometry::kDetector_AMoRE_I:{
 													 constexpr const char *pvCheckerString = "_Crystal_PV";
-													 //str_size checkerIndex                 = volume.index(pvCheckerString);
-													 size_t checkerIndex                 = volume.find(pvCheckerString);
+													 str_size checkerIndex                 = volume.index(pvCheckerString);
 													 if (checkerIndex != G4String::npos) {
 														 G4VPhysicalVolume *theMother;
 														 size_t envelopeCopyNo = 1;

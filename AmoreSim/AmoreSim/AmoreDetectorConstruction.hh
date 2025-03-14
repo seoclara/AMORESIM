@@ -22,10 +22,12 @@
 
 #include "AmoreSim/AmoreDetectorStaticType.hh"
 #include "AmoreSim/AmoreModuleHit.hh"
+#include "CupSim/CupPMTSD.hh"
 #include "CupSim/CupDetectorConstruction.hh"
 #include "G4Version.hh"
 
 class G4SurfaceProperty;
+class AmoreVetoSD;
 
 class AmoreDetectorConstruction : public CupDetectorConstruction {
 	private:
@@ -153,6 +155,10 @@ class AmoreDetectorConstruction : public CupDetectorConstruction {
 		G4VPhysicalVolume *f200_VetoMaterialPhysical;
 		G4VPhysicalVolume *f200_AirBufferPhysical;
 		G4VPhysicalVolume *f200_OVCPhysical;
+		AmoreVetoSD *PSMD;
+
+		// MyDetector
+		CupPMTSD *mypmtSDWC;
 
 	public:
 		typedef enum {
@@ -377,6 +383,7 @@ class AmoreDetectorConstruction : public CupDetectorConstruction {
 				//G4Material *frameMat, G4Material *clampMat, G4Material *waferMat, G4Material *filmMat, G4int TowerNum);
 		G4LogicalVolume *ConstructAMoRE200_OD(); ///< make the AMoRE200 outer detector
 		void ConstructAMoRE200_PSMD(); ///< make the AMoRE200 plastic scintillator muon detector
+		G4LogicalVolume *MakePS(const G4String &type, G4VSensitiveDetector *SD);
 		void ConstructAMoRE200_WCMD(); ///< make the AMoRE200 water cerenkov muon detector
 		void ConstructAMoRE200_SDandField();
 
@@ -443,7 +450,6 @@ class AmoreDetectorConstruction : public CupDetectorConstruction {
 		G4VSolid *BuildCopperFrameSolid(G4double, G4double, G4double, G4double);
 		G4VSolid *BuildPhotonFrameSolid(G4double, G4double);
 
-
 		static eDetGeometry whichDetGeometry;
 		static eNShieldConf whichNShieldingConf;
 		static ePhaseAMoRE200 whichAMoRE200Phase;
@@ -484,6 +490,7 @@ bool AmoreDetectorConstruction::JudgeBorderIncident(const G4Step *aStep,
 }
 
 // For AMoRE-II simulation (don't use those method)
+
 bool AmoreDetectorConstruction::Judge_CavernBorder(const G4Step *aStep) const {
 	return JudgeBorderIncident(aStep, &fCavernPhysical, 1);
 }

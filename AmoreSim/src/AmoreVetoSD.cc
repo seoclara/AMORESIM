@@ -1,7 +1,9 @@
 #include "AmoreSim/AmoreVetoSD.hh"
 #include "AmoreSim/AmoreDetectorConstruction.hh"
 #include "CupSim/CupVetoSD.hh"
+#include "AmoreSim/AmoreScintillation.hh"
 
+#include "G4SDManager.hh"
 #include "G4EmSaturation.hh"
 #include "G4LossTableManager.hh"
 
@@ -9,24 +11,50 @@
 #include <sstream>
 using namespace std;
 
-AmoreVetoSD::AmoreVetoSD(G4String name, int arg_max_tgs) : CupVetoSD(name, arg_max_tgs) {}
+AmoreVetoSD::AmoreVetoSD(G4String name, int arg_max_tgs) : CupVetoSD(name, arg_max_tgs) {
+    max_tgs = arg_max_tgs;
+    G4String HCname;
+    collectionName.insert(HCname = "PSMDColl");
+    HCID = -1;
+}
 AmoreVetoSD::~AmoreVetoSD() {}
 
+void AmoreVetoSD::Initialize(G4HCofThisEvent *HCE){
+    // hitsCollection = new CupVetoHitsCollection(SensitiveDetectorName, collectionName[0]);
+    hitsCollection = new CupVetoHitsCollection(SensitiveDetectorName, collectionName[1]);
+    // G4cout << "JW: AmoreVetoSD::Initialize ---> SensitiveDetectorName= " << SensitiveDetectorName << G4endl;
+    // G4cout << "JW: AmoreVetoSD::Initialize ---> collectionName[0]= " << collectionName[0] << G4endl;
+    // G4cout << "JW: FullPathName= " << GetFullPathName() << G4endl;
+    // G4cout << "JW: collectionName[1]=" << collectionName[1] << G4endl;
+    if (HCID < 0) {
+        HCID = G4SDManager::GetSDMpointer()->GetCollectionID(hitsCollection);
+    }
+    HCE->AddHitsCollection(HCID, hitsCollection);
+
+    for (G4int i = 0; i < max_tgs; i++){
+        //CupVetoHit *aHit = new CupVetoHit(i);
+        CupVetoHit *aHit = new CupVetoHit();
+        hitsCollection->insert(aHit);
+    }
+}
+
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
+
 G4bool AmoreVetoSD::ProcessHits(G4Step *aStep, G4TouchableHistory * /*ROhist*/) 
 {
-    G4EmSaturation *emSaturation = G4LossTableManager::Instance()->EmSaturation();
+    // G4cout << "JW:: AmoreVetoSD ProcessHits test" << G4endl;
+    G4double edep_quenched             = AmoreScintillation::GetTotEdepQuenched();
+    // G4EmSaturation *emSaturation = G4LossTableManager::Instance()->EmSaturation();
     //G4double edep_quenched = emSaturation->VisibleEnergyDeposition(aStep);
-    G4double edep_quenched = emSaturation->VisibleEnergyDepositionAtAStep(aStep);
-
-    G4double edep = aStep->GetTotalEnergyDeposit();
+    // G4double edep_quenched = emSaturation->VisibleEnergyDepositionAtAStep(aStep);
+    G4double edep                      = aStep->GetTotalEnergyDeposit();
     G4ParticleDefinition *particleType = aStep->GetTrack()->GetDefinition();
-    G4String particleName = particleType->GetParticleName();
+    G4String particleName              = particleType->GetParticleName();
 
-    if (edep == 0. || particleName == "opticalphoton") {
-        return true;
-    }
-    // G4cout << "JW: AmoreVetoSD::ProcessHits ---> edep_quenched= " << edep_quenched << G4endl;
+    // G4cout << "JW: AmoreVetoSD::ProcessHits ---> edep= " << edep << ", edep_quenched= " << edep_quenched << G4endl;
+    // G4cout << "JW: AmoreVetoSD::ProcessHits ---> particleName= " << particleName << G4endl;
+    if (edep == 0. || particleName == "opticalphoton") return true;
+    // if (particleName == "opticalphoton") return true;
 
     G4StepPoint *preStepPoint = aStep->GetPreStepPoint();
     G4TouchableHandle theTouchable = preStepPoint->GetTouchableHandle();
@@ -39,8 +67,9 @@ G4bool AmoreVetoSD::ProcessHits(G4Step *aStep, G4TouchableHistory * /*ROhist*/)
     G4String VolName = thePhysical->GetName();
     G4String motherVolName = theMotherPhysical->GetName();
     G4String envelopeVolName = theEnvelopePhysical->GetName();
-
-    // G4cout << "JW: MuonVeto copyNo= " << copyNo << G4endl;
+    // G4cout << "JW: AmoreVetoSD::ProcessHits ---> VolName= " << VolName << G4endl;
+    // G4cout << "JW: AmoreVetoSD::ProcessHits ---> motherVolName= " << motherVolName << G4endl;
+    // G4cout << "JW: AmoreVetoSD::ProcessHits ---> envelopeVolName= " << envelopeVolName << G4endl;
     switch(AmoreDetectorConstruction::GetDetGeometryType()){
         case eDetGeometry::kDetector_AMoRE200:{
             ifstream wherePS;
@@ -79,16 +108,25 @@ G4bool AmoreVetoSD::ProcessHits(G4Step *aStep, G4TouchableHistory * /*ROhist*/)
             break;
 
     }
+    // G4cout << "JW: MuonVeto copyNo= " << copyNo << G4endl;
     // G4cout << "             VolName= " << VolName << G4endl;
     // G4cout << "             motherCopyNo= " << motherCopyNo << G4endl;
     // G4cout << "             motherVolName= " << motherVolName << G4endl;
     // G4cout << "             envelopeCopyNo= " << envelopeCopyNo << G4endl;
     // G4cout << "             envelopeVolName= " << envelopeVolName << G4endl;
-    // G4cout << "      changed CopyNo = " << copyNo << G4endl;
+    G4int cellID = -1;
+    std::string prefix = "MuonVeto_Envelope";
+    if (envelopeVolName.find(prefix) == 0){
+        std::string cellIDStr = envelopeVolName.substr(prefix.length());
+        cellID = std::stoi(cellIDStr);
+        // cellID = (strstr(VolName, "PlasticScintO")) ? std::stoi(cellIDStr) : std::stoi(cellIDStr) + maxPSNo;
+        // G4cout << "             cellID= " << cellID << G4endl;
+    }
 
     CupVetoHit *aHit = (*hitsCollection)[copyNo];
     if (!(aHit->GetLogV())) {
         aHit->SetLogV(thePhysical->GetLogicalVolume());
+        // G4cout << "             LogV= " << thePhysical->GetLogicalVolume()->GetName() << G4endl;
         G4AffineTransform aTrans = theTouchable->GetHistory()->GetTopTransform();
         aTrans.Invert();
         aHit->SetRot(aTrans.NetRotation());
@@ -97,7 +135,10 @@ G4bool AmoreVetoSD::ProcessHits(G4Step *aStep, G4TouchableHistory * /*ROhist*/)
 
     aHit->AddEdep(edep);
     aHit->AddEdepQuenched(edep_quenched);
+    aHit->SetCellID(cellID);
 
     // return CupVetoSD::ProcessHits(aStep, ROhist);
     return true;
 }
+
+void AmoreVetoSD::EndOfEvent(G4HCofThisEvent * /*HCE*/){}

@@ -96,6 +96,30 @@ void AmoreDetectorConstruction::ConstructAMoRE200_ID(G4LogicalVolume *aWorkAreaL
 	G4LogicalVolume *logiWorkArea = aWorkAreaLV;
 	G4Material *WA_mat = logiWorkArea->GetMaterial();
 
+	/*
+	///////////////////////////////////////////////////////
+	// Build Source Housing: teflon tube
+	// diameter 12 mm and thickness 1 mm
+	///////////////////////////////////////////////////////
+	G4double housing_thickness = 1 * mm;
+	G4double housing_radius = 12 / 2. * mm;
+	G4double source_radius = 1 / 2. * mm;
+	G4double source_xpos = ss_radius + housing_radius + housing_thickness + solidBooleanTol;
+	G4double source_height[4] = {ss_inner_height_half * 5 / 10, ss_inner_height_half * 4 / 10, ss_inner_height_half * 3 / 10, ss_inner_height_half * 2 / 10};
+
+	G4Torus *SHousing1 = new G4Torus("SHousing1",
+									 housing_radius - housing_thickness, housing_radius, source_xpos, 0, 360. * degree);
+	G4LogicalVolume *logiSourceHousing = new G4LogicalVolume(SHousing1, _teflon, "SourceHousing1LV");
+
+	//////////////////////////////////////////////////////
+	// Build Source Volume: Thorium wire
+	// diameter 1 mm
+	//////////////////////////////////////////////////////
+	G4Torus *Source1 = new G4Torus("Source1", 0, source_radius, source_xpos, 0, 360. * degree);
+	// G4LogicalVolume *logiSourceVolume = new G4LogicalVolume(Source1, _ThWire, "SourceVolume1LV");
+	// G4LogicalVolume *logiSourceVolume = new G4LogicalVolume(Source1, _air, "SourceVolume1LV");
+	G4LogicalVolume *logiSourceVolume = new G4LogicalVolume(Source1, _FeWire, "SourceVolume1LV");
+	*/
 
 	///////////////////////////////////////////////////////
 	// Build Layer5_OVC Stainless Steel (SS)
@@ -109,9 +133,11 @@ void AmoreDetectorConstruction::ConstructAMoRE200_ID(G4LogicalVolume *aWorkAreaL
 									ss_radius, ss_inner_height_half, 0, 360. * deg);
 	G4VSolid *SSTop = new G4Box("SSTop",
 								sst_xsize_half, sst_ysize_half, sst_zsize_half);
-	G4VSolid *SSOVC0 = new G4UnionSolid("SSOVC0", SSCylinder, SSTop, nullptr,
-										{0, 0, ss_inner_height_half + sst_zsize_half});
-	G4LogicalVolume *logiSSOVC = new G4LogicalVolume(SSOVC0, _stainless, "logiSSOVC");
+	// G4VSolid *SSOVC0 = new G4UnionSolid("SSOVC0", SSCylinder, SSTop, nullptr,
+										// {0, 0, ss_inner_height_half + sst_zsize_half});
+	// G4LogicalVolume *logiSSOVC = new G4LogicalVolume(SSOVC0, _stainless, "logiSSOVC");
+	G4LogicalVolume *logiSSOVCTop = new G4LogicalVolume(SSTop, _aluminium, "logiSSOVCTop");
+	G4LogicalVolume *logiSSOVC = new G4LogicalVolume(SSCylinder, _stainless, "logiSSOVC");
 
 	///////////////////////////////////////////////////////
 	// For Radon Air
@@ -125,17 +151,33 @@ void AmoreDetectorConstruction::ConstructAMoRE200_ID(G4LogicalVolume *aWorkAreaL
 																   radonAirBox->GetZHalfLength() - SSCylinder->GetZHalfLength()));
 	G4LogicalVolume *radonAirLV = new G4LogicalVolume(radonAirSolid, _air, "RadonAir_LV");
 
+
 	///////////////////////////////////////////////////////
-	// Variables for calibraion source
+	// For Source Housing and Source Volume
 	///////////////////////////////////////////////////////
-	G4double source_length = 7 * m ;
+	G4double source_length = 7 * m;
 	G4int nSegments = 100;
 	G4double inner_radius = 0.5/2 * cm;
 	G4double outer_radius = 0.8/2 * cm;
 
 	G4double dTheta = (2.5 * M_PI) / nSegments;
 	G4double segment_length = source_length / nSegments;
-	G4double coil_radius = ss_radius + outer_radius + 1*mm;
+	G4double coil_radius = ss_radius + outer_radius + 1 * mm;
+	G4LogicalVolume *logiSourceHousing = MakeSource(_ThRubber, _polyurethane, nSegments, source_length, inner_radius, outer_radius);
+	for (int iseg = 0; iseg < nSegments; iseg++){
+		G4double theta = iseg * dTheta*1.4;
+		G4double x = coil_radius * cos(theta);
+		G4double y = coil_radius * sin(theta);
+		G4double z = SSCylinder->GetZHalfLength()/2/nSegments * iseg;
+		G4double angle = asin(SSCylinder->GetZHalfLength()/2/nSegments/segment_length);
+		G4RotationMatrix *rot = new G4RotationMatrix();
+		rot->rotateX(90*deg);
+		rot->rotateX(angle);
+		rot->rotateZ(theta);
+
+		G4ThreeVector pos = G4ThreeVector(0, 0, -SSCylinder->GetZHalfLength()/1.6) + G4ThreeVector(x, y, z);
+		new G4PVPlacement(G4Transform3D(*rot, pos), logiSourceHousing, "physSourceHousing" + to_string(iseg), radonAirLV, false, 0, OverlapCheck);
+	}
 
 	switch (whichSimType){
 		case kRockGammaMode:
@@ -149,6 +191,8 @@ void AmoreDetectorConstruction::ConstructAMoRE200_ID(G4LogicalVolume *aWorkAreaL
 			f200_OVCPhysical = new G4PVPlacement(nullptr,
 											 {0, 0, -SSCylinder->GetZHalfLength() - nShield_GapFromCeiling + ovc_gap},
 											 logiSSOVC, "physSSOVC", logiWorkArea, false, 0, OverlapCheck);
+			new G4PVPlacement(nullptr, G4ThreeVector(0, 0, -SSCylinder->GetZHalfLength() - nShield_GapFromCeiling + ovc_gap + ss_inner_height_half + sst_zsize_half),
+					logiSSOVCTop, "physSSOVCTop", logiWorkArea, false, 0, OverlapCheck);
 			break;
 		case kIdealMode:{
 			G4double ovcPosZ = boricacid_thickness + thin_lead_shield_thickness + lead_shield_thickness +
@@ -156,49 +200,38 @@ void AmoreDetectorConstruction::ConstructAMoRE200_ID(G4LogicalVolume *aWorkAreaL
 			f200_OVCPhysical = new G4PVPlacement(nullptr,
 											 {0, 0, SSCylinder->GetZHalfLength() + ovcPosZ + ovc_gap},
 											 logiSSOVC, "physSSOVC", logiWorkArea, false, 0, OverlapCheck);
+			new G4PVPlacement(nullptr, G4ThreeVector(0, 0, SSCylinder->GetZHalfLength() + ovcPosZ + ovc_gap + ss_inner_height_half + sst_zsize_half),
+					logiSSOVCTop, "physSSOVCTop", logiWorkArea, false, 0, OverlapCheck);
+
 			// Radon Air ------
 			new G4PVPlacement(nullptr, {0, 0, radonAirBox->GetZHalfLength() + ovcPosZ},
 						  radonAirLV, "RadonAir_PV", logiWorkArea, false, 0, OverlapCheck);
-			G4LogicalVolume *logiSourceHousing = MakeSource(_ThRubber, _polyurethane, nSegments, source_length, inner_radius, outer_radius);
-			for(int iseg = 0; iseg < nSegments; iseg++){
-				G4double theta = iseg * dTheta*1.4;
-				G4double x = coil_radius * cos(theta);
-				G4double y = coil_radius * sin(theta);
-				G4double z = SSCylinder->GetZHalfLength()/2/nSegments * iseg;
-				G4double angle = asin(SSCylinder->GetZHalfLength()/2/nSegments / segment_length);
-
-				G4RotationMatrix *rot = new G4RotationMatrix();
-				rot->rotateX(90*deg);
-				rot->rotateX(angle);
-				rot->rotateZ(theta);
-
-				G4ThreeVector pos = G4ThreeVector(x, y, z) + G4ThreeVector(0, 0, -SSCylinder->GetZHalfLength()/1.6);
-				new G4PVPlacement(G4Transform3D(*rot, pos), logiSourceHousing, "physSourceHousing" + to_string(iseg), radonAirLV, false, 0, OverlapCheck);
-			}
+			/*
+			for (int isrc = 0; isrc < 4; isrc++){
+				G4ThreeVector SourcePosition = G4ThreeVector(0, 0, -source_height[isrc]);
+				new G4PVPlacement(nullptr, SourcePosition,
+							  logiSourceHousing, "physSourceHousing" + to_string(isrc), radonAirLV, false, 0, OverlapCheck);
+				new G4PVPlacement(nullptr, SourcePosition,
+							  logiSourceVolume, "physSourceVolume" + to_string(isrc), radonAirLV, false, 0, OverlapCheck);
+			}  */
+			
 			break;}
 		case kRealMode:{
 			f200_OVCPhysical = new G4PVPlacement(nullptr, RealModel_shield_topPos + G4ThreeVector(0, 0, -SSCylinder->GetZHalfLength() + ovc_gap + nShield_GapFromCeiling),
 											 logiSSOVC, "physSSOVC", logiWorkArea, false, 0, OverlapCheck);
+			new G4PVPlacement(nullptr, RealModel_shield_topPos + G4ThreeVector(0, 0, -SSCylinder->GetZHalfLength() + ovc_gap + nShield_GapFromCeiling + ss_inner_height_half + sst_zsize_half),
+					logiSSOVCTop, "physSSOVCTop", logiWorkArea, false, 0, OverlapCheck);
 
 			new G4PVPlacement(nullptr, RealModel_shield_topPos + G4ThreeVector(0, 0, -radonAirBox->GetZHalfLength() + nShield_GapFromCeiling - 11 * cm + ovc_gap),
 						  radonAirLV, "RadonAir_PV", logiWorkArea, false, 0, OverlapCheck);
-
-			G4LogicalVolume *logiSourceHousing = MakeSource(_ThRubber, _polyurethane, nSegments, source_length, inner_radius, outer_radius);
-			for(int iseg = 0; iseg < nSegments; iseg++){
-				G4double theta = iseg * dTheta*1.4;
-				G4double x = coil_radius * cos(theta);
-				G4double y = coil_radius * sin(theta);
-				G4double z = SSCylinder->GetZHalfLength()/2/nSegments * iseg;
-				G4double angle = asin(SSCylinder->GetZHalfLength()/2/nSegments / segment_length);
-
-				G4RotationMatrix *rot = new G4RotationMatrix();
-				rot->rotateX(90*deg);
-				rot->rotateX(angle);
-				rot->rotateZ(theta);
-
-				G4ThreeVector pos = G4ThreeVector(x, y, z) + G4ThreeVector(0, 0, -SSCylinder->GetZHalfLength()/1.6);
-				new G4PVPlacement(G4Transform3D(*rot, pos), logiSourceHousing, "physSourceHousing" + to_string(iseg), radonAirLV, false, 0, OverlapCheck);
-			}
+			/*
+			for (int isrc = 0; isrc < 4; isrc++){
+				G4ThreeVector SourcePosition = G4ThreeVector(0, 0, -source_height[isrc]);
+				new G4PVPlacement(nullptr, SourcePosition,
+							  logiSourceHousing, "physSourceHousing" + to_string(isrc), radonAirLV, false, 0, OverlapCheck);
+				new G4PVPlacement(nullptr, SourcePosition,
+							  logiSourceVolume, "physSourceVolume" + to_string(isrc), radonAirLV, false, 0, OverlapCheck);
+			}*/
 			break;}
 		default:
 			break;
@@ -470,7 +503,7 @@ void AmoreDetectorConstruction::ConstructAMoRE200_ID(G4LogicalVolume *aWorkAreaL
 		cout << " (length: mm, weight: kg, global coordinate) \n"
 			 << endl;
 		cout << " OVC " << endl;
-		cout << "     mass            : " << logiSSOVC->GetMass(true, false) / kg << endl;
+		cout << "     mass            : " << logiSSOVC->GetMass(true, false) / kg << "(" << logiSSOVCTop->GetMass(true, false)/kg << ")" << endl;
 		cout << "     dimension (rxh) : " << SSCylinder->GetOuterRadius() << " x " << SSCylinder->GetZHalfLength() * 2 << endl;
 		cout << "     thickness       : " << OVCthick << "(" << OVCthickB << ")" << endl;
 		cout << "     coordinate      : " << globalPos_OVC << endl;
@@ -528,9 +561,9 @@ void AmoreDetectorConstruction::ConstructAMoRE200_ID(G4LogicalVolume *aWorkAreaL
 		cout << "     coordinate     : " << GetPhysicalVolumeByName("physSCshield")->GetTranslation() + globalPos_Cu1In << endl;
 		cout << " ================== Calibration system ==========" << endl;
 		cout << " Source housing" << endl;
-		cout << "     mass                 : " << G4LogicalVolumeStore::GetInstance()->GetVolume("SourceHousingLV", false)->GetMass(true, false) / kg * nSegments<< endl;
+		cout << "     mass               : " << G4LogicalVolumeStore::GetInstance()->GetVolume("SourceHousingLV", false)->GetMass(true, false) /kg * nSegments << endl;
 		cout << " Source volume" << endl;
-		cout << "     mass                 : " << G4LogicalVolumeStore::GetInstance()->GetVolume("SourceVolumeLV", false)->GetMass(true, false) / kg * nSegments << endl;
+		cout << "     mass               : " << G4LogicalVolumeStore::GetInstance()->GetVolume("SourceVolumeLV", false)->GetMass(true, false) / kg * nSegments<< endl;
 		cout << " ================== Crystal modules  ==========" << endl;
 		cout << " The number of towers                 : " << f200_TotTowerNum << endl;
 		cout << " The number of crystals in the tower  : " << nModuleInTower << endl;
@@ -679,9 +712,9 @@ void AmoreDetectorConstruction::ConstructAMoRE200_ID(G4LogicalVolume *aWorkAreaL
 		logiCuMCPVis->SetForceSolid(true);
 		logiCuP1Vis->SetForceSolid(true);
 		logiPbP2Vis->SetForceSolid(true);
-		// logiSSOVCVis->SetForceSolid(true);
 
 		logiSSOVC->SetVisAttributes(logiSSOVCVis);
+		logiSSOVCTop->SetVisAttributes(logiSSOVCVis);
 		// logiSSOVCIn->SetVisAttributes(logiTargetRoomVis);
 		logiCu4->SetVisAttributes(logiCu4Vis);
 		// logiCu4In->SetVisAttributes(logiTargetRoomVis);
@@ -743,6 +776,7 @@ G4LogicalVolume *AmoreDetectorConstruction::MakeSource(G4Material *sourceMat, G4
 
 	return logiSourceHousing;
 }
+
 
 ///////////////////////////////////////////////////////////////////////////////
 // Crystal module making function

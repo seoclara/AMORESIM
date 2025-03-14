@@ -34,6 +34,7 @@ void AmoreDetectorConstruction::ConstructAMoRE200_SDandField() {
 	// get pointer to logical volume
 
 	G4SDManager *SDman = G4SDManager::GetSDMpointer();
+	SDman->SetVerboseLevel(2);
 	G4String SDname;
 
 	CupScintSD *TGSD = new CupScintSD(SDname = "/CupDet/TGSD", f200_TotCrystalNum);
@@ -45,17 +46,40 @@ void AmoreDetectorConstruction::ConstructAMoRE200_SDandField() {
 	}
 
 	// CupVetoSD *PSOMD = new CupVetoSD(SDname = "/CupDet/MuonVetoSD", f200_TotPSNum);
-	AmoreVetoSD *PSMD = new AmoreVetoSD(SDname = "/CupDet/MuonVetoSD", f200_TotPSNum*2);
+	// AmoreVetoSD *PSMD = new AmoreVetoSD(SDname = "/CupDet/MuonVetoSD", f200_TotPSNum*2);
+	PSMD = new AmoreVetoSD(SDname = "/CupDet/MuonVetoSD", f200_TotPSNum*2);
 	SDman->AddNewDetector(PSMD);
-	auto PSO_PV = CupDetectorConstruction::GetPhysicalVolumeByName("PlasticScintO_PV");
-	auto PSO_LV = PSO_PV->GetLogicalVolume();
-	PSO_LV->SetSensitiveDetector(PSMD);
+	auto PSO_PV_long = CupDetectorConstruction::GetPhysicalVolumeByName("PlasticScintO_PVlong");
+	auto PSI_PV_long = CupDetectorConstruction::GetPhysicalVolumeByName("PlasticScintI_PVlong");
+	auto PSO_PV_short = CupDetectorConstruction::GetPhysicalVolumeByName("PlasticScintO_PVshort");
+	auto PSI_PV_short = CupDetectorConstruction::GetPhysicalVolumeByName("PlasticScintI_PVshort");
+
+	auto PSO_LV_long = PSO_PV_long->GetLogicalVolume();
+	G4cout << "JW: SD check: " << PSO_LV_long->GetName() << G4endl;
+	PSO_LV_long->SetSensitiveDetector(PSMD);
+	auto PSI_LV_long = PSI_PV_long->GetLogicalVolume();
+	PSI_LV_long->SetSensitiveDetector(PSMD);
+
+	auto PSO_LV_short = PSO_PV_short->GetLogicalVolume();
+	G4cout << "JW: SD check: " << PSO_LV_short->GetName() << G4endl;
+	PSO_LV_short->SetSensitiveDetector(PSMD);
+	auto PSI_LV_short = PSI_PV_short->GetLogicalVolume();
+	PSI_LV_short->SetSensitiveDetector(PSMD);
+
+
+	G4Region *PSRegion = new G4Region("PSVeto");
+	PSRegion->AddRootLogicalVolume(PSO_LV_long);
+	PSRegion->AddRootLogicalVolume(PSI_LV_long);
+	PSRegion->AddRootLogicalVolume(PSO_LV_short);
+	PSRegion->AddRootLogicalVolume(PSI_LV_short);
+	
+	
 
 	// CupVetoSD *PSIMD = new CupVetoSD(SDname = "/CupDet/MuonVetoSD", f200_TotPSNum);
 	// SDman->AddNewDetector(PSIMD);
-	auto PSI_PV = CupDetectorConstruction::GetPhysicalVolumeByName("PlasticScintI_PV");
-	auto PSI_LV = PSI_PV->GetLogicalVolume();
-	PSI_LV->SetSensitiveDetector(PSMD);
+	// auto PSI_PV = CupDetectorConstruction::GetPhysicalVolumeByName("PlasticScintI_PV");
+	// auto PSI_LV = PSI_PV->GetLogicalVolume();
+	// PSI_LV->SetSensitiveDetector(PSMD);
 
 /*
 	CupPMTSD *WCMD = new CupPMTSD(SDname = "/cupdet/pmt/inner", f200_TotPMTNum, 0, 10);

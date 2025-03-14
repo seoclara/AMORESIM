@@ -40,7 +40,6 @@ if("${AMORESIM_JOB_NAME}" STREQUAL "")
     set(AMORESIM_JOB_NAME "scratch" FORCE)
 endif()
 
-
 set(AMORESIM_DECAY_SOURCE_NAME "U238 Th232 K40 U235 Pb210 Na22 I125 I126 Te121 Te121m Te123m Te125m Te127m H3" CACHE STRING "Target isotopes list for decay simulation (Seperated by space)")
 set(AMORESIM_DECAY_RATE "4.9E-18 1.6E-18 1.8E-17 3.1E-17 1E-9 8.5E-9 1.4E-7 6.2E-7 4.2E-7 4.9E-8 6.7E-8 1.4E-7 7.6E-8 1.8E-9" CACHE STRING "Half life list for target isotopes (Seperated by space, Unit in Hz)")
 set(AMORESIM_NCORE "100" CACHE STRING "Total number of jobs for simulation of each isotope in the list")

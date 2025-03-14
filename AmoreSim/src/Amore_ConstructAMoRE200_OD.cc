@@ -184,6 +184,13 @@ G4LogicalVolume *AmoreDetectorConstruction::ConstructAMoRE200_OD()
 	G4LogicalVolume *logiRockShell = new G4LogicalVolume(RockBox, _rock, "logiRockShell");
 	logiRockShell->SetVisAttributes(visRock);
 
+	// Sphere type rock shell
+	//G4Sphere *RockSphere = new G4Sphere("RockSphere", 0, PS_housing_halfsize+5000*mm , 0, 360 * deg, 0, 90 * deg);
+	G4Sphere *RockSphere = new G4Sphere("RockSphere", 0, 10*m , 0, 360 * deg, 0, 180 * deg);
+	G4LogicalVolume *logiRockSphere = new G4LogicalVolume(RockSphere, _rock, "logiRockSphere");
+	logiRockSphere->SetVisAttributes(visRock);
+	
+
 	////////////////////////////////////////////
 	// Make Shield Solid and Logical volumes
 	////////////////////////////////////////////
@@ -256,8 +263,8 @@ G4LogicalVolume *AmoreDetectorConstruction::ConstructAMoRE200_OD()
 																	boricAcidBox->GetZHalfLength() + lead_housing_thickness - IDspaceBox->GetZHalfLength()));
 
 	// G4LogicalVolume *boricAcidLV = new G4LogicalVolume(boricAcidSolid, _BoricAcidRubber, "BoricAcid_LV"); // su-yeon
-	// G4LogicalVolume *boricAcidLV = new G4LogicalVolume(boricAcidSolid, _BoricAcidPowder, "BoricAcid_LV"); // su-yeon
-	G4LogicalVolume *boricAcidLV = new G4LogicalVolume(boricAcidSolid, _air, "BoricAcid_LV"); // su-yeon
+	G4LogicalVolume *boricAcidLV = new G4LogicalVolume(boricAcidSolid, _BoricAcidPowder, "BoricAcid_LV"); // su-yeon
+	// G4LogicalVolume *boricAcidLV = new G4LogicalVolume(boricAcidSolid, _air, "BoricAcid_LV"); // su-yeon
 	boricAcidLV->SetVisAttributes(boricAcidVisAttr);
 
 
@@ -447,6 +454,7 @@ G4LogicalVolume *AmoreDetectorConstruction::ConstructAMoRE200_OD()
 	G4LogicalVolume *logiCavern = nullptr;
 	G4VPhysicalVolume *physCavern = nullptr;
 
+	G4Sphere *rockgammaCavern = nullptr;
 	G4Sphere *neutronmodeCavern = nullptr;
 	G4Sphere *hemiSphereCavern = nullptr;
 	G4VSolid *realisticCavern = nullptr;
@@ -458,6 +466,15 @@ G4LogicalVolume *AmoreDetectorConstruction::ConstructAMoRE200_OD()
 	switch (whichSimType)
 	{
 		case kRockGammaMode: {// for rock gamma simulation
+			// Sphere shape rock shell for reference simulation
+			fRockPhysical = new G4PVPlacement(NULL, {0, 0, 0}, logiRockSphere, "physRock", logiWorld, false, 0, OverlapCheck);
+			rockgammaCavern = new G4Sphere("cavern_solid", 0, RockSphere->GetOuterRadius()-4000*mm , 0, 360 * deg, 0, 180 * deg);
+			logiCavern = new G4LogicalVolume(rockgammaCavern, _air, "logiCavern");
+			logiCavern->SetVisAttributes(visCavern);
+			physCavern = new G4PVPlacement(nullptr, {0, 0, 0}, logiCavern, "physCavern", logiRockSphere, false, 0, OverlapCheck);
+
+		/* // box shape rock shell for simple geometry
+
 			fRockPhysical = new G4PVPlacement(NULL, {0,0,0}, logiRockShell, 
 											"physRock", logiWorld, false, 0, OverlapCheck);
 			G4Box *rockgammaCavern = new G4Box("cavern_solid",
@@ -468,6 +485,7 @@ G4LogicalVolume *AmoreDetectorConstruction::ConstructAMoRE200_OD()
 			logiCavern = new G4LogicalVolume(rockgammaCavern, _air, "logiCavern");
 			physCavern = new G4PVPlacement(nullptr, {0, 0, 0}, logiCavern, "physCavern", logiRockShell, false, 0, OverlapCheck);
 			logiCavern->SetVisAttributes(visCavern);
+			*/
 
 			break;}
 
@@ -1201,11 +1219,11 @@ G4LogicalVolume *AmoreDetectorConstruction::ConstructAMoRE200_OD()
 	new G4PVPlacement(nullptr, {0, 0, lead_shield_thickness / 2.},
 					  ThinLeadShieldLV, "ThinLeadShield_PV", leadShieldLV, false, 0, OverlapCheck);
 
-/*
+// /*
 	// Boric Acid ----------
 	new G4PVPlacement(nullptr, {0, 0, thin_lead_shield_thickness / 2.},
 					  boricAcidLV, "InnerBoricAcid_PV", ThinLeadShieldLV, false, 0, OverlapCheck);
-					  */
+					//   */
 
 
 	//////////////////////////////////////////
@@ -1704,7 +1722,11 @@ G4LogicalVolume *AmoreDetectorConstruction::ConstructAMoRE200_OD()
 		{
 			case kRockGammaMode:
 				cout << " Rock for rockgamma simulation" << endl;
-				cout << "     shell mass  : " << logiRockShell->GetMass(true, false) / kg << endl;
+				// cout << "     shell mass  : " << logiRockShell->GetMass(true, false) / kg << endl;
+				cout << "      mass     : " << logiRockSphere->GetMass(true, false) / kg << endl;
+				cout << "    dimension (r): " << RockSphere->GetOuterRadius() << endl;
+				cout << " Cavern (rockgamma simulation ) " << endl;
+				cout << "     dimension (r): " << rockgammaCavern->GetOuterRadius() << endl;
 				break;
 			case kNeutronMode:
 				cout << " Cavern" << endl;

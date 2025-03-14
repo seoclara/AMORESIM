@@ -17,6 +17,7 @@
 #include "G4VisExtent.hh"
 #include "G4ios.hh"
 #include "globals.hh"
+#include "G4ParallelWorldProcess.hh"
 
 AmoreSteppingAction::AmoreSteppingAction(AmoreRootNtuple *r) : CupSteppingAction(r){}
 AmoreSteppingAction::AmoreSteppingAction(AmoreRootNtuple *r, CupPrimaryGeneratorAction *p)
@@ -24,6 +25,41 @@ AmoreSteppingAction::AmoreSteppingAction(AmoreRootNtuple *r, CupPrimaryGenerator
 
 void AmoreSteppingAction::UserSteppingAction(const G4Step *aStep) {
     CupSteppingAction::UserSteppingAction(aStep);
+    G4Track* trk = aStep->GetTrack();
+    const G4Step* pStep = &(*aStep);
+    const G4Step* hStep = G4ParallelWorldProcess::GetHyperStep();
+    if(hStep != nullptr) pStep = hStep;
+
+    G4StepPoint* postStepPoint = pStep->GetPostStepPoint();
+    // if(postStepPoint->GetStepStatus() == fWorldBoundary){
+    if(postStepPoint->GetPhysicalVolume() == nullptr){
+    // if(pStep->GetPostStepPoint()->GetPhysicalVolume() == nullptr) {
+        // trk->SetTrackStatus(fStopAndKill);
+        trk->SetTrackStatus(fKillTrackAndSecondaries);
+        return;
+    }
+
+    if(trk->GetDefinition()->GetParticleName() == "opticalphoton") {
+        if(pStep->GetPostStepPoint()->GetStepStatus() == fGeomBoundary){
+    	    G4VPhysicalVolume* thePrePV  = pStep->GetPreStepPoint()->GetPhysicalVolume();
+    	    G4VPhysicalVolume* thePostPV = pStep->GetPostStepPoint()->GetPhysicalVolume();
+    	    G4String prevolName = thePrePV->GetName();
+    	    G4String postvolName = thePostPV->GetName();
+    	    G4String prematName = thePrePV->GetLogicalVolume()->GetMaterial()->GetName();
+    	    G4String postmatName = thePostPV->GetLogicalVolume()->GetMaterial()->GetName();
+    	    if (prematName == "PMT_Vac" && postmatName == "PMT_Vac") {
+              	trk->SetTrackStatus(fStopAndKill);
+                return;
+        	}
+        }
+    }
+    /*
+    G4VPhysicalVolume*  trkVolume = aStep->GetTrack()->GetNextVolume();
+    if(trkVolume->GetName() == "physWorld") {
+        trk->SetTrackStatus(fStopAndKill);
+        return;
+    }    
+    */
     /*
     const G4Track* trk = aStep->GetTrack();
     G4cout << "PreStep " << aStep->GetPreStepPoint()->GetPosition()

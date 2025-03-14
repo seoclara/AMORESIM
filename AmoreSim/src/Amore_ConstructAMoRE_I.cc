@@ -7496,7 +7496,8 @@ void AmoreDetectorConstruction::ConstructAMoRE_I() {
 			leadBoxsize - leadBoxThickness, leadBoxzsize - leadBoxThickness / 2.);
 	PbBox     = new G4SubtractionSolid("PbBox", PbBoxOut, PbBoxIn, 0,
 			G4ThreeVector(leadBoxThickness / 2., 0, leadBoxThickness / 2.));
-	logiPbBox = new G4LogicalVolume(PbBox, _stainless, "logiPbBox");
+	// logiPbBox = new G4LogicalVolume(PbBox, _stainless, "logiPbBox");
+	logiPbBox = new G4LogicalVolume(PbBox, _aluminium, "logiPbBox");
 
 	PbBlockOut =
 		new G4Box("PbBlockOut", leadBoxsize / 2. - leadBoxHousingThickness,

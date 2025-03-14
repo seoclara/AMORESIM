@@ -91,24 +91,37 @@ void AmoreParallelWorldConstruction::ConstructSD(){
             // Set PMT sensitive detector
             G4SDManager* SDman = G4SDManager::GetSDMpointer();
             G4String pmtSDWCname = "/cupdet/pmt/inner";
-            pmtSDWC = new CupPMTSD(pmtSDWCname, maxWCPMTNo, 0, 10); 
+            pmtSDWC = new CupPMTSD(pmtSDWCname, maxWCPMTNo+1, 0, 10); 
             SDman->AddNewDetector(pmtSDWC);
 
 	        // Set PMT Optical modle for AMoRE-II WCMD
             G4cout << "Set PMT Optical Model for AMoRE-II WCMD" << G4endl;
-            G4VPhysicalVolume* PMT_body_phys = CupDetectorConstruction::GetPhysicalVolumeByName("WCPMT_body_phys");
-            if (PMT_body_phys == NULL) {
-                G4Exception(" ", " ", JustWarning, "Could not find PMT_body_phys!");
-            } else G4cout << "found PMT_body_phys: " << PMT_body_phys->GetName() << G4endl;
+            G4VPhysicalVolume* PMT10_body_phys = CupDetectorConstruction::GetPhysicalVolumeByName("WCPMT10_body_phys");
+            G4VPhysicalVolume* PMT8_body_phys = CupDetectorConstruction::GetPhysicalVolumeByName("WCPMT8_body_phys");
+            if (PMT10_body_phys == NULL) {
+                G4Exception(" ", " ", JustWarning, "Could not find PMT10_body_phys!");
+            } else G4cout << "found PMT10_body_phys: " << PMT10_body_phys->GetName() << G4endl;
+            if (PMT8_body_phys == NULL) {
+                G4Exception(" ", " ", JustWarning, "Could not find PMT8_body_phys!");
+            } else G4cout << "found PMT8_body_phys: " << PMT8_body_phys->GetName() << G4endl;
 
-            G4LogicalVolume* PMT_body_log = PMT_body_phys->GetLogicalVolume();
-            PMT_body_log->SetSensitiveDetector(pmtSDWC);
+            G4LogicalVolume* PMT10_body_log = PMT10_body_phys->GetLogicalVolume();
+            PMT10_body_log->SetSensitiveDetector(pmtSDWC);
+            G4LogicalVolume* PMT8_body_log = PMT8_body_phys->GetLogicalVolume();
+            PMT8_body_log->SetSensitiveDetector(pmtSDWC);
 
-            G4VPhysicalVolume* PMT_inner1_phys = CupDetectorConstruction::GetPhysicalVolumeByName("WCPMT_inner1_phys");
-            G4LogicalVolume* PMT_inner1_log = PMT_inner1_phys->GetLogicalVolume();
-            PMT_inner1_log->SetSensitiveDetector(pmtSDWC);
+            G4VPhysicalVolume* PMT10_inner1_phys = CupDetectorConstruction::GetPhysicalVolumeByName("WCPMT10_inner1_phys");
+            G4LogicalVolume* PMT10_inner1_log = PMT10_inner1_phys->GetLogicalVolume();
+            PMT10_inner1_log->SetSensitiveDetector(pmtSDWC);
+            G4VPhysicalVolume* PMT8_inner1_phys = CupDetectorConstruction::GetPhysicalVolumeByName("WCPMT8_inner1_phys");
+            G4LogicalVolume* PMT8_inner1_log = PMT8_inner1_phys->GetLogicalVolume();
+            PMT8_inner1_log->SetSensitiveDetector(pmtSDWC);
 
-            new CupPMTOpticalModel("WCPMT_optical_model", PMT_body_phys);
+            G4Region *PmtRegion = new G4Region("WCPMT");
+            PmtRegion->AddRootLogicalVolume(PMT10_body_log);
+            PmtRegion->AddRootLogicalVolume(PMT8_body_log);
+            new CupPMTOpticalModel("WCPMT_optical_model", PMT10_body_phys);
+            new CupPMTOpticalModel("WCPMT_optical_model", PMT8_body_phys);
             G4cout << "PMT Optical Model done" << G4endl;
             break;
         }

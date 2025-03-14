@@ -2,6 +2,7 @@
 
 #include "AmoreSim/AmoreDetectorConstruction.hh" // the DetectorConstruction class header
 #include "AmoreSim/AmoreDetectorStaticInfo.hh"
+#include "AmoreSim/AmoreVetoSD.hh"
 
 #include "CupSim/CupParam.hh"
 #include "CupSim/CupVetoSD.hh"
@@ -27,7 +28,7 @@ using namespace std;
 using namespace AmoreDetectorStaticInfo;
 using namespace AmoreDetectorStaticInfo::AMoRE_200;
 
-static G4LogicalVolume *MakePS(G4String type);
+//static G4LogicalVolume *MakePS(G4String type);
 
 void AmoreDetectorConstruction::ConstructAMoRE200_PSMD()
 {
@@ -117,7 +118,7 @@ void AmoreDetectorConstruction::ConstructAMoRE200_PSMD()
     ////////////////////////////////////////////
 	// --- position the plastic scintillators
 	////////////////////////////////////////////
-	G4int region, ps_id;
+	G4int copyno, region, ps_id;
 	G4double cood_x, cood_y, cood_z, ps_size;
 
 	G4RotationMatrix *psRotMtx = new G4RotationMatrix();
@@ -130,6 +131,9 @@ void AmoreDetectorConstruction::ConstructAMoRE200_PSMD()
 
 	G4RotationMatrix *bpsRotMtx = new G4RotationMatrix();
 	bpsRotMtx->rotateY(90*deg);
+
+	G4LogicalVolume *logi_longPS = MakePS("long", PSMD);
+	G4LogicalVolume *logi_shortPS = MakePS("short", PSMD);
 
 	while (wherePS.good()) {
 		// get a line from the file
@@ -144,9 +148,10 @@ void AmoreDetectorConstruction::ConstructAMoRE200_PSMD()
 		istringstream lineStream(linebuffer);
 
 		// parse out region, coordinates,
-		region = ps_id = -1;
+		copyno = region = ps_id = -1;
 		cood_x = cood_y = cood_z = ps_size = 0.0;
-		lineStream >> region >> ps_id >> cood_x >> cood_y >> cood_z >> ps_size;
+		lineStream >> copyno >> region >> ps_id >> cood_x >> cood_y >> cood_z >> ps_size;
+		G4cout << "JW: loaded copyno= " << copyno << " region= " << region << " ps_id= " << ps_id << G4endl;
 
 		// check for bad data
 		if (lineStream.fail() || region < 0 || (cood_x == 0. && cood_y == 0. && cood_z == 0.) || ps_size == 0.) {
@@ -156,30 +161,33 @@ void AmoreDetectorConstruction::ConstructAMoRE200_PSMD()
 		}
 
 		// a possible DAQ numbering
-		int ith = ps_id;
+		int cellid = ps_id;
+		int ith = copyno;
 
 		// name this PS
 		char PSname[64];
-		sprintf(PSname, "MuonVeto_Envelope%d", ith);
+		sprintf(PSname, "MuonVeto_Envelope%d", cellid);
 
 		// position the PS
 		G4ThreeVector pos(cood_x, cood_y, cood_z);
 
 		// place the PS
 		if (region < 9){ // side PS
-			new G4PVPlacement(G4Transform3D(*psRotMtx, pos), PSname, MakePS("long"), VetoHousingSide_PV, false, ith, OverlapCheck);
+			new G4PVPlacement(G4Transform3D(*psRotMtx, pos), PSname, logi_longPS, VetoHousingSide_PV, false, ith, OverlapCheck);
 		} else if (region < 11){ // bottom PS
-			new G4PVPlacement(G4Transform3D(*bpsRotMtx, pos), PSname, MakePS("long"), VetoHousingBottom_PV, false, ith, OverlapCheck);
+			new G4PVPlacement(G4Transform3D(*bpsRotMtx, pos), PSname, logi_longPS, VetoHousingBottom_PV, false, ith, OverlapCheck);
 		} else if (ps_size == longPSlength) { // vertical side PS
-			new G4PVPlacement(G4Transform3D(*vpsRotMtx, pos), PSname, MakePS("long"), VetoHousingSide_PV, false, ith, OverlapCheck);
+			new G4PVPlacement(G4Transform3D(*vpsRotMtx, pos), PSname, logi_longPS, VetoHousingSide_PV, false, ith, OverlapCheck);
 		} else{ // vertical side PS
-			new G4PVPlacement(G4Transform3D(*vpsRotMtx, pos), PSname, MakePS("short"), VetoHousingSide_PV, false, ith, OverlapCheck);
+			new G4PVPlacement(G4Transform3D(*vpsRotMtx, pos), PSname, logi_shortPS, VetoHousingSide_PV, false, ith, OverlapCheck);
 		}
+		G4cout << "JW: PSname= " << PSname << " pos= " << pos << G4endl;
+		G4cout << "JW: region= " << region << " psid= " << cellid << " copyno= " << ith << G4endl;
 
-		if (ith == 12 || ith == 3*12 || ith == 5*12+17 || ith == 7*12+17) {
+		if (cellid == 12 || cellid == 3*12 || cellid == 5*12+17 || cellid == 7*12+17) {
 			psRotMtx->rotateZ(-90*deg);
 		}
-		if (ith == 132 || ith == 135 || ith == 138 || ith == 141){
+		if (cellid == 132 || cellid == 135 || cellid == 138 || cellid == 141){
 			vpsRotMtx->rotateZ(90*deg);
 		}
 	}
@@ -344,12 +352,13 @@ void AmoreDetectorConstruction::ConstructAMoRE200_PSMD()
 
 }
 
-static G4LogicalVolume *MakePS(G4String type)
+// static G4LogicalVolume *MakePS(G4String type)
+G4LogicalVolume *AmoreDetectorConstruction::MakePS(const G4String &type, G4VSensitiveDetector *vetoSD)
 {
 	////////////////////////////////////////////
 	// --- Muon Veto (Plastic scintillator)
 	////////////////////////////////////////////
-	G4bool OverlapCheck = false;
+	//OverlapCheck = false;
     CupParam &db ( CupParam::GetDB() );
 	G4double plastic_scintillator_thickness = db["plastic_scintillator_thickness"];
 	G4double plastic_veto_width        = db["plastic_veto_width"];
@@ -366,8 +375,10 @@ static G4LogicalVolume *MakePS(G4String type)
 	// plastic scintillator
 	auto plasticScintBox = new G4Box("PlasticScint_Box", 
 				plastic_scintillator_thickness/2., PSlength, plastic_veto_width/2. - veto_frame_thickness);
-	auto plasticScintOLV = new G4LogicalVolume(plasticScintBox, G4Material::GetMaterial("G4_PLASTIC_SC_VINYLTOLUENE"), "PlasticScintO_LV");
-	auto plasticScintILV = new G4LogicalVolume(plasticScintBox, G4Material::GetMaterial("G4_PLASTIC_SC_VINYLTOLUENE"), "PlasticScintI_LV");
+	auto plasticScintOLV = new G4LogicalVolume(plasticScintBox, G4Material::GetMaterial("G4_PLASTIC_SC_VINYLTOLUENE"), "PlasticScintO_LV"+type);
+	plasticScintOLV->SetSensitiveDetector(vetoSD);
+	auto plasticScintILV = new G4LogicalVolume(plasticScintBox, G4Material::GetMaterial("G4_PLASTIC_SC_VINYLTOLUENE"), "PlasticScintI_LV"+type);
+	plasticScintILV->SetSensitiveDetector(vetoSD);
 
 	auto plasticScintVis = new G4VisAttributes(G4Colour(0.8, 1.0, 0.725, 0.4));
 	plasticScintVis->SetForceSolid(true);
@@ -378,13 +389,13 @@ static G4LogicalVolume *MakePS(G4String type)
 	auto plasticScintHolderBox = new G4Box("AluminiumHolder_Box",
 			al_plate_thickness/2., PSlength, plastic_veto_width/2. - veto_frame_thickness);
 
-	auto aluminiumHolderLV = new G4LogicalVolume(plasticScintHolderBox, G4Material::GetMaterial("Aluminium"), "AluminiumHolder_LV");
+	auto aluminiumHolderLV = new G4LogicalVolume(plasticScintHolderBox, G4Material::GetMaterial("Aluminium"), "AluminiumHolder_LV"+type);
 	aluminiumHolderLV->SetVisAttributes(G4Colour(0.6, 0.6, 0.7, 0.1));
 
 	// air volume
 	auto plasticVetoAirBox = new G4Box("PlasticVetoAir_Box",
 			plastic_veto_thickness/2. - veto_frame_thickness, PSlength, plastic_veto_width/2. - veto_frame_thickness);
-	auto plasticVetoAirLV = new G4LogicalVolume(plasticVetoAirBox, G4Material::GetMaterial("Air"), "PlasticVetoAir_LV");
+	auto plasticVetoAirLV = new G4LogicalVolume(plasticVetoAirBox, G4Material::GetMaterial("Air"), "PlasticVetoAir_LV"+type);
 
 	// muon veto box
 	auto plasticVetoBox = new G4Box("PlasticVeto_Box",
@@ -400,30 +411,30 @@ static G4LogicalVolume *MakePS(G4String type)
 			plasticVetoSolid1, plasticVetoCut,0,
 			{-plastic_veto_thickness + veto_frame_thickness/2. - solidBooleanTol,0,0});
 
-	auto PSLV = new G4LogicalVolume(plasticVetoSolid, G4Material::GetMaterial("StainlessSteel"), "PlasticVetoEnvelope_LV");
+	auto PSLV = new G4LogicalVolume(plasticVetoSolid, G4Material::GetMaterial("StainlessSteel"), "PlasticVetoEnvelope_LV"+type);
 	auto stainlessVis = new G4VisAttributes(G4Colour(0.6, 0.6, 0.7, 0.9));
 	stainlessVis->SetForceSolid(true);
 	PSLV->SetVisAttributes(stainlessVis);
 
 	// place the inner components of the Veto Box
 	new G4PVPlacement(nullptr, G4ThreeVector(0.,0.,0.), plasticVetoAirLV, 
-		"PlasticVetoAir_PV", PSLV, false, 0, OverlapCheck);
+		"PlasticVetoAir_PV"+type, PSLV, false, 0, OverlapCheck);
 
 	new G4PVPlacement(nullptr, G4ThreeVector(
 		plastic_veto_thickness/2. - veto_frame_thickness - al_plate_thickness/2.,0,0), 
-		aluminiumHolderLV, "AluminiumHolder_PV", plasticVetoAirLV, false, 0, OverlapCheck);
+		aluminiumHolderLV, "AluminiumHolder_PV"+type, plasticVetoAirLV, false, 0, OverlapCheck);
 
 	new G4PVPlacement(nullptr, G4ThreeVector(
 		-plastic_veto_thickness/2. + veto_frame_thickness + al_plate_thickness/2.,0,0), 
-		aluminiumHolderLV, "AluminiumHolder_PV", plasticVetoAirLV, false, 0, OverlapCheck);
+		aluminiumHolderLV, "AluminiumHolder_PV"+type, plasticVetoAirLV, false, 0, OverlapCheck);
 
 	new G4PVPlacement(nullptr, G4ThreeVector(
 		plastic_veto_thickness/2. - veto_frame_thickness - al_plate_thickness - plastic_scintillator_thickness/2.,0, 0), 
-		plasticScintOLV, "PlasticScintO_PV", plasticVetoAirLV, false, 0, OverlapCheck);
+		plasticScintOLV, "PlasticScintO_PV"+type, plasticVetoAirLV, false, 0, OverlapCheck);
 
 	new G4PVPlacement(nullptr, G4ThreeVector(
 		-plastic_veto_thickness/2. + veto_frame_thickness + al_plate_thickness + plastic_scintillator_thickness/2.,0, 0),
-		plasticScintILV, "PlasticScintI_PV", plasticVetoAirLV, false, 0, OverlapCheck);
+		plasticScintILV, "PlasticScintI_PV"+type, plasticVetoAirLV, false, 0, OverlapCheck);
 
 	//auto PSRegion = new G4Region("PS_muonveto");
 	// PSRegion->AddRootLogicalVolume(plasticScintOLV);

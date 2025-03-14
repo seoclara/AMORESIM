@@ -319,8 +319,10 @@ void AmoreDetectorConstruction::ConstructMaterials() {
 
 	// ... insert any additional material definitions here
 	G4NistManager *nist = G4NistManager::Instance();
-	G4Isotope *Mo98 = new G4Isotope(name = "Molybdenum98", iz = 42, n = 98, a = 97.9054073 * g / mole);
-	_elementMo98 = new G4Element(name = "enriched Molybdenum", symbol = "Mo", nisotope = 1);
+	G4Isotope *Mo98 =
+		new G4Isotope(name = "Molybdenum98", iz = 42, n = 98, a = 97.9054073 * g / mole);
+	G4Element *_elementMo98 =
+		new G4Element(name = "enriched Molybdenum", symbol = "Mo", nisotope = 1);
 	_elementMo98->AddIsotope(Mo98, abundance = 100. * perCent);
 
 	_elementB = nist->FindOrBuildElement("B");
