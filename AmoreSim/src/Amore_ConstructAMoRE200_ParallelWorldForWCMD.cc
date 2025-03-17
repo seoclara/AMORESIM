@@ -169,7 +169,8 @@ void AmoreParallelWorldConstruction::ConstructAMoRE200_ParallelWorldForWCMD()
 		WCPMTno = region_c;
 
 		// name this PMT
-		sprintf(PMTname, "physWCPMT%d", WCPMTno);
+		// sprintf(PMTname, "physWCPMT%d", WCPMTno);
+		snprintf(PMTname, sizeof(PMTname), "physWCPMT%d", WCPMTno);
 
 		// calculate angles and positions
 		// we want PMTS to point normal to the surface they're mounted on

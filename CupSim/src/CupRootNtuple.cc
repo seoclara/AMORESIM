@@ -295,9 +295,12 @@ void CupRootNtuple::RecordTrack(const G4Track *a_track) {
     char volname[100];
     char prcsname[100];
 
-    sprintf(partname, "%s", (char *)pname.data());
-    sprintf(volname, "%s", (char *)volume.data());
-    sprintf(prcsname, "%s", (char *)procname.data());
+    // sprintf(partname, "%s", (char *)pname.data());
+    // sprintf(volname, "%s", (char *)volume.data());
+    // sprintf(prcsname, "%s", (char *)procname.data());
+    snprintf(partname, sizeof(partname), "%s", (char *)pname.data());
+    snprintf(volname, sizeof(volname), "%s", (char *)volume.data());
+    snprintf(prcsname, sizeof(prcsname), "%s", (char *)procname.data());
 
     G4ParticleDefinition *pdef = a_track->GetDefinition();
     if (G4IonTable::IsIon(pdef)) {
@@ -367,9 +370,12 @@ void CupRootNtuple::RecordStep(const G4Step *a_step) {
     char prcsname[100];
     char volname[100];
 
-    sprintf(partname, "%s", (char *)pname.data());
-    sprintf(volname, "%s", (char *)volume.data());
-    sprintf(prcsname, "%s", (char *)procname.data());
+    // sprintf(partname, "%s", (char *)pname.data());
+    // sprintf(volname, "%s", (char *)volume.data());
+    // sprintf(prcsname, "%s", (char *)procname.data());
+    snprintf(partname, sizeof(partname), "%s", (char *)pname.data());
+    snprintf(volname, sizeof(volname), "%s", (char *)volume.data());
+    snprintf(prcsname, sizeof(prcsname), "%s", (char *)procname.data());
 
     G4ParticleDefinition *pdef = a_step->GetTrack()->GetDefinition();
     if (G4IonTable::IsIon(pdef)) {
@@ -399,7 +405,8 @@ void CupRootNtuple::RecordStep(const G4Step *a_step) {
     }
     // Access physical volume where primary particles generated
     if (istep == 1 && prntid == 0 && trid == 1) {
-        sprintf(volumeName, "%s", (char *)volume.data());
+        // sprintf(volumeName, "%s", (char *)volume.data());
+        snprintf(volumeName, sizeof(volumeName), "%s", (char *)volume.data());
         copyNo = motherCopyNo;
         G4String motherVolName;
     }
@@ -427,12 +434,14 @@ void CupRootNtuple::SetEventInfo(const G4Event *a_event) {
         for (i = db.begin(); i != db.end(); i++) {
             G4String key((*i).first);
             char branchName[80];
-            sprintf(branchName, "database.%s", key.c_str());
+            // sprintf(branchName, "database.%s", key.c_str());
+            snprintf(branchName, sizeof(branchName), "database.%s", key.c_str());
             TBranch *b = fROOTRunTree->GetBranch(branchName);
             if (b == NULL) {
                 double dummy = 0.0;
                 char leafFormat[80];
-                sprintf(leafFormat, "%s/D", key.c_str());
+                // sprintf(leafFormat, "%s/D", key.c_str());
+                snprintf(leafFormat, sizeof(leafFormat), "%s/D", key.c_str());
                 b                = fROOTRunTree->Branch(branchName, &dummy, leafFormat);
                 int nTreeEntries = (int)(fROOTRunTree->GetEntries());
                 if (nTreeEntries > 0) {
@@ -494,7 +503,8 @@ void CupRootNtuple::SetPrimary(const G4Event *a_event) {
             ke = sqrt(p->GetMass() * p->GetMass() + p->GetMomentum().mag2()) - p->GetMass();
             G4String parname = p->GetG4code()->GetParticleName();
             char tName[100];
-            sprintf(tName, "%s", (char *)parname.data());
+            // sprintf(tName, "%s", (char *)parname.data());
+            snprintf(tName, sizeof(tName), "%s", (char *)parname.data());
 
             vrtx.SetT0(pv->GetT0());
             vrtx.SetX0(pv->GetX0());

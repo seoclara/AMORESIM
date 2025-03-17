@@ -113,9 +113,11 @@ CupPrimaryGeneratorAction::CupPrimaryGeneratorAction(CupDetectorConstruction *ar
     {
         for (int i = 0; i < theNumEventTypes; i++) {
             char key[16];
-            sprintf(key, "gen.rate%d", i);
+            // sprintf(key, "gen.rate%d", i);
+            snprintf(key, sizeof(key), "gen.rate%d", i);
             myEventRate[i] = db.GetWithDefault(key, 0.0);
-            sprintf(key, "gen.trig%d", i);
+            // sprintf(key, "gen.trig%d", i);
+            snprintf(key, sizeof(key), "gen.trig%d", i);
             switch (i) {
                 case 32: // C-14 in scintillator
                 case 33: // U-238  in rock
@@ -156,7 +158,8 @@ CupPrimaryGeneratorAction::CupPrimaryGeneratorAction(CupDetectorConstruction *ar
         for (i = 0; i < theNumVertexGenCodes; i++)
             if (theVertexGenerators[i] == NULL) {
                 char dbname[16];
-                sprintf(dbname, "gen.vtx%d", i);
+                // sprintf(dbname, "gen.vtx%d", i);
+                snprintf(dbname, sizeof(dbname), "gen.vtx%d", i);
                 theVertexGenerators[i] = new CupVertexGen_HEPEvt(dbname);
             }
 
@@ -170,7 +173,8 @@ CupPrimaryGeneratorAction::CupPrimaryGeneratorAction(CupDetectorConstruction *ar
         for (i = 0; i < theNumPosGenCodes; i++)
             if (thePositionGenerators[i] == NULL) {
                 char dbname[16];
-                sprintf(dbname, "gen.pos%d", i);
+                // sprintf(dbname, "gen.pos%d", i);
+                snprintf(dbname, sizeof(dbname), "gen.pos%d", i);
                 thePositionGenerators[i] = new CupPosGen_PointPaintFill(dbname);
             }
 
@@ -203,7 +207,8 @@ void CupPrimaryGeneratorAction::SetEventRate(int i, double r) {
 
     CupParam &db(CupParam::GetDB());
     char key[16];
-    sprintf(key, "gen.rate%d", i);
+    // sprintf(key, "gen.rate%d", i);
+    snprintf(key, sizeof(key), "gen.rate%d", i);
     db[key] = r;
 }
 
@@ -212,7 +217,8 @@ void CupPrimaryGeneratorAction::SetEventTriggerCondition(int iev, int itc) {
 
     CupParam &db(CupParam::GetDB());
     char key[16];
-    sprintf(key, "gen.trig%d", iev);
+    // sprintf(key, "gen.trig%d", iev);
+    snprintf(key, sizeof(key), "gen.trig%d", iev);
     db[key] = itc;
 }
 

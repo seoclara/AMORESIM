@@ -1214,10 +1214,12 @@ void AmoreDetectorConstruction::ConstructAMoREPilotRUN5() {
   }
   fPilot_logiCMOCell = new G4LogicalVolume *[CMOCellNum];
   for (int nn = 0; nn < 6; nn++) { //  5 layers
-    sprintf(namecmo, "CMOCell%d", nn);
+    // sprintf(namecmo, "CMOCell%d", nn);
+    snprintf(namecmo, sizeof(namecmo), "CMOCell%d", nn);
     CMOCell[nn] = new G4EllipticalTube(namecmo, // name
                                        cmocell_lr[nn], cmocell_sr[nn], cmocell_h[nn]);
-    sprintf(namecmo, "logiCMOCell%d", nn);
+    // sprintf(namecmo, "logiCMOCell%d", nn);
+    snprintf(namecmo, sizeof(namecmo), "logiCMOCell%d", nn);
     logiCMOCell[nn] = new G4LogicalVolume(CMOCell[nn], CaMoO4, namecmo, 0, 0, 0);
     fPilot_logiCMOCell[nn] = logiCMOCell[nn];
 
@@ -1225,7 +1227,8 @@ void AmoreDetectorConstruction::ConstructAMoREPilotRUN5() {
 
     PosCMOCell = G4ThreeVector(zero, zero, zCell[nn]);
 
-    sprintf(namecmo, "physCMOCell%d", nn);
+    // sprintf(namecmo, "physCMOCell%d", nn);
+    snprintf(namecmo, sizeof(namecmo), "physCMOCell%d", nn);
     new G4PVPlacement(nullptr, PosCMOCell, logiCMOCell[nn], namecmo, logiTargetRoom, false, copyNo);
     G4cout << "###   " << logiCMOCell[nn]->GetName() << "  " << logiCMOCell[nn]->GetMass() / kg
            << "  " << zCell[nn] << "  " << PosTR << "  " << PosInnerDet << G4endl;
@@ -1437,7 +1440,8 @@ void AmoreDetectorConstruction::ConstructAMoREPilotRUN5() {
 
   for (int nn = 0; nn < 6; nn++) {
     copyNo = nn;
-    sprintf(namePin, "TopPin_%d", nn);
+    // sprintf(namePin, "TopPin_%d", nn);
+    snprintf(namePin, sizeof(namePin), "TopPin_%d", nn);
 
     PhotonDetZ = cmocell_h[nn] + PhotonDet_zsize + zCell[nn];
     PosPhotonDet = G4ThreeVector(zero, zero, PhotonDetZ);
@@ -1446,14 +1450,16 @@ void AmoreDetectorConstruction::ConstructAMoREPilotRUN5() {
         0, G4ThreeVector(0, 33 + 7.5 * mm, PhotonDetZ + PhotonFrame_z + 0.2 * mm + 0.13 / 2 * mm),
         lv_topPin, namePin, logiTargetRoom, false, copyNo);
 
-    sprintf(namePin, "B1Pin_%d", nn);
+    // sprintf(namePin, "B1Pin_%d", nn);
+    snprintf(namePin, sizeof(namePin), "B1Pin_%d", nn);
 
     new G4PVPlacement(0,
                       G4ThreeVector(-1. * cm / 2 - 1.5 * mm, 34.7 + (5. + 6) / 2.,
                                     zCdown[nn] - CopperFz / 4. - 1.5 * mm),
                       lv_b1Pin, namePin, logiTargetRoom, false, copyNo);
 
-    sprintf(namePin, "B2Pin_%d", nn);
+    // sprintf(namePin, "B2Pin_%d", nn);
+    snprintf(namePin, sizeof(namePin), "B2Pin_%d", nn);
 
     new G4PVPlacement(0,
                       G4ThreeVector(-1. * cm / 2 - 1. * mm, -34.7 - (5. + 6.) / 2.,
@@ -1712,7 +1718,8 @@ void AmoreDetectorConstruction::ConstructAMoREPilotRUN5() {
 
     copyNo = nn;
     PosCopperframeUp = G4ThreeVector(zero, zero, zCup[nn] - CopperFz / 2);
-    sprintf(namecuframe, "physCopperFrame%d", nn);
+    // sprintf(namecuframe, "physCopperFrame%d", nn);
+    snprintf(namecuframe, sizeof(namecuframe), "physCopperFrame%d", nn);
     new G4PVPlacement(nullptr, PosCopperframeUp, logiSquareDiskUp[nn], namecuframe, logiTargetRoom,
                       false, copyNo);
     G4cout << "###   " << logiSquareDiskUp[nn]->GetName() << "  "
@@ -1732,7 +1739,8 @@ void AmoreDetectorConstruction::ConstructAMoREPilotRUN5() {
 
   for (int nn = 0; nn < 1; nn++) {
     copyNo = nn;
-    sprintf(nameBoltsTop, "BoltsTop_%d", nn);
+    // sprintf(nameBoltsTop, "BoltsTop_%d", nn);
+    snprintf(nameBoltsTop, sizeof(nameBoltsTop), "BoltsTop_%d", nn);
 
     PhotonDetZ = cmocell_h[nn] + PhotonDet_zsize + zCell[nn];
     PosPhotonDet = G4ThreeVector(zero, zero, PhotonDetZ);
@@ -1781,7 +1789,8 @@ void AmoreDetectorConstruction::ConstructAMoREPilotRUN5() {
 
   for (int nn = 0; nn < 6; nn++) {
     copyNo = nn;
-    sprintf(nameBolts, "Bolts_%d", nn);
+    // sprintf(nameBolts, "Bolts_%d", nn);
+    snprintf(nameBolts, sizeof(nameBolts), "Bolts_%d", nn);
 
     PhotonDetZ = cmocell_h[nn] + PhotonDet_zsize + zCell[nn];
     PosPhotonDet = G4ThreeVector(zero, zero, PhotonDetZ);
@@ -1801,7 +1810,8 @@ void AmoreDetectorConstruction::ConstructAMoREPilotRUN5() {
 
   for (int nn = 1; nn < 7; nn++) {
     copyNo = nn;
-    sprintf(nameBolts, "Bolts_%d", nn);
+    // sprintf(nameBolts, "Bolts_%d", nn);
+    snprintf(nameBolts, sizeof(nameBolts), "Bolts_%d", nn);
 
     PhotonDetZ = cmocell_h[nn] + PhotonDet_zsize + zCell[nn];
     PosPhotonDet = G4ThreeVector(zero, zero, PhotonDetZ);
@@ -1840,7 +1850,8 @@ void AmoreDetectorConstruction::ConstructAMoREPilotRUN5() {
 
   for (int nn = 1; nn < 6; nn++) {
     copyNo = nn;
-    sprintf(nameBoltsM3, "BoltsM3_%d", nn);
+    // sprintf(nameBoltsM3, "BoltsM3_%d", nn);
+    snprintf(nameBoltsM3, sizeof(nameBoltsM3), "BoltsM3_%d", nn);
 
     PhotonDetZ = cmocell_h[nn] + PhotonDet_zsize + zCell[nn];
     PosPhotonDet = G4ThreeVector(zero, zero, PhotonDetZ);
@@ -1876,7 +1887,8 @@ void AmoreDetectorConstruction::ConstructAMoREPilotRUN5() {
 
   for (int nn = 0; nn < 1; nn++) {
     copyNo = nn;
-    sprintf(nameBoltsM3S, "BoltsM3S_%d", nn);
+    // sprintf(nameBoltsM3S, "BoltsM3S_%d", nn);
+    snprintf(nameBoltsM3S, sizeof(nameBoltsM3S), "BoltsM3S_%d", nn);
 
     PhotonDetZ = cmocell_h[nn] + PhotonDet_zsize + zCell[nn];
     PosPhotonDet = G4ThreeVector(zero, zero, PhotonDetZ);
@@ -1913,7 +1925,8 @@ void AmoreDetectorConstruction::ConstructAMoREPilotRUN5() {
 
   for (int nn = 1; nn < 7; nn++) {
     copyNo = nn;
-    sprintf(nameBoltsM3F, "BoltsM3F_%d", nn);
+    // sprintf(nameBoltsM3F, "BoltsM3F_%d", nn);
+    snprintf(nameBoltsM3F, sizeof(nameBoltsM3F), "BoltsM3F_%d", nn);
 
     PhotonDetZ = cmocell_h[nn] + PhotonDet_zsize + zCell[nn];
     PosPhotonDet = G4ThreeVector(zero, zero, PhotonDetZ);
@@ -1933,7 +1946,8 @@ void AmoreDetectorConstruction::ConstructAMoREPilotRUN5() {
 
   for (int nn = 0; nn < 6; nn++) {
     copyNo = nn;
-    sprintf(nameBoltsM3F, "BoltsM3F_%d", nn);
+    // sprintf(nameBoltsM3F, "BoltsM3F_%d", nn);
+    snprintf(nameBoltsM3F, sizeof(nameBoltsM3F), "BoltsM3F_%d", nn);
 
     PhotonDetZ = cmocell_h[nn] + PhotonDet_zsize + zCell[nn];
     PosPhotonDet = G4ThreeVector(zero, zero, PhotonDetZ);
@@ -1977,7 +1991,8 @@ void AmoreDetectorConstruction::ConstructAMoREPilotRUN5() {
 
   for (int nn = 1; nn < 7; nn++) {
     copyNo = nn;
-    sprintf(nameBoltsAB, "BoltsAB_%d", nn);
+    // sprintf(nameBoltsAB, "BoltsAB_%d", nn);
+    snprintf(nameBoltsAB, sizeof(nameBoltsAB), "BoltsAB_%d", nn);
 
     PhotonDetZ = cmocell_h[nn] + PhotonDet_zsize + zCell[nn];
     PosPhotonDet = G4ThreeVector(zero, zero, PhotonDetZ);
@@ -2012,7 +2027,8 @@ void AmoreDetectorConstruction::ConstructAMoREPilotRUN5() {
 
   for (int nn = 1; nn < 7; nn++) {
     copyNo = nn;
-    sprintf(namePEEKCr, "PEEKCr_%d", nn);
+    // sprintf(namePEEKCr, "PEEKCr_%d", nn);
+    snprintf(namePEEKCr, sizeof(namePEEKCr), "PEEKCr_%d", nn);
 
     PhotonDetZ = cmocell_h[nn] + PhotonDet_zsize + zCell[nn];
     PosPhotonDet = G4ThreeVector(zero, zero, PhotonDetZ);
@@ -2051,7 +2067,8 @@ void AmoreDetectorConstruction::ConstructAMoREPilotRUN5() {
 
   for (int nn = 1; nn < 7; nn++) {
     copyNo = nn + 23;
-    sprintf(nameGOLDsb, "GOLDsb_%d", nn);
+    // sprintf(nameGOLDsb, "GOLDsb_%d", nn);
+    snprintf(nameGOLDsb, sizeof(nameGOLDsb), "GOLDsb_%d", nn);
 
     PhotonDetZ = cmocell_h[nn] + PhotonDet_zsize + zCell[nn];
     PosPhotonDet = G4ThreeVector(zero, zero, PhotonDetZ);
@@ -2080,7 +2097,8 @@ void AmoreDetectorConstruction::ConstructAMoREPilotRUN5() {
 
   for (int nn = 0; nn < 6; nn++) {
     copyNo = 6 + nn;
-    sprintf(nameGOLDsa, "GOLDsa_%d", nn);
+    // sprintf(nameGOLDsa, "GOLDsa_%d", nn);
+    snprintf(nameGOLDsa, sizeof(nameGOLDsa), "GOLDsa_%d", nn);
 
     PhotonDetZ = cmocell_h[nn] + PhotonDet_zsize + zCell[nn];
     PosPhotonDet = G4ThreeVector(zero, zero, PhotonDetZ);
@@ -2120,7 +2138,8 @@ void AmoreDetectorConstruction::ConstructAMoREPilotRUN5() {
   G4Tubs*   Reflector_h;
 
   for (int nn = 0; nn < 6; nn++) { //  5 layers
-    sprintf(namerefl, "Reflector%d", nn);
+    // sprintf(namerefl, "Reflector%d", nn);
+    snprintf(namerefl, sizeof(namerefl), "Reflector%d", nn);
 
     Reflector_in[nn] = new G4Box(namerefl, reflector_inx, reflector_iny,
                                  cmocell_h[nn] + 0.7 * mm); // not Top cover Ver.
@@ -2140,11 +2159,13 @@ void AmoreDetectorConstruction::ConstructAMoREPilotRUN5() {
 
     Reflector[nn]= new G4UnionSolid("Reflector_out - Reflector_in", Reflector_b[nn],Reflector_d,0,G4ThreeVector(0,0,-cmocell_h[nn]-0.5*mm-reflector_thick/2+0.0001*cm) );
 
-    sprintf(namerefl, "logiReflector%d", nn);
+    // sprintf(namerefl, "logiReflector%d", nn);
+    snprintf(namerefl, sizeof(namerefl), "logiReflector%d", nn);
     logiReflector[nn] = new G4LogicalVolume(Reflector[nn], _vm2000, namerefl);
 
     PosRef = G4ThreeVector(xCell[nn], yCell[nn], zCell[nn]);
-    sprintf(namerefl, "physReflector%d", nn);
+    // sprintf(namerefl, "physReflector%d", nn);
+    snprintf(namerefl, sizeof(namerefl), "physReflector%d", nn);
     new G4PVPlacement(nullptr, PosRef, logiReflector[nn], namerefl, logiTargetRoom, false, 0);
     G4cout << "###   " << logiReflector[nn]->GetName() << "  " << logiReflector[nn]->GetMass() / kg
            << G4endl;
@@ -2967,7 +2988,7 @@ void AmoreDetectorConstruction::ConstructAMoREPilotRUN5() {
   G4cout << "Set Geometry Attributes...\n";
   logiHallVis = new G4VisAttributes(G4Colour(0.8, 0.8, 0.8, 0.1));
   logiHall->SetVisAttributes(logiHallVis);
-  logiHall->SetVisAttributes(G4VisAttributes::GetInvisible);
+  logiHall->SetVisAttributes(G4VisAttributes::GetInvisible());
 
   // llization
   G4VisAttributes *va_smallbox = new G4VisAttributes(brown);
@@ -3066,31 +3087,31 @@ void AmoreDetectorConstruction::ConstructAMoREPilotRUN5() {
     logiGeWafer->SetVisAttributes(logiGeWaferVis);
     logiVacDisk->SetVisAttributes(logiVacDiskVis);
   } else {
-    logiVacDisk->SetVisAttributes(G4VisAttributes::GetInvisible);
+    logiVacDisk->SetVisAttributes(G4VisAttributes::GetInvisible());
     logiPhotonDetVis->SetVisibility(true);
     logiPhotonDetVis->SetForceWireframe(true);
     logiPhotonDet->SetVisAttributes(logiPhotonDetVis);
   }
   if (flagInvisible) {
-    logiRock->SetVisAttributes(G4VisAttributes::GetInvisible);
-    logiWorkArea->SetVisAttributes(G4VisAttributes::GetInvisible);
-    logiTopPbBox->SetVisAttributes(G4VisAttributes::GetInvisible);
-    logiPbBox->SetVisAttributes(G4VisAttributes::GetInvisible);
-    logiSSOVCOuter->SetVisAttributes(G4VisAttributes::GetInvisible);
-    logiCu4Outer->SetVisAttributes(G4VisAttributes::GetInvisible);
-    logiCu3Outer->SetVisAttributes(G4VisAttributes::GetInvisible);
-    logiCu2Outer->SetVisAttributes(G4VisAttributes::GetInvisible);
-    logiCu1Outer->SetVisAttributes(G4VisAttributes::GetInvisible);
+    logiRock->SetVisAttributes(G4VisAttributes::GetInvisible());
+    logiWorkArea->SetVisAttributes(G4VisAttributes::GetInvisible());
+    logiTopPbBox->SetVisAttributes(G4VisAttributes::GetInvisible());
+    logiPbBox->SetVisAttributes(G4VisAttributes::GetInvisible());
+    logiSSOVCOuter->SetVisAttributes(G4VisAttributes::GetInvisible());
+    logiCu4Outer->SetVisAttributes(G4VisAttributes::GetInvisible());
+    logiCu3Outer->SetVisAttributes(G4VisAttributes::GetInvisible());
+    logiCu2Outer->SetVisAttributes(G4VisAttributes::GetInvisible());
+    logiCu1Outer->SetVisAttributes(G4VisAttributes::GetInvisible());
 
     if (flagInvisible == 999) {
       for (int nn = 0; nn < 5; nn++) {
-        logiCMOCell[nn]->SetVisAttributes(G4VisAttributes::GetInvisible);
+        logiCMOCell[nn]->SetVisAttributes(G4VisAttributes::GetInvisible());
       }
 
-      logiCuMCP->SetVisAttributes(G4VisAttributes::GetInvisible);
-      logiCuP1->SetVisAttributes(G4VisAttributes::GetInvisible);
-      logiPbP2->SetVisAttributes(G4VisAttributes::GetInvisible);
-      logiCuP3->SetVisAttributes(G4VisAttributes::GetInvisible);
+      logiCuMCP->SetVisAttributes(G4VisAttributes::GetInvisible());
+      logiCuP1->SetVisAttributes(G4VisAttributes::GetInvisible());
+      logiPbP2->SetVisAttributes(G4VisAttributes::GetInvisible());
+      logiCuP3->SetVisAttributes(G4VisAttributes::GetInvisible());
     }
   } else {
     logiCuP1Vis->SetForceSolid(true);

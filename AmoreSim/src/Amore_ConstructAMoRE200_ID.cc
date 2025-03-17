@@ -426,7 +426,7 @@ void AmoreDetectorConstruction::ConstructAMoRE200_ID(G4LogicalVolume *aWorkAreaL
 	//////////////////////////////////////////////////////
 	G4Tubs *CrystalArray = new G4Tubs("CrystalArray", 0, Array_radius, Array_height / 2., 0, 360. * deg);
 	G4LogicalVolume *logiCrystalArray = new G4LogicalVolume(CrystalArray, _vacuum, "CrystalArrayLV");
-	logiCrystalArray->SetVisAttributes(G4VisAttributes::GetInvisible);
+	logiCrystalArray->SetVisAttributes(G4VisAttributes::GetInvisible());
 	new G4PVPlacement(0, {0, 0, TR_height - Array_height / 2.}, logiCrystalArray, "physCrystalArray", logiTargetRoom, false, 0, OverlapCheck);
 
 	//////////////////////////////////////////////////////
@@ -462,7 +462,7 @@ void AmoreDetectorConstruction::ConstructAMoRE200_ID(G4LogicalVolume *aWorkAreaL
 		G4ThreeVector modulePos = G4ThreeVector(tower_x, tower_y, -Tower_height / 2 + module_h / 2.);
 		for (int imodule = 0; imodule < nModuleInTower; imodule++){
 			G4LogicalVolume *logiCrystalModule = MakeModule(_vacuum, _Li2MoO4, _vm2000, _copper, _copper3, _teflon2, _SiWafer, _gold, itower, imodule);
-			logiCrystalModule->SetVisAttributes(G4VisAttributes::GetInvisible);
+			logiCrystalModule->SetVisAttributes(G4VisAttributes::GetInvisible());
 			new G4PVPlacement(0, modulePos, logiCrystalModule, ("physCrystalModule" + to_string(itower) + "_" + to_string(imodule)).c_str(), logiCrystalArray, false, 0, OverlapCheck);
 			modulePos[2] += module_h;
 		}
@@ -676,7 +676,7 @@ void AmoreDetectorConstruction::ConstructAMoRE200_ID(G4LogicalVolume *aWorkAreaL
 	//////////////////////////////
 	G4VisAttributes *logiTargetRoomVis = new G4VisAttributes(G4Colour(0, 0, 0, 0.2));
 	logiTargetRoom->SetVisAttributes(logiTargetRoomVis);
-	logiTargetRoom->SetVisAttributes(G4VisAttributes::GetInvisible);
+	logiTargetRoom->SetVisAttributes(G4VisAttributes::GetInvisible());
 
 	G4VisAttributes *logiSSOVCVis = new G4VisAttributes(cyanl);
 	G4VisAttributes *logiCu4Vis = new G4VisAttributes(bluel);
@@ -688,19 +688,19 @@ void AmoreDetectorConstruction::ConstructAMoRE200_ID(G4LogicalVolume *aWorkAreaL
 	G4VisAttributes *logiPbP2Vis = new G4VisAttributes(lgrey);
 
 	if (flagInvisible || flagOneCell){
-		logiSSOVC->SetVisAttributes(G4VisAttributes::GetInvisible);
-		logiCu4->SetVisAttributes(G4VisAttributes::GetInvisible);
-		logiCu3->SetVisAttributes(G4VisAttributes::GetInvisible);
-		logiCu2->SetVisAttributes(G4VisAttributes::GetInvisible);
-		logiCu1->SetVisAttributes(G4VisAttributes::GetInvisible);
+		logiSSOVC->SetVisAttributes(G4VisAttributes::GetInvisible());
+		logiCu4->SetVisAttributes(G4VisAttributes::GetInvisible());
+		logiCu3->SetVisAttributes(G4VisAttributes::GetInvisible());
+		logiCu2->SetVisAttributes(G4VisAttributes::GetInvisible());
+		logiCu1->SetVisAttributes(G4VisAttributes::GetInvisible());
 
 		if (flagInvisible == 999){
-			logiCuMCP->SetVisAttributes(G4VisAttributes::GetInvisible);
-			logiCuP1->SetVisAttributes(G4VisAttributes::GetInvisible);
-			logiCuP2->SetVisAttributes(G4VisAttributes::GetInvisible);
-			logiCuP3->SetVisAttributes(G4VisAttributes::GetInvisible);
-			logiPbP1->SetVisAttributes(G4VisAttributes::GetInvisible);
-			logiPbP2->SetVisAttributes(G4VisAttributes::GetInvisible);
+			logiCuMCP->SetVisAttributes(G4VisAttributes::GetInvisible());
+			logiCuP1->SetVisAttributes(G4VisAttributes::GetInvisible());
+			logiCuP2->SetVisAttributes(G4VisAttributes::GetInvisible());
+			logiCuP3->SetVisAttributes(G4VisAttributes::GetInvisible());
+			logiPbP1->SetVisAttributes(G4VisAttributes::GetInvisible());
+			logiPbP2->SetVisAttributes(G4VisAttributes::GetInvisible());
 		}
 	} else{
 		// logiTargetRoomVis->SetForceSolid(true);

@@ -8510,7 +8510,7 @@ if (fNeutronMode) {
 G4cout << "Set Geometry Attributes...\n";
 logiHallVis = new G4VisAttributes(G4Colour(0.8, 0.8, 0.8, 0.1));
 logiHall->SetVisAttributes(logiHallVis);
-//logiHall->SetVisAttributes(G4VisAttributes::GetInvisible);
+//logiHall->SetVisAttributes(G4VisAttributes::GetInvisible());
 
 //	  IVC_Welding//////////
 
@@ -8542,21 +8542,21 @@ logiPbP2Vis = new G4VisAttributes(grey);
 logiCuP3Vis = new G4VisAttributes(red);
 
 if (flagInvisible) {
-	logiRock->SetVisAttributes(G4VisAttributes::GetInvisible);
-	logiWorkArea->SetVisAttributes(G4VisAttributes::GetInvisible);
-	logiTopPbBox->SetVisAttributes(G4VisAttributes::GetInvisible);
-	logiPbBox->SetVisAttributes(G4VisAttributes::GetInvisible);
-	logiSSOVCOuter->SetVisAttributes(G4VisAttributes::GetInvisible);
-	logiCu4Outer->SetVisAttributes(G4VisAttributes::GetInvisible);
-	logiCu3Outer->SetVisAttributes(G4VisAttributes::GetInvisible);
-	logiCu2Outer->SetVisAttributes(G4VisAttributes::GetInvisible);
-	logiCu1Outer->SetVisAttributes(G4VisAttributes::GetInvisible);
+	logiRock->SetVisAttributes(G4VisAttributes::GetInvisible());
+	logiWorkArea->SetVisAttributes(G4VisAttributes::GetInvisible());
+	logiTopPbBox->SetVisAttributes(G4VisAttributes::GetInvisible());
+	logiPbBox->SetVisAttributes(G4VisAttributes::GetInvisible());
+	logiSSOVCOuter->SetVisAttributes(G4VisAttributes::GetInvisible());
+	logiCu4Outer->SetVisAttributes(G4VisAttributes::GetInvisible());
+	logiCu3Outer->SetVisAttributes(G4VisAttributes::GetInvisible());
+	logiCu2Outer->SetVisAttributes(G4VisAttributes::GetInvisible());
+	logiCu1Outer->SetVisAttributes(G4VisAttributes::GetInvisible());
 
 	if (flagInvisible == 999) {
-		logiCuMCP->SetVisAttributes(G4VisAttributes::GetInvisible);
-		logiCuP1->SetVisAttributes(G4VisAttributes::GetInvisible);
-		logiPbP2->SetVisAttributes(G4VisAttributes::GetInvisible);
-		logiCuP3->SetVisAttributes(G4VisAttributes::GetInvisible);
+		logiCuMCP->SetVisAttributes(G4VisAttributes::GetInvisible());
+		logiCuP1->SetVisAttributes(G4VisAttributes::GetInvisible());
+		logiPbP2->SetVisAttributes(G4VisAttributes::GetInvisible());
+		logiCuP3->SetVisAttributes(G4VisAttributes::GetInvisible());
 	}
 } else {
 	logiCuP1Vis->SetForceSolid(true);

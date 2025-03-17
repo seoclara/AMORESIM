@@ -277,12 +277,12 @@ G4LogicalVolume *AmoreDetectorConstruction::ConstructAMoRE200_OD()
 	G4VSolid *plasticVetoHousingSolid = new G4SubtractionSolid("PlasticVetoHousing_Solid", plasticVetoHousing1Box, IDspaceBox, 0,
 															   G4ThreeVector(0, 0, plasticVetoHousing1Box->GetZHalfLength() - IDspaceBox->GetZHalfLength()));
 	G4LogicalVolume *plasticVetoHousing1LV = new G4LogicalVolume(plasticVetoHousingSolid, _air, "PlasticVetoHousing1_LV");
-	plasticVetoHousing1LV->SetVisAttributes(G4VisAttributes::GetInvisible);
+	plasticVetoHousing1LV->SetVisAttributes(G4VisAttributes::GetInvisible());
 
 	G4Box *plasticVetoHousing2Box = new G4Box("PlasticVetoHousing2_Box",
 											  bottom_veto_housingX / 2., bottom_veto_housingY / 2., plastic_veto_thickness / 2.);
 	G4LogicalVolume *plasticVetoHousing2LV = new G4LogicalVolume(plasticVetoHousing2Box, _air, "PlasticVetoHousing2_LV");
-	plasticVetoHousing2LV->SetVisAttributes(G4VisAttributes::GetInvisible);
+	plasticVetoHousing2LV->SetVisAttributes(G4VisAttributes::GetInvisible());
 
 	////////////////////////////////////////////
 	// Muon Veto (Water Cerenkov)
@@ -322,7 +322,7 @@ G4LogicalVolume *AmoreDetectorConstruction::ConstructAMoRE200_OD()
 	G4VSolid *HatWaterAirSolid = new G4SubtractionSolid("WCAir_Solid", shieldWaterAirBox, shieldHatAirBox2, 0,
 														G4ThreeVector(0, 0, -shieldWaterAirBox->GetZHalfLength()));
 	G4LogicalVolume *shieldWaterTankAirLV = new G4LogicalVolume(HatWaterAirSolid, _air, "HatWaterTankAir_LV");
-	shieldWaterTankAirLV->SetVisAttributes(G4VisAttributes::GetInvisible);
+	shieldWaterTankAirLV->SetVisAttributes(G4VisAttributes::GetInvisible());
 
 	// Hat Water Tank --------------------------------
 	G4Box *shieldWaterTankBox = new G4Box("WaterTank_Box",
@@ -402,7 +402,7 @@ G4LogicalVolume *AmoreDetectorConstruction::ConstructAMoRE200_OD()
 	G4Box *DetHbeamHousingBox = new G4Box("DetHbeamHousingBox",
 										  shieldHatSpaceBox->GetXHalfLength(), shieldHatSpaceBox->GetYHalfLength(), shieldHatSpaceBox->GetZHalfLength() - DetHbeam_size / 2.);
 	G4LogicalVolume *DetHbeamHousingLV = new G4LogicalVolume(DetHbeamHousingBox, _air, "DetHbeamHousing_LV");
-	DetHbeamHousingLV->SetVisAttributes(G4VisAttributes::GetInvisible);
+	DetHbeamHousingLV->SetVisAttributes(G4VisAttributes::GetInvisible());
 
 	G4Box *DetHbeamHBox = new G4Box("DetHbeamH_Box", DetHbeam_size / 2., DetHbeam_size / 2., shieldHatSpaceBox->GetYHalfLength());
 	G4Box *DetHbeamVBox = new G4Box("DetHbeamV_Box", DetHbeam_size / 2., DetHbeam_size / 2., PS_housing_height / 2.);
@@ -493,7 +493,7 @@ G4LogicalVolume *AmoreDetectorConstruction::ConstructAMoRE200_OD()
 			neutronmodeCavern = new G4Sphere("cavern_solid", 0, cavern_nMode_radius, 0., 360. * deg, 0, 180. * deg);
 			// cavern_solid = neutronmodeCavern;
 			logiCavern = new G4LogicalVolume(neutronmodeCavern, _air, "logiCavern");
-			logiCavern->SetVisAttributes(G4VisAttributes::GetInvisible);
+			logiCavern->SetVisAttributes(G4VisAttributes::GetInvisible());
 			physCavern = new G4PVPlacement(nullptr, {}, logiCavern, "physCavern", logiWorld, false, 0, OverlapCheck);
 			break;
 
@@ -1265,7 +1265,7 @@ G4LogicalVolume *AmoreDetectorConstruction::ConstructAMoRE200_OD()
 											G4ThreeVector(HBeam_housingDist, 0, 0));
 	}
 	G4LogicalVolume *HbeamHousingLV = new G4LogicalVolume(HbeamHousing, _air, "HbeamHousing_LV");
-	HbeamHousingLV->SetVisAttributes(G4VisAttributes::GetInvisible);
+	HbeamHousingLV->SetVisAttributes(G4VisAttributes::GetInvisible());
 
 
 	G4LogicalVolume *HbeamBotLV = nullptr;

@@ -779,11 +779,11 @@ void Cup_PMT_LogicalVolume::ConstructPMT_UsingTorusStack(
     // Set colors and visibility
     ////
     G4VisAttributes *visAtt;
-    this->SetVisAttributes(G4VisAttributes::GetInvisible);
+    this->SetVisAttributes(G4VisAttributes::GetInvisible());
     // PMT glass
     // visAtt= new G4VisAttributes(G4Color(0.0,1.0,1.0,0.05));
     // body_log->SetVisAttributes( visAtt );
-    body_log->SetVisAttributes(G4VisAttributes::GetInvisible);
+    body_log->SetVisAttributes(G4VisAttributes::GetInvisible());
     // dynode is medium gray
     visAtt = new G4VisAttributes(G4Color(0.5, 0.5, 0.5, 1.0));
     dynode_log->SetVisAttributes(visAtt);
@@ -990,7 +990,7 @@ void Cup_PMT_LogicalVolume::ConstructPMT_UsingEllipsoid(
     ////////////////////////////////////////////////////////////////
     // Set colors and visibility
     ////
-    this->SetVisAttributes(G4VisAttributes::GetInvisible);
+    this->SetVisAttributes(G4VisAttributes::GetInvisible());
     // top PMT glass is very clear orangish-gray
     G4VisAttributes *visAtt = new G4VisAttributes(G4Color(0.7, 0.5, 0.3, 0.27));
     face_log->SetVisAttributes(visAtt);
@@ -1003,7 +1003,7 @@ void Cup_PMT_LogicalVolume::ConstructPMT_UsingEllipsoid(
     if (dynode1_log) dynode1_log->SetVisAttributes(visAtt);
     dynode2_log->SetVisAttributes(visAtt);
     // interior vacuum is invisible
-    back_interior_log->SetVisAttributes(G4VisAttributes::GetInvisible);
-    stem_interior_log->SetVisAttributes(G4VisAttributes::GetInvisible);
-    face_interior_log->SetVisAttributes(G4VisAttributes::GetInvisible);
+    back_interior_log->SetVisAttributes(G4VisAttributes::GetInvisible());
+    stem_interior_log->SetVisAttributes(G4VisAttributes::GetInvisible());
+    face_interior_log->SetVisAttributes(G4VisAttributes::GetInvisible());
 }
