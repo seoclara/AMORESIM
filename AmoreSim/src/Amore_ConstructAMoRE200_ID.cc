@@ -3,7 +3,7 @@
 //
 //  Modified by E.J.Jeon 2007/06/14
 //  Modified by Y.S.Yoon 2015/06/15
-//  Updated by J.Seo 2025/02/06
+//  Updated by J.Seo 2025/03/17
 
 #include "globals.hh"
 
@@ -31,7 +31,6 @@
 #include "G4PVParameterised.hh"
 #include "G4PVPlacement.hh"
 #include "G4VPhysicalVolume.hh"
-// #include "G4ThreeVector.hh"
 #include "G4Version.hh"
 #include "G4VisAttributes.hh"
 
@@ -39,7 +38,6 @@
 #include "G4SDManager.hh"
 
 #include "G4UserLimits.hh"
-// #include "CLHEP/Matrix/Matrix.h"
 
 #include <cmath>
 #include <cstdio>
@@ -52,7 +50,6 @@
 #include "G4NistManager.hh"
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
-// using namespace CLHEP;
 using namespace std;
 using namespace AmoreDetectorStaticInfo;
 using namespace AmoreDetectorStaticInfo::AMoRE_200;
@@ -96,31 +93,6 @@ void AmoreDetectorConstruction::ConstructAMoRE200_ID(G4LogicalVolume *aWorkAreaL
 	G4LogicalVolume *logiWorkArea = aWorkAreaLV;
 	G4Material *WA_mat = logiWorkArea->GetMaterial();
 
-	/*
-	///////////////////////////////////////////////////////
-	// Build Source Housing: teflon tube
-	// diameter 12 mm and thickness 1 mm
-	///////////////////////////////////////////////////////
-	G4double housing_thickness = 1 * mm;
-	G4double housing_radius = 12 / 2. * mm;
-	G4double source_radius = 1 / 2. * mm;
-	G4double source_xpos = ss_radius + housing_radius + housing_thickness + solidBooleanTol;
-	G4double source_height[4] = {ss_inner_height_half * 5 / 10, ss_inner_height_half * 4 / 10, ss_inner_height_half * 3 / 10, ss_inner_height_half * 2 / 10};
-
-	G4Torus *SHousing1 = new G4Torus("SHousing1",
-									 housing_radius - housing_thickness, housing_radius, source_xpos, 0, 360. * degree);
-	G4LogicalVolume *logiSourceHousing = new G4LogicalVolume(SHousing1, _teflon, "SourceHousing1LV");
-
-	//////////////////////////////////////////////////////
-	// Build Source Volume: Thorium wire
-	// diameter 1 mm
-	//////////////////////////////////////////////////////
-	G4Torus *Source1 = new G4Torus("Source1", 0, source_radius, source_xpos, 0, 360. * degree);
-	// G4LogicalVolume *logiSourceVolume = new G4LogicalVolume(Source1, _ThWire, "SourceVolume1LV");
-	// G4LogicalVolume *logiSourceVolume = new G4LogicalVolume(Source1, _air, "SourceVolume1LV");
-	G4LogicalVolume *logiSourceVolume = new G4LogicalVolume(Source1, _FeWire, "SourceVolume1LV");
-	*/
-
 	///////////////////////////////////////////////////////
 	// Build Layer5_OVC Stainless Steel (SS)
 	///////////////////////////////////////////////////////
@@ -133,9 +105,6 @@ void AmoreDetectorConstruction::ConstructAMoRE200_ID(G4LogicalVolume *aWorkAreaL
 									ss_radius, ss_inner_height_half, 0, 360. * deg);
 	G4VSolid *SSTop = new G4Box("SSTop",
 								sst_xsize_half, sst_ysize_half, sst_zsize_half);
-	// G4VSolid *SSOVC0 = new G4UnionSolid("SSOVC0", SSCylinder, SSTop, nullptr,
-										// {0, 0, ss_inner_height_half + sst_zsize_half});
-	// G4LogicalVolume *logiSSOVC = new G4LogicalVolume(SSOVC0, _stainless, "logiSSOVC");
 	G4LogicalVolume *logiSSOVCTop = new G4LogicalVolume(SSTop, _aluminium, "logiSSOVCTop");
 	G4LogicalVolume *logiSSOVC = new G4LogicalVolume(SSCylinder, _stainless, "logiSSOVC");
 
@@ -144,7 +113,6 @@ void AmoreDetectorConstruction::ConstructAMoRE200_ID(G4LogicalVolume *aWorkAreaL
 	///////////////////////////////////////////////////////
 	G4Box *radonAirBox = new G4Box("RadonAir_Box",
 								   airbuffer_radius - boricacid_thickness, airbuffer_radius - boricacid_thickness,
-								   // (airbuffer_height - boricacid_thickness) / 2.);
 								   (airbuffer_height - boricacid_thickness - 11 * cm) / 2.);
 	G4VSolid *radonAirSolid = new G4SubtractionSolid("RadonAir_Solid", radonAirBox, SSCylinder, 0,
 													 G4ThreeVector(0, 0,
@@ -181,12 +149,6 @@ void AmoreDetectorConstruction::ConstructAMoRE200_ID(G4LogicalVolume *aWorkAreaL
 
 	switch (whichSimType){
 		case kRockGammaMode:
-		// {
-			// G4double workarea_posz = static_cast<G4Box *>(logiWorkArea->GetSolid())->GetZHalfLength();
-			// f200_OVCPhysical = new G4PVPlacement(nullptr,
-											//  {0, 0, -workarea_posz + PE_shield_thickness + lead_shield_thickness + boricacid_thickness + ovc_gap + SSCylinder->GetZHalfLength()},
-											//  logiSSOVC, "physSSOVC", logiWorkArea, false, 0, OverlapCheck);
-			// break;}
 		case kNeutronMode:
 			f200_OVCPhysical = new G4PVPlacement(nullptr,
 											 {0, 0, -SSCylinder->GetZHalfLength() - nShield_GapFromCeiling + ovc_gap},
@@ -206,15 +168,6 @@ void AmoreDetectorConstruction::ConstructAMoRE200_ID(G4LogicalVolume *aWorkAreaL
 			// Radon Air ------
 			new G4PVPlacement(nullptr, {0, 0, radonAirBox->GetZHalfLength() + ovcPosZ},
 						  radonAirLV, "RadonAir_PV", logiWorkArea, false, 0, OverlapCheck);
-			/*
-			for (int isrc = 0; isrc < 4; isrc++){
-				G4ThreeVector SourcePosition = G4ThreeVector(0, 0, -source_height[isrc]);
-				new G4PVPlacement(nullptr, SourcePosition,
-							  logiSourceHousing, "physSourceHousing" + to_string(isrc), radonAirLV, false, 0, OverlapCheck);
-				new G4PVPlacement(nullptr, SourcePosition,
-							  logiSourceVolume, "physSourceVolume" + to_string(isrc), radonAirLV, false, 0, OverlapCheck);
-			}  */
-			
 			break;}
 		case kRealMode:{
 			f200_OVCPhysical = new G4PVPlacement(nullptr, RealModel_shield_topPos + G4ThreeVector(0, 0, -SSCylinder->GetZHalfLength() + ovc_gap + nShield_GapFromCeiling),
@@ -224,14 +177,6 @@ void AmoreDetectorConstruction::ConstructAMoRE200_ID(G4LogicalVolume *aWorkAreaL
 
 			new G4PVPlacement(nullptr, RealModel_shield_topPos + G4ThreeVector(0, 0, -radonAirBox->GetZHalfLength() + nShield_GapFromCeiling - 11 * cm + ovc_gap),
 						  radonAirLV, "RadonAir_PV", logiWorkArea, false, 0, OverlapCheck);
-			/*
-			for (int isrc = 0; isrc < 4; isrc++){
-				G4ThreeVector SourcePosition = G4ThreeVector(0, 0, -source_height[isrc]);
-				new G4PVPlacement(nullptr, SourcePosition,
-							  logiSourceHousing, "physSourceHousing" + to_string(isrc), radonAirLV, false, 0, OverlapCheck);
-				new G4PVPlacement(nullptr, SourcePosition,
-							  logiSourceVolume, "physSourceVolume" + to_string(isrc), radonAirLV, false, 0, OverlapCheck);
-			}*/
 			break;}
 		default:
 			break;
@@ -242,7 +187,6 @@ void AmoreDetectorConstruction::ConstructAMoRE200_ID(G4LogicalVolume *aWorkAreaL
 								ss_inner_height_half - OVCthickB / 2., 0, 360 * deg);
 
 	G4LogicalVolume *logiSSOVCIn = new G4LogicalVolume(SSOVC1, WA_mat, "SSOVC_InnerSpaceLV");
-	// new G4PVPlacement(0, G4ThreeVector(0, 0, OVCthick/2.),
 	new G4PVPlacement(0, G4ThreeVector(0, 0, OVCthickB / 2.),
 					  logiSSOVCIn, "physSSOVCIn", logiSSOVC, false, 0, OverlapCheck);
 
@@ -267,7 +211,6 @@ void AmoreDetectorConstruction::ConstructAMoRE200_ID(G4LogicalVolume *aWorkAreaL
 	///////////////////////////////////////////////////////
 	// Layer3_Cu IVC
 	///////////////////////////////////////////////////////
-	// G4double cu3zthick = cu3thick/2.;
 	G4Tubs *Cu3Cylinder = new G4Tubs("Cu3Cylinder", 0, cu3_radius, cu3_height, 0, 360. * deg);
 	G4LogicalVolume *logiCu3 = new G4LogicalVolume(Cu3Cylinder, _copper, "logiCu3", 0, 0, 0);
 	G4Tubs *Cu3CylIn = new G4Tubs("Cu3CylinderInSol", 0,
@@ -276,14 +219,12 @@ void AmoreDetectorConstruction::ConstructAMoRE200_ID(G4LogicalVolume *aWorkAreaL
 	new G4PVPlacement(0, // no rotation
 					  G4ThreeVector(0, 0, -Cu4CylIn->GetZHalfLength() + cu3_height + Cu3GapFromBot),
 					  logiCu3, "physCu3", logiCu4In, false, 0, OverlapCheck);
-	// new G4PVPlacement(0, G4ThreeVector(0, 0, cu3thick/2.),
 	new G4PVPlacement(0, G4ThreeVector(0, 0, cu3thickB / 2.),
 					  logiCu3In, "physCu3In", logiCu3, false, 0, OverlapCheck);
 
 	///////////////////////////////////////////////////////
 	// Layer2_Cu3 SHIELD-STILL
 	///////////////////////////////////////////////////////
-	// G4double cu2zthick = cu2thick/2.;
 	G4Tubs *Cu2Cylinder = new G4Tubs("Cu2Cylinder", 0, cu2_radius, cu2_height, 0, 360. * deg);
 	G4LogicalVolume *logiCu2 = new G4LogicalVolume(Cu2Cylinder, _copper, "logiCu2", 0, 0, 0);
 	G4Tubs *Cu2CylIn = new G4Tubs("Cu2CylinderInSol", 0,
@@ -293,14 +234,12 @@ void AmoreDetectorConstruction::ConstructAMoRE200_ID(G4LogicalVolume *aWorkAreaL
 	new G4PVPlacement(0, // no rotation
 					  G4ThreeVector(0, 0, -Cu3CylIn->GetZHalfLength() + cu2_height + Cu2GapFromBot),
 					  logiCu2, "physCu2", logiCu3In, false, 0, OverlapCheck);
-	// new G4PVPlacement(0, G4ThreeVector(0, 0, cu2thick/2.),
 	new G4PVPlacement(0, G4ThreeVector(0, 0, cu2thickB / 2.),
 					  logiCu2In, "physCu2In", logiCu2, false, 0, OverlapCheck);
 
 	///////////////////////////////////////////////////////
 	// Layer1_Cu4 50mk-SHIELD
 	///////////////////////////////////////////////////////
-	// G4double cu1zthick = cu1thick/2.;
 	G4Tubs *Cu1Cylinder = new G4Tubs("Cu1Cylinder", 0, cu1_radius, cu1_height, 0, 360. * deg);
 	G4LogicalVolume *logiCu1 = new G4LogicalVolume(Cu1Cylinder, _copper, "logiCu1", 0, 0, 0);
 	G4Tubs *Cu1CylIn = new G4Tubs("Cu1CylInSol", 0,
@@ -310,7 +249,6 @@ void AmoreDetectorConstruction::ConstructAMoRE200_ID(G4LogicalVolume *aWorkAreaL
 	new G4PVPlacement(0, // no rotation
 					  G4ThreeVector(0, 0, -Cu2CylIn->GetZHalfLength() + cu1_height + Cu1GapFromBot),
 					  logiCu1, "physCu1", logiCu2In, false, 0, OverlapCheck);
-	// new G4PVPlacement(0, G4ThreeVector(0, 0, cu1thick/2.),
 	new G4PVPlacement(0, G4ThreeVector(0, 0, cu1thickB / 2.),
 					  logiCu1In, "physCu1In", logiCu1, false, 0, OverlapCheck);
 
@@ -413,7 +351,6 @@ void AmoreDetectorConstruction::ConstructAMoRE200_ID(G4LogicalVolume *aWorkAreaL
 	G4double TR_radius = inlead_radius;
 	G4double TR_height = 800. / 2.; // 900/2.; // This value should be changed !!!!!
 
-	// G4ThreeVector PosTR = G4ThreeVector(0., 0., CenterCuP5Z - TR_height - cup1_zsize - TRGapFromCuP5);
 	G4ThreeVector PosTR = G4ThreeVector(0., 0., CenterCuP6Z - pbp3_zsize - TR_height);
 	G4Tubs *TargetRoom = new G4Tubs("TargetRoom", 0, TR_radius, TR_height, 0, 360. * deg);
 	G4LogicalVolume *logiTargetRoom = new G4LogicalVolume(TargetRoom, _vacuum, "logiTargetRoom", 0, 0, 0);
@@ -468,7 +405,6 @@ void AmoreDetectorConstruction::ConstructAMoRE200_ID(G4LogicalVolume *aWorkAreaL
 		}
 	}
 
-	// f200_logiCrystalCell = G4LogicalVolumeStore::GetInstance()->GetVolume("CrystalCellLV",false);
 
 	//////////////////////////////////////////////////////
 	G4ThreeVector globalPos_OVC = f200_OVCPhysical->GetTranslation();
@@ -651,23 +587,6 @@ void AmoreDetectorConstruction::ConstructAMoRE200_ID(G4LogicalVolume *aWorkAreaL
 		cout << "     crystal module0_0: " << globalPos_TR + GetPhysicalVolumeByName("physCrystalArray")->GetTranslation() + GetPhysicalVolumeByName("physCrystalModule0_0")->GetTranslation() << endl;
 		cout << "     clamp top0    : " << globalPos_TR + GetPhysicalVolumeByName("physCrystalArray")->GetTranslation() + GetPhysicalVolumeByName("physCrystalModule0_0")->GetTranslation() + GetPhysicalVolumeByName("physClampTop0")->GetTranslation() << endl;
 
-		/*
-				cout << " post global position------" <<endl;
-				for(int i = 0; i < f200_TotTowerNum; i++){
-					for(int j = 0; j < nModuleInTower; j++){
-						G4int detid = i * 9 + j;
-						cout << "		physPost"<< detid << "_" << 0 <<": " << globalPos_TR + GetPhysicalVolumeByName("physCrystalArray")->GetTranslation() +
-							GetPhysicalVolumeByName(("physCrystalModule" + to_string(i) + "_" + to_string(j)).c_str())->GetTranslation() +
-							GetPhysicalVolumeByName(("physPost"+to_string(detid)+"_0").c_str())->GetTranslation() + G4ThreeVector(3,0,0) << endl;
-						cout << "		physPost"<< detid << "_" << 1 <<": " << globalPos_TR + GetPhysicalVolumeByName("physCrystalArray")->GetTranslation() +
-							GetPhysicalVolumeByName(("physCrystalModule" + to_string(i) + "_" + to_string(j)).c_str())->GetTranslation() +
-							GetPhysicalVolumeByName(("physPost"+to_string(detid)+"_1").c_str())->GetTranslation() + G4ThreeVector(3,0,0) << endl;
-						cout << "		physPost"<< detid << "_" << 2 <<": " << globalPos_TR + GetPhysicalVolumeByName("physCrystalArray")->GetTranslation() +
-							GetPhysicalVolumeByName(("physCrystalModule" + to_string(i) + "_" + to_string(j)).c_str())->GetTranslation() +
-							GetPhysicalVolumeByName(("physPost"+to_string(detid)+"_2").c_str())->GetTranslation() + G4ThreeVector(3,0,0) << endl;
-					}
-				}
-		*/
 		cout << " ===================================================" << endl;
 	}
 
@@ -740,7 +659,6 @@ void AmoreDetectorConstruction::ConstructAMoRE200_ID(G4LogicalVolume *aWorkAreaL
 	/////////////////////////////////////////////////////////////////
 	//  Set Region
 	G4Region *crystalsRegion = new G4Region("crystals");
-	// crystalsRegion->AddRootLogicalVolume(f200_logiCrystalCell);
 	for (int icry = 0; icry < f200_TotCrystalNum; icry++){
 		crystalsRegion->AddRootLogicalVolume(f200_logiCrystalCell[icry]);
 	}
@@ -1165,7 +1083,6 @@ G4LogicalVolume *AmoreDetectorConstruction::MakeModule(G4Material *towerMat, G4M
 	///_______________________________________________
 	G4Tubs *Screw_M5_head = new G4Tubs("M5_head", 0, M5_size / 2., M5_height / 2., 0, 360. * deg);
 	G4Tubs *Screw_M5_12 = new G4Tubs("M5_12", 0, post_bolt_r, M5_12_height / 2., 0, 360. * deg);
-	// G4Tubs *Screw_M5_15 = new G4Tubs("M5_15", 0, post_bolt_r, M5_15_height/2., 0, 360. * deg);
 	G4Tubs *Screw_M4_head = new G4Tubs("M4_head", 0, M4_size / 2., M4_height / 2., 0, 360. * deg);
 	G4Tubs *Screw_M4_6 = new G4Tubs("M4_6", 0, tophole0_size / 2., M4_6_height / 2., 0, 360. * deg);
 	G4Tubs *Screw_M4_4 = new G4Tubs("M4_4", 0, tophole0_size / 2., M4_4_height / 2., 0, 360. * deg);
@@ -1192,7 +1109,6 @@ G4LogicalVolume *AmoreDetectorConstruction::MakeModule(G4Material *towerMat, G4M
 	/// POSITIONING of the module componants
 	///-----------------------------------------------
 	G4int CrystalOffset = 1.;
-	// G4int CrystalIndex = TowerNum * nModuleInTower + ModuleNum;
 	G4ThreeVector cellPos = G4ThreeVector(0, 0, module_h / 2 - topleg_height - Module_thick - cell_h / 2. + CrystalOffset);
 
 	/// Crystal .................................
@@ -1460,34 +1376,5 @@ const AMoRE200CrystalModuleInfo AmoreDetectorStaticInfo::AMoRE_200::crystalModul
 	{"LMO6_4_0", 6.0 * cm / 2, 6.0 * cm, 7 * (Module_radius + Module_gap), -4 * (Module_radius + Module_gap) * sin(60 * deg)},
 	{"LMO6_4_1", 6.0 * cm / 2, 6.0 * cm, -7 * (Module_radius + Module_gap), -4 * (Module_radius + Module_gap) * sin(60 * deg)},
 	{"LMO6_4_2", 6.0 * cm / 2, 6.0 * cm, -(Module_radius + Module_gap), 8 * (Module_radius + Module_gap) * sin(60 * deg)}
-	//{"LMO6_4_3", 6.0 * cm / 2, 6.0 * cm,     Module_radius+Module_gap ,  8*(Module_radius+Module_gap)*sin(60*deg)}
 
-	/* for 70 module
-	   {"LMO6_4_0" , 6.0 * cm / 2, 6.0 * cm,  9*(Module_radius+Module_gap),  0},
-	   {"LMO6_4_1" , 6.0 * cm / 2, 6.0 * cm,  8*(Module_radius+Module_gap), -2*(Module_radius+Module_gap)*sin(60*deg)},
-	   {"LMO6_4_2" , 6.0 * cm / 2, 6.0 * cm,  7*(Module_radius+Module_gap), -4*(Module_radius+Module_gap)*sin(60*deg)},
-	   {"LMO6_4_3" , 6.0 * cm / 2, 6.0 * cm,  6*(Module_radius+Module_gap), -6*(Module_radius+Module_gap)*sin(60*deg)},
-	   {"LMO6_4_4" , 6.0 * cm / 2, 6.0 * cm,  5*(Module_radius+Module_gap), -8*(Module_radius+Module_gap)*sin(60*deg)},
-	   {"LMO6_4_5" , 6.0 * cm / 2, 6.0 * cm,  3*(Module_radius+Module_gap), -8*(Module_radius+Module_gap)*sin(60*deg)},
-	   {"LMO6_4_6" , 6.0 * cm / 2, 6.0 * cm,     Module_radius+Module_gap , -8*(Module_radius+Module_gap)*sin(60*deg)},
-	   {"LMO6_4_7" , 6.0 * cm / 2, 6.0 * cm,   -(Module_radius+Module_gap), -8*(Module_radius+Module_gap)*sin(60*deg)},
-	   {"LMO6_4_8" , 6.0 * cm / 2, 6.0 * cm, -3*(Module_radius+Module_gap), -8*(Module_radius+Module_gap)*sin(60*deg)},
-	   {"LMO6_4_9" , 6.0 * cm / 2, 6.0 * cm, -5*(Module_radius+Module_gap), -8*(Module_radius+Module_gap)*sin(60*deg)},
-	   {"LMO6_4_10", 6.0 * cm / 2, 6.0 * cm, -6*(Module_radius+Module_gap), -6*(Module_radius+Module_gap)*sin(60*deg)},
-	   {"LMO6_4_11", 6.0 * cm / 2, 6.0 * cm, -7*(Module_radius+Module_gap), -4*(Module_radius+Module_gap)*sin(60*deg)},
-	   {"LMO6_4_12", 6.0 * cm / 2, 6.0 * cm, -8*(Module_radius+Module_gap), -2*(Module_radius+Module_gap)*sin(60*deg)},
-	   {"LMO6_4_13", 6.0 * cm / 2, 6.0 * cm, -9*(Module_radius+Module_gap),  0},
-	   {"LMO6_4_14", 6.0 * cm / 2, 6.0 * cm, -8*(Module_radius+Module_gap),  2*(Module_radius+Module_gap)*sin(60*deg)},
-	   {"LMO6_4_15", 6.0 * cm / 2, 6.0 * cm, -7*(Module_radius+Module_gap),  4*(Module_radius+Module_gap)*sin(60*deg)},
-	   {"LMO6_4_16", 6.0 * cm / 2, 6.0 * cm, -6*(Module_radius+Module_gap),  6*(Module_radius+Module_gap)*sin(60*deg)},
-	   {"LMO6_4_17", 6.0 * cm / 2, 6.0 * cm, -5*(Module_radius+Module_gap),  8*(Module_radius+Module_gap)*sin(60*deg)},
-	   {"LMO6_4_18", 6.0 * cm / 2, 6.0 * cm, -3*(Module_radius+Module_gap),  8*(Module_radius+Module_gap)*sin(60*deg)},
-	   {"LMO6_4_19", 6.0 * cm / 2, 6.0 * cm,   -(Module_radius+Module_gap),  8*(Module_radius+Module_gap)*sin(60*deg)},
-	   {"LMO6_4_20", 6.0 * cm / 2, 6.0 * cm,     Module_radius+Module_gap ,  8*(Module_radius+Module_gap)*sin(60*deg)},
-	   {"LMO6_4_21", 6.0 * cm / 2, 6.0 * cm,  3*(Module_radius+Module_gap),  8*(Module_radius+Module_gap)*sin(60*deg)},
-	   {"LMO6_4_22", 6.0 * cm / 2, 6.0 * cm,  5*(Module_radius+Module_gap),  8*(Module_radius+Module_gap)*sin(60*deg)},
-	   {"LMO6_4_23", 6.0 * cm / 2, 6.0 * cm,  6*(Module_radius+Module_gap),  6*(Module_radius+Module_gap)*sin(60*deg)},
-	   {"LMO6_4_24", 6.0 * cm / 2, 6.0 * cm,  7*(Module_radius+Module_gap),  4*(Module_radius+Module_gap)*sin(60*deg)},
-	   {"LMO6_4_25", 6.0 * cm / 2, 6.0 * cm,  8*(Module_radius+Module_gap),  2*(Module_radius+Module_gap)*sin(60*deg)}
-	   */
 };

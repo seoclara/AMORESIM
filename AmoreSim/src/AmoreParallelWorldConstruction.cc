@@ -56,6 +56,11 @@ void AmoreParallelWorldConstruction::Construct(){
             fGlass = G4Material::GetMaterial("Glass");
             fStainless = G4Material::GetMaterial("StainlessSteel");
             fPMT_Vac = G4Material::GetMaterial("PMT_Vac");
+	    // Create optical surface for photocathode
+            fPhotocathode_opsurf = new G4OpticalSurface("Photocathode_opsurf");
+            fPhotocathode_opsurf->SetType(dielectric_metal); // ignored if RINDEX defined
+            fPhotocathode_opsurf->SetMaterialPropertiesTable(
+                G4Material::GetMaterial("photocathode")->GetMaterialPropertiesTable());
 
             // Create Para volume
             G4Box* paraBox = new G4Box("paraBox", 6600./2.*mm, 6600./2.*mm, 3300./2.*mm);

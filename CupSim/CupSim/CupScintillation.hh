@@ -1,57 +1,3 @@
-//
-// ********************************************************************
-// * License and Disclaimer                                           *
-// *                                                                  *
-// * The  Geant4 software  is  copyright of the Copyright Holders  of *
-// * the Geant4 Collaboration.  It is provided  under  the terms  and *
-// * conditions of the Geant4 Software License,  included in the file *
-// * LICENSE and available at  http://cern.ch/geant4/license .  These *
-// * include a list of copyright holders.                             *
-// *                                                                  *
-// * Neither the authors of this software system, nor their employing *
-// * institutes,nor the agencies providing financial support for this *
-// * work  make  any representation or  warranty, express or implied, *
-// * regarding  this  software system or assume any liability for its *
-// * use.  Please see the license in the file  LICENSE  and URL above *
-// * for the full disclaimer and the limitation of liability.         *
-// *                                                                  *
-// * This  code  implementation is the result of  the  scientific and *
-// * technical work of the GEANT4 collaboration.                      *
-// * By using,  copying,  modifying or  distributing the software (or *
-// * any work based  on the software)  you  agree  to acknowledge its *
-// * use  in  resulting  scientific  publications,  and indicate your *
-// * acceptance of all terms of the Geant4 Software license.          *
-// ********************************************************************
-//
-//
-// $Id: CupScintillation.hh,v 1.2 2017/09/27 09:04:54 ejjeon Exp $
-//
-//
-////////////////////////////////////////////////////////////////////////
-// Scintillation Light Class Definition
-////////////////////////////////////////////////////////////////////////
-//
-// File:        G4Scintillation.hh
-// Description:	Discrete Process - Generation of Scintillation Photons
-// Version:     1.0
-// Created:     1998-11-07
-// Author:      Peter Gumplinger
-// Updated:     2010-10-20 Allow the scintillation yield to be a function
-//                         of energy deposited by particle type
-//                         Thanks to Zach Hartwig (Department of Nuclear
-//                         Science and Engineeering - MIT)
-//              2005-07-28 add G4ProcessType to constructor
-//              2002-11-21 change to user G4Poisson for small MeanNumPotons
-//              2002-11-07 allow for fast and slow scintillation
-//              2002-11-05 make use of constant material properties
-//              2002-05-16 changed to inherit from VRestDiscreteProcess
-//              2002-05-09 changed IsApplicable method
-//              1999-10-29 add method and class descriptors
-//
-// mail:        gum@triumf.ca
-//
-////////////////////////////////////////////////////////////////////////
-
 #ifndef CupScintillation_h
 #define CupScintillation_h 1
 
@@ -203,7 +149,10 @@ class CupScintillation : public G4VRestDiscreteProcess,
     // EJ: start
     // following two methods are for G4UImessenger
     void SetNewValue(G4UIcommand *command, G4String newValues);
-    // G4String GetCurrentValue(G4UIcommand * command);
+    G4String GetCurrentValue(G4UIcommand * command);
+    void SetVerboseLevel(G4int level);
+    G4int GetVerboseLevel(void) const;
+    void PrintVerboseLevel();  // Method to print the current verbose level
 
     // following are for energy deposition diagnosis
     static void ResetTotEdep() {
@@ -250,19 +199,13 @@ class CupScintillation : public G4VRestDiscreteProcess,
     G4EmSaturation *emSaturation;
 
     // EJ: start
+    static G4int verboseLevel;
     static G4UIdirectory *CupScintDir;
     static G4bool doScintillation;
-#if G4VERSION_NUMBER >= 1000
     static G4ThreadLocal G4double totEdep;
     static G4ThreadLocal G4double totEdep_quenched;
     static G4ThreadLocal G4int nScintPhotons;
     static G4ThreadLocal G4ThreeVector scintCentroidSum;
-#else
-    static G4double totEdep;
-    static G4double totEdep_quenched;
-    static G4int nScintPhotons;
-    static G4ThreeVector scintCentroidSum;
-#endif
     // EJ: end
 };
 
@@ -339,5 +282,8 @@ inline G4double CupScintillation::bi_exp(G4double t, G4double tau1, G4double tau
     return std::exp(-1.0 * t / tau2) * (1 - std::exp(-1.0 * t / tau1)) / tau2 / tau2 *
            (tau1 + tau2);
 }
+
+inline void CupScintillation::SetVerboseLevel(int level) { verboseLevel= level; }
+inline G4int CupScintillation::GetVerboseLevel(void) const { return verboseLevel; }
 
 #endif /* CupScintillation_h */

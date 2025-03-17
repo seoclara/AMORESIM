@@ -25,16 +25,11 @@ G4UIdirectory *CupScintillation::CupScintDir = 0;
 // universal on/off flag
 G4bool CupScintillation::doScintillation = true;
 // energy deposition
-#if G4VERSION_NUMBER >= 1000
 G4ThreadLocal G4double CupScintillation::totEdep          = 0.0;
 G4ThreadLocal G4double CupScintillation::totEdep_quenched = 0.0;
 G4ThreadLocal G4int CupScintillation::nScintPhotons       = 0;
-#else
-G4double CupScintillation::totEdep          = 0.0;
-G4double CupScintillation::totEdep_quenched = 0.0;
-G4int CupScintillation::nScintPhotons       = 0;
-#endif
-
+// verboseLevel
+G4int CupScintillation::verboseLevel     = 0; // Initialize static member
 // EJ: end
 
 /////////////////
@@ -109,11 +104,33 @@ void CupScintillation::SetNewValue(G4UIcommand *command, G4String newValues) {
     } else if (commandName == "off") {
         doScintillation = false;
     } else if (commandName == "verbose") {
-        verboseLevel = strtol((const char *)newValues, NULL, 0);
+        G4int level = strtol((const char *)newValues, NULL, 0);
+	SetVerboseLevel(level);
     } else {
         G4cerr << "No CupScintillation command named " << commandName << G4endl;
     }
     return;
+}
+
+G4String
+CupScintillation::GetCurrentValue(G4UIcommand * command)
+{
+   G4String commandName= command -> GetCommandName();
+   if (commandName == "on" || commandName == "off") {
+     return doScintillation ? "on" : "off";
+   }
+   else if (commandName == "verbose") {
+     char outbuff[64];
+     sprintf(outbuff, "%d", verboseLevel);
+     return G4String(outbuff);
+   }
+   else {
+     return (commandName+" is not a valid CupScintillation command");
+   }
+}
+
+void CupScintillation::PrintVerboseLevel() {
+    G4cerr << "PrintVerboseLevel: Current verboseLevel is " << verboseLevel << G4endl;
 }
 // EJ: end
 
@@ -359,7 +376,7 @@ G4VParticleChange *CupScintillation::PostStepDoIt(const G4Track &aTrack, const G
             if (nscnt == 1) {
                 if (Fast_Intensity) {
                     ScintillationTime =
-                        aMaterialPropertiesTable->GetConstProperty("SCINTILLATIONTIMECONSTANT1");
+                        aMaterialPropertiesTable->GetConstProperty("FASTTIMECONSTANT");
                     if (fFiniteRiseTime) {
                         ScintillationRiseTime =
                             aMaterialPropertiesTable->GetConstProperty("FASTSCINTILLATIONRISETIME");
@@ -378,13 +395,13 @@ G4VParticleChange *CupScintillation::PostStepDoIt(const G4Track &aTrack, const G
                         (G4PhysicsOrderedFreeVector *)((*theSlowIntegralTable)(materialIndex));
                 }
             } else {
-                G4double YieldRatio = aMaterialPropertiesTable->GetConstProperty("SCINTILLATIONYIELD1");
+                G4double YieldRatio = aMaterialPropertiesTable->GetConstProperty("YIELDRATIO");
                 if (ExcitationRatio == 1.0) {
                     Num = G4int(std::min(YieldRatio, 1.0) * NumPhotons);
                 } else {
                     Num = G4int(std::min(ExcitationRatio, 1.0) * NumPhotons);
                 }
-                ScintillationTime = aMaterialPropertiesTable->GetConstProperty("SCINTILLATIONTIMECONSTANT1");
+                ScintillationTime = aMaterialPropertiesTable->GetConstProperty("FASTTIMECONSTANT");
                 if (fFiniteRiseTime) {
                     ScintillationRiseTime =
                         aMaterialPropertiesTable->GetConstProperty("FASTSCINTILLATIONRISETIME");

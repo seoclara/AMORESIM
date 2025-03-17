@@ -240,7 +240,7 @@ OPTION wavelength
  770 10.0e3   # V
  800  0.1e-3  # (G4OpAbsorption / GetP.I.L. bug workaround)
 
-PROPERTY  FASTCOMPONENT
+PROPERTY  SCINTILLATIONCOMPONENT1
 # UNITS  nm\E (nm\E)^(-1)*(MeV)^(-1)    
 OPTION dy_dwavelength
 200       0.7302
@@ -432,7 +432,7 @@ OPTION dy_dwavelength
 797       0.0204
 800       0.0195
 
-PROPERTY  SLOWCOMPONENT
+PROPERTY  SCINTILLATIONCOMPONENT2
 # UNITS  nm\E (nm\E)^(-1)*(MeV)^(-1)    
 OPTION dy_dwavelength
 200       0.7302
@@ -1179,7 +1179,7 @@ OPTION wavelength
  770 0.020	 # |
  800 0.0         # v
 
-PROPERTY  FASTCOMPONENT
+PROPERTY  SCINTILLATIONCOMPONENT1
 # UNITS  nm\E (nm\E)^(-1)*(MeV)^(-1)    
 OPTION dy_dwavelength
 200       0.7302
@@ -1372,7 +1372,7 @@ OPTION dy_dwavelength
 800       0.0195
 
 
-PROPERTY  SLOWCOMPONENT
+PROPERTY  SCINTILLATIONCOMPONENT2
 # UNITS  nm\E (nm\E)^(-1)*(MeV)^(-1)    
 OPTION dy_dwavelength
 200       0.7302
@@ -1604,7 +1604,7 @@ OPTION wavelength
  770 10.0e3   # V
  800  0.1e-3  # (G4OpAbsorption / GetP.I.L. bug workaround)
 
-PROPERTY  FASTCOMPONENT
+PROPERTY  SCINTILLATIONCOMPONENT1
 # UNITS  nm\E (nm\E)^(-1)*(MeV)^(-1)    
 OPTION dy_dwavelength
 300     1.0
@@ -1612,7 +1612,7 @@ OPTION dy_dwavelength
 650     1.0
 750     1.0
 
-PROPERTY  SLOWCOMPONENT
+PROPERTY  SCINTILLATIONCOMPONENT2
 # UNITS  nm\E (nm\E)^(-1)*(MeV)^(-1)    
 OPTION dy_dwavelength
 300     1.0
@@ -1660,7 +1660,7 @@ OPTION wavelength
  770 10.0e3   # V
  800  0.1e-3  # (G4OpAbsorption / GetP.I.L. bug workaround)
 
-PROPERTY  FASTCOMPONENT
+PROPERTY  SCINTILLATIONCOMPONENT1
 # UNITS  nm\E (nm\E)^(-1)*(MeV)^(-1)    
 OPTION dy_dwavelength
 300	1.0
@@ -1668,7 +1668,7 @@ OPTION dy_dwavelength
 650	1.0
 750	1.0
 
-PROPERTY  SLOWCOMPONENT
+PROPERTY  SCINTILLATIONCOMPONENT2
 # UNITS  nm\E (nm\E)^(-1)*(MeV)^(-1)    
 OPTION dy_dwavelength
 300     1.0

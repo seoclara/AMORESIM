@@ -59,16 +59,140 @@
 #include "CupSim/CupParam.hh"
 #include "CupSim/CupPhysicsList.hh"
 #include "CupSim/CupPhysicsListMessenger.hh"
+#include "CupSim/CupDeferTrackProc.hh"
 
+#include "globals.hh"
+#include "G4SystemOfUnits.hh"
 #include "G4ProcessManager.hh"
 #include "G4ProcessVector.hh"
-#include "G4SystemOfUnits.hh"
-#include "globals.hh"
 
 #include "G4ParticleDefinition.hh"
-#include "G4ParticleTable.hh"
-#include "G4ParticleTypes.hh"
 #include "G4ParticleWithCuts.hh"
+#include "G4ParticleTypes.hh"
+#include "G4ParticleTable.hh"
+
+#include "G4ios.hh"
+#include "G4UserLimits.hh"
+
+#include "G4MesonConstructor.hh"
+#include "G4BaryonConstructor.hh"
+#include "G4IonConstructor.hh"
+#include "G4ShortLivedConstructor.hh"
+
+#include "G4StepLimiter.hh"
+
+// gamma
+#include "G4PhotoElectricEffect.hh"
+#include "G4LivermorePhotoElectricModel.hh"
+
+#include "G4ComptonScattering.hh"
+#include "G4LivermoreComptonModel.hh"
+
+#include "G4GammaConversion.hh"
+#include "G4BetheHeitler5DModel.hh"
+
+#include "G4RayleighScattering.hh"
+#include "G4LivermoreRayleighModel.hh"
+
+// e-
+#include "G4eMultipleScattering.hh"
+
+#include "G4eIonisation.hh"
+#include "G4LivermoreIonisationModel.hh"
+
+#include "G4eBremsstrahlung.hh"
+#include "G4UniversalFluctuation.hh"
+
+// e+
+#include "G4eIonisation.hh"
+#include "G4eBremsstrahlung.hh"
+#include "G4eplusAnnihilation.hh"
+
+// alpha and GenericIon and deuterons, triton, He3:
+//muon:
+#include "G4MuIonisation.hh"
+#include "G4MuBremsstrahlung.hh"
+#include "G4MuPairProduction.hh"
+#include "G4MuMultipleScattering.hh"
+#include "G4MuonMinusCapture.hh"
+
+//OTHERS:
+#include "G4hIonisation.hh"
+#include "G4hMultipleScattering.hh"
+#include "G4hBremsstrahlung.hh"
+#include "G4ionIonisation.hh"
+#include "G4IonParametrisedLossModel.hh"
+
+//em process options to allow msc step-limitation to be switched off
+#include "G4EmParameters.hh"
+#include "G4VAtomDeexcitation.hh"
+#include "G4UAtomicDeexcitation.hh"
+#include "G4LossTableManager.hh"
+
+#include "G4Scintillation.hh"
+#include "G4OpAbsorption.hh"
+//#include "G4OpBoundaryProcess.hh" // EJ: replaced by CupOpBoundaryProcess.hh
+#include "G4OpticalParameters.hh"
+
+// Elastic processes:
+#include "G4HadronElasticProcess.hh"
+#include "G4ChipsElasticModel.hh"
+#include "G4ElasticHadrNucleusHE.hh"
+
+// Inelastic processes:
+#include "G4HadronInelasticProcess.hh"
+
+// High energy FTFP model and Bertini cascade
+#include "G4FTFModel.hh"
+#include "G4LundStringFragmentation.hh"
+#include "G4ExcitedStringDecay.hh"
+#include "G4PreCompoundModel.hh"
+#include "G4GeneratorPrecompoundInterface.hh"
+#include "G4TheoFSGenerator.hh"
+#include "G4CascadeInterface.hh"
+
+// Cross sections
+#include "G4VCrossSectionDataSet.hh"
+#include "G4CrossSectionDataSetRegistry.hh"
+
+#include "G4CrossSectionElastic.hh"
+#include "G4CrossSectionInelastic.hh"
+#include "G4BGGPionElasticXS.hh"
+#include "G4BGGPionInelasticXS.hh"
+#include "G4AntiNuclElastic.hh"
+
+#include "G4CrossSectionInelastic.hh"
+#include "G4BGGNucleonInelasticXS.hh"
+#include "G4BGGNucleonElasticXS.hh"
+#include "G4NeutronInelasticXS.hh"
+#include "G4NeutronElasticXS.hh"
+#include "G4ComponentAntiNuclNuclearXS.hh"
+#include "G4ComponentGGNuclNuclXsc.hh"
+#include "G4ComponentGGHadronNucleusXsc.hh"
+
+#include "G4HadronElastic.hh"
+#include "G4NeutronCaptureProcess.hh"
+
+// Neutron high-precision models: <20 MeV
+#include "G4ParticleHPElastic.hh"
+#include "G4ParticleHPElasticData.hh"
+#include "G4ParticleHPCapture.hh"
+#include "G4ParticleHPCaptureData.hh"
+#include "G4ParticleHPInelastic.hh"
+#include "G4ParticleHPInelasticData.hh"
+
+// Stopping processes
+#include "G4HadronStoppingProcess.hh"
+#include "G4HadronicAbsorptionBertini.hh"
+#include "G4HadronicAbsorptionFritiof.hh"
+
+#include "G4HadronicParameters.hh"
+
+#include "G4Decay.hh"
+#include "G4RadioactiveDecay.hh"
+#include "G4PhysicsListHelper.hh"
+#include "G4NuclideTable.hh"
+#include "G4NuclearLevelData.hh"
 
 #include "G4EmLivermorePhysics.hh"
 #include "G4EmStandardPhysics.hh"
@@ -77,8 +201,6 @@
 #include "G4RegionStore.hh"
 
 #include "G4ios.hh"
-
-#include "CupSim/CupDeferTrackProc.hh"
 
 G4ProductionCuts *CupPhysicsList::DetectorCuts = nullptr;
 G4double CupPhysicsList::cutForGamma           = 0;
@@ -111,9 +233,10 @@ CupPhysicsList::CupPhysicsList() : G4VModularPhysicsList() {
 	pMessenger       = new CupPhysicsListMessenger(this);
 	CupParam &db     = CupParam::GetDB();
 	omitHadronicProc = (db["omit_hadronic_processes"] != 0.0);
+	//G4cout << "EJ: omitHadronicProc = " << omitHadronicProc << G4endl;
 	if (omitHadronicProc) {
 		G4cerr << "Warning, Hadronic processes omitted.\n";
-		return;
+		//return;
 	}
 	omitNeutHP = (db["omit_neutron_hp"] != 0.0);
 	if (omitNeutHP) {
@@ -121,6 +244,21 @@ CupPhysicsList::CupPhysicsList() : G4VModularPhysicsList() {
 	} else {
 		G4cerr << "Note: +++ INCLUDING neutron_hp model. +++" << G4endl;
 	}
+
+	// Hadronic physics extra configuration
+  	G4double hlThreshold = 1000 * picosecond;
+    	G4NuclideTable::GetInstance()->SetThresholdOfHalfLife(hlThreshold);
+
+  	//G4EmParameters::Instance()->AddPhysics("World","G4RadioactiveDecay");
+  	G4EmParameters::Instance()->AddPhysics("World","G4Radioactivation");
+  	G4DeexPrecoParameters* deex = G4NuclearLevelData::GetInstance()->GetParameters();
+  	deex->SetStoreICLevelData(true);
+  	deex->SetMaxLifeTime(G4NuclideTable::GetInstance()->GetThresholdOfHalfLife()
+                       /std::log(2.));
+	// radioactivation of materials
+  	deex->SetIsomerProduction(true);
+  	deex->SetCorrelatedGamma(true);
+  	SetVerboseLevel(VerboseLevel);
 }
 
 // Destructor //////////////////////////////////////////////////////////////
@@ -287,20 +425,13 @@ void CupPhysicsList::AddParameterisation() {
 #include "G4hMultipleScattering.hh"
 #include "G4ionIonisation.hh"
 
-// em process options to allow msc step-limitation to be switched off
-//#include "G4EmProcessOptions.hh"
 #include "G4LossTableManager.hh"
 
 void CupPhysicsList::ConstructEM() {
 
 	// set a finer grid of the physic tables in order to improve precision
 	// former LowEnergy models have 200 bins up to 100 GeV
-/*
-	G4EmProcessOptions opt;
-	opt.SetMaxEnergy(100 * GeV);
-	opt.SetDEDXBinning(200);
-	opt.SetLambdaBinning(200);
-*/
+
 	auto theParticleIterator = GetParticleIterator();
 
 	theParticleIterator->reset();
@@ -419,12 +550,6 @@ void CupPhysicsList::ConstructEM() {
 		}
 	}
 
-	// switch on fluorescence, PIXE and Auger:
-/*
-	opt.SetFluo(true);
-	opt.SetPIXE(true);
-	opt.SetAuger(true);
-*/
 }
 
 // Optical Processes ////////////////////////////////////////////////////////
@@ -434,7 +559,6 @@ void CupPhysicsList::ConstructEM() {
 #include "CupSim/CupScintillation.hh"
 #include "G4Cerenkov.hh"
 #include "G4EmSaturation.hh"
-//#include "G4OpBoundaryProcess.hh"
 // EJ: end
 
 void CupPhysicsList::ConstructOp() {
@@ -911,6 +1035,11 @@ void CupPhysicsList::ConstructHad() {
 #include "G4IonTable.hh"
 #include "G4Ions.hh"
 #include "G4RadioactiveDecay.hh"
+#include "G4Radioactivation.hh"
+
+#include "G4NuclideTable.hh"
+#include "G4NuclearLevelData.hh"
+#include "G4DeexPrecoParameters.hh"
 
 void CupPhysicsList::ConstructGeneral() {
 
@@ -933,13 +1062,58 @@ void CupPhysicsList::ConstructGeneral() {
 		if (!particle->IsShortLived()) pmanager->AddDiscreteProcess(theDeferProcess);
 	}
 
+	//G4RadioactiveDecay *theRadioactiveDecay = new G4RadioactiveDecay();
+	auto theRadioactiveDecay  = new G4Radioactivation();
+  	theRadioactiveDecay->SetARM(true);    
+
+	//set a finer grid of the physic tables in order to improve precision
+  	//former LowEnergy models have 200 bins up to 100 GeV
+  	G4EmParameters* emParameters = G4EmParameters::Instance();
+  	//emParameters->SetVerbose(2);
+  	//emParameters->SetNumberOfBinsPerDecade(20);
+  	//emParameters->SetMscStepLimitType(fMinimal);
+	// EM physics extra configuration
+  	// this physics constructor should be defined after EM constructor
+	//emParameters->SetMinEnergy(100.0 * eV);
+	//emParameters->SetMaxEnergy(100.0 * GeV);
+	emParameters->SetAuger(true);  // Enable Auger electron production
+	emParameters->SetFluo(true);   // Enable fluorescence
+	emParameters->SetPixe(true);   // Enable PIXE
+	emParameters->SetDeexcitationIgnoreCut(true);
+
+	// EM physics constructor is not used in this example, so
+  	// it is needed to instantiate and to initialize atomic deexcitation
+  	G4LossTableManager* man = G4LossTableManager::Instance();
+  	G4VAtomDeexcitation* ad = man->AtomDeexcitation();
+  	if(!ad) {
+    	G4EmParameters::Instance()->SetAugerCascade(true);
+    	ad = new G4UAtomicDeexcitation();
+    	man->SetAtomDeexcitation(ad);
+    	ad->InitialiseAtomicDeexcitation();
+	}
+
 	// Declare radioactive decay to the GenericIon in the IonTable.
-	const G4IonTable *theIonTable           = G4ParticleTable::GetParticleTable()->GetIonTable();
+	// register radioactiveDecay
+  	G4PhysicsListHelper::GetPhysicsListHelper()->
+    	RegisterProcess(theRadioactiveDecay, G4GenericIon::GenericIon());
+
+	G4ParticleDefinition* triton = G4Triton::Definition();
+    	triton->SetPDGStable(false);
+	G4PhysicsListHelper::GetPhysicsListHelper()->RegisterProcess(theRadioactiveDecay,
+                                                               G4Triton::Triton());
+	
+/*
+	// Declare radioactive decay to the GenericIon in the IonTable.
 	G4RadioactiveDecay *theRadioactiveDecay = new G4RadioactiveDecay();
+	//auto theRadioactiveDecay  = new G4Radioactivation();
+
+	const G4IonTable *theIonTable           = G4ParticleTable::GetParticleTable()->GetIonTable();
+
+	G4ParticleDefinition* triton = G4Triton::Definition();
+        triton->SetPDGStable(false);
 
 	for (G4int i = 0; i < theIonTable->Entries(); i++) {
 		G4String particleName = theIonTable->GetParticle(i)->GetParticleName();
-		G4String particleType = theIonTable->GetParticle(i)->GetParticleType();
 
 		if (particleName == "GenericIon") {
 			G4ProcessManager *pmanager = theIonTable->GetParticle(i)->GetProcessManager();
@@ -957,6 +1131,18 @@ void CupPhysicsList::ConstructGeneral() {
 			pmanager->SetProcessOrdering(theRadioactiveDecay, idxAtRest);
 		}
 	}
+
+	// Configure atomic deexcitation parameters
+    //G4EmParameters* emParameters = G4EmParameters::Instance();
+    auto emParameters = G4EmParameters::Instance();
+    emParameters->SetVerbose(1);
+    emParameters->SetMinEnergy(100.0 * eV);
+    emParameters->SetMaxEnergy(100.0 * GeV);
+    emParameters->SetAuger(true);  // Enable Auger electron production
+    emParameters->SetFluo(true);   // Enable fluorescence
+    emParameters->SetPixe(true);   // Enable PIXE
+    emParameters->SetDeexcitationIgnoreCut(true); // Ensure deexcitation processes are not cut off
+	*/
 }
 
 // Cuts /////////////////////////////////////////////////////////////////////

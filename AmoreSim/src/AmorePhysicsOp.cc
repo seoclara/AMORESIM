@@ -1,14 +1,14 @@
 #include "AmoreSim/AmorePhysicsOp.hh"
 #include "AmoreSim/AmoreScintillation.hh"
 #include "CupSim/CupOpAttenuation.hh"
-#include "CupSim/CupOpBoundaryProcess.hh"
+//#include "CupSim/CupOpBoundaryProcess.hh"
 
 #include "G4LossTableManager.hh"
 #include "G4ProcessManager.hh"
 
 #include "G4Cerenkov.hh"
 #include "G4EmSaturation.hh"
-//#include "G4OpBoundaryProcess.hh"
+#include "G4OpBoundaryProcess.hh"
 #include "G4OpticalPhysics.hh"
 
 #include "G4Version.hh"
@@ -20,7 +20,16 @@ AmorePhysicsOp::AmorePhysicsOp(const G4String &name) : G4VPhysicsConstructor(nam
 AmorePhysicsOp::~AmorePhysicsOp() {}
 
 void AmorePhysicsOp::ConstructProcess() {
-    // EJ: start
+
+    G4ProcessManager * pmanager =
+        G4OpticalPhoton::OpticalPhoton()->GetProcessManager();
+    if (!pmanager) {
+        G4ExceptionDescription ed;
+        ed << "Optical Photon without a Process Manager";
+        G4Exception("G4OpticalPhysics::ConstructProcess()", "", FatalException, ed);
+        return;
+    }	
+
     // scintillation process
     AmoreScintillation *theScintProcessDef = new AmoreScintillation("Scintillation");
     // theScintProcessDef->DumpPhysicsTable();
@@ -36,10 +45,12 @@ void AmorePhysicsOp::ConstructProcess() {
     CupOpAttenuation *theAttenuationProcess = new CupOpAttenuation();
     theAttenuationProcess->UseTimeProfile("exponential");
     theAttenuationProcess->SetVerboseLevel(OpVerbLevel);
+    pmanager->AddDiscreteProcess(theAttenuationProcess);
 
-    //G4OpBoundaryProcess *theBoundaryProcess = new G4OpBoundaryProcess();
-    CupOpBoundaryProcess *theBoundaryProcess = new CupOpBoundaryProcess();
+    G4OpBoundaryProcess *theBoundaryProcess = new G4OpBoundaryProcess();
+    //CupOpBoundaryProcess *theBoundaryProcess = new CupOpBoundaryProcess();
     theBoundaryProcess->SetVerboseLevel(OpVerbLevel);
+    pmanager->AddDiscreteProcess(theBoundaryProcess);
 
     // Cerenkov
     G4Cerenkov *theCerenkovProcess = new G4Cerenkov();
@@ -57,6 +68,8 @@ void AmorePhysicsOp::ConstructProcess() {
         G4ParticleDefinition *particle = theParticleIterator->value();
         G4ProcessManager *pmanager     = particle->GetProcessManager();
         G4String particleName          = particle->GetParticleName();
+	if (!pmanager) continue;
+
         if (theScintProcessDef->IsApplicable(*particle)) {
             pmanager->AddProcess(theScintProcessDef);
             pmanager->SetProcessOrderingToLast(theScintProcessDef, idxAtRest);

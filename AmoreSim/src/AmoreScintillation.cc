@@ -41,9 +41,9 @@ G4VParticleChange *AmoreScintillation::PostStepDoIt(const G4Track &aTrack, const
     if (!aMaterialPropertiesTable) return G4VRestDiscreteProcess::PostStepDoIt(aTrack, aStep);
 
     G4MaterialPropertyVector *Fast_Intensity =
-        aMaterialPropertiesTable->GetProperty("FASTCOMPONENT");
+        aMaterialPropertiesTable->GetProperty("SCINTILLATIONCOMPONENT1");
     G4MaterialPropertyVector *Slow_Intensity =
-        aMaterialPropertiesTable->GetProperty("SLOWCOMPONENT");
+        aMaterialPropertiesTable->GetProperty("SCINTILLATIONCOMPONENT2");
 
     if (!Fast_Intensity && !Slow_Intensity)
         return G4VRestDiscreteProcess::PostStepDoIt(aTrack, aStep);
