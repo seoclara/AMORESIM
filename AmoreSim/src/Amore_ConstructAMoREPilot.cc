@@ -1335,10 +1335,10 @@ void AmoreDetectorConstruction::ConstructAMoREPilot() {
     }
     fPilot_logiCMOCell = new G4LogicalVolume *[CMOCellNum];
     for (int nn = 0; nn < CMOCellNum; nn++) { //  5 layers
-        sprintf(namecmo, "CMOCell%d", nn);
+        snprintf(namecmo, sizeof(namecmo), "CMOCell%d", nn);
         CMOCell[nn] = new G4EllipticalTube(namecmo, // name
                                            cmocell_lr[nn], cmocell_sr[nn], cmocell_h[nn]);
-        sprintf(namecmo, "logiCMOCell%d", nn);
+        snprintf(namecmo, sizeof(namecmo), "logiCMOCell%d", nn);
         logiCMOCell[nn]        = new G4LogicalVolume(CMOCell[nn], CaMoO4, namecmo, 0, 0, 0);
         fPilot_logiCMOCell[nn] = logiCMOCell[nn];
 
@@ -1346,7 +1346,7 @@ void AmoreDetectorConstruction::ConstructAMoREPilot() {
 
         PosCMOCell = G4ThreeVector(0, 0, zCell[nn]);
 
-        sprintf(namecmo, "physCMOCell%d", nn);
+        snprintf(namecmo, sizeof(namecmo), "physCMOCell%d", nn);
         new G4PVPlacement(nullptr, PosCMOCell, logiCMOCell[nn], namecmo, logiTargetRoom, false,
                           copyNo);
         G4cout << "###   " << logiCMOCell[nn]->GetName() << "  " << logiCMOCell[nn]->GetMass() / kg
@@ -1436,7 +1436,7 @@ void AmoreDetectorConstruction::ConstructAMoREPilot() {
         copyNo       = nn;
         PhotonDetZ   = cmocell_h[nn] + PhotonDet_zsize + zCell[nn];
         PosPhotonDet = G4ThreeVector(0, 0, PhotonDetZ);
-        sprintf(namePEEK4, "PEEK4_%d", nn);
+        snprintf(namePEEK4, sizeof(namePEEK4), "PEEK4_%d", nn);
         new G4PVPlacement(0, G4ThreeVector(15, 21, PhotonDetZ + 1.05 * mm), lPEEK4, namePEEK4,
                           logiTargetRoom, false, copyNo);
         new G4PVPlacement(0, G4ThreeVector(-15, 21, PhotonDetZ + 1.05 * mm), lPEEK4, namePEEK4,
@@ -1463,7 +1463,7 @@ void AmoreDetectorConstruction::ConstructAMoREPilot() {
         copyNo       = nn;
         PhotonDetZ   = cmocell_h[nn] + PhotonDet_zsize + zCell[nn];
         PosPhotonDet = G4ThreeVector(0, 0, PhotonDetZ);
-        sprintf(nameBCT, "BCT_%d", nn);
+        snprintf(nameBCT, sizeof(nameBCT), "BCT_%d", nn);
         new G4PVPlacement(0, G4ThreeVector(19.5, 26.5, PhotonDetZ - 1. * mm), lBCT, nameBCT,
                           logiTargetRoom, false, copyNo);
         new G4PVPlacement(0, G4ThreeVector(19.5, -26.5, PhotonDetZ - 1. * mm), lBCT, nameBCT,
@@ -1490,7 +1490,7 @@ void AmoreDetectorConstruction::ConstructAMoREPilot() {
 
     for (int nn = 1; nn < 7; nn++) {
         copyNo = nn;
-        sprintf(namePEEKCr, "PEEKCr_%d", nn);
+        snprintf(namePEEKCr, sizeof(namePEEKCr), "PEEKCr_%d", nn);
 
         PhotonDetZ   = cmocell_h[nn] + PhotonDet_zsize + zCell[nn];
         PosPhotonDet = G4ThreeVector(0, 0, PhotonDetZ);
@@ -1549,26 +1549,26 @@ void AmoreDetectorConstruction::ConstructAMoREPilot() {
         PhotonDetZ   = cmocell_h[nn] + PhotonDet_zsize + zCell[nn];
         PosPhotonDet = G4ThreeVector(0, 0, PhotonDetZ);
 
-        sprintf(nameMothEpoxy, "MothEpoxy_%d", nn);
+        snprintf(nameMothEpoxy, sizeof(nameMothEpoxy), "MothEpoxy_%d", nn);
         physMothEpoxy = new G4PVPlacement(0, G4ThreeVector(0, -20, PhotonDetZ + 3.775), lMothEpoxy,
                                           nameMothEpoxy, logiTargetRoom, false, copyNo);
         (void)physMothEpoxy;
     }
 
-    sprintf(namePCB, "PCB_");
+    snprintf(namePCB, sizeof(namePCB), "PCB_");
     new G4PVPlacement(0, G4ThreeVector(0, -5, 0.0225), lPCB, namePCB, lMothEpoxy, false, copyNo);
 
-    sprintf(nameEpoxy, "Epoxy_");
+    snprintf(nameEpoxy, sizeof(nameEpoxy), "Epoxy_");
     new G4PVPlacement(cRotation, G4ThreeVector(-5, 10, -0.2655), lEpoxy, nameEpoxy, lMothEpoxy,
                       false, copyNo);
 
     new G4PVPlacement(cRotation, G4ThreeVector(2, 13, -0.2665), lEpoxy, nameEpoxy, lMothEpoxy,
                       false, copyNo);
 
-    sprintf(nameSolder, "Solder_");
+    snprintf(nameSolder, sizeof(nameSolder), "Solder_");
     new G4PVPlacement(0, G4ThreeVector(3, 0, 0.14), lSolder, nameSolder, lMothEpoxy, false, copyNo);
 
-    sprintf(nameSolder2, "Solder2_");
+    snprintf(nameSolder2, sizeof(nameSolder2), "Solder2_");
     new G4PVPlacement(0, G4ThreeVector(-3, -3, 0.14), lSolder2, nameSolder2, lMothEpoxy, false,
                       copyNo);
 
@@ -1882,7 +1882,7 @@ void AmoreDetectorConstruction::ConstructAMoREPilot() {
 
         copyNo           = nn;
         PosCopperframeUp = G4ThreeVector(0, 0, zCup[nn] - CopperFz / 2);
-        sprintf(namecuframe, "physCopperFrame%d", nn);
+        snprintf(namecuframe, sizeof(namecuframe), "physCopperFrame%d", nn);
         new G4PVPlacement(nullptr, PosCopperframeUp, logiSquareDiskUp[nn], namecuframe,
                           logiTargetRoom, false, copyNo);
         G4cout << "###   " << logiSquareDiskUp[nn]->GetName() << "  "
@@ -1935,29 +1935,29 @@ void AmoreDetectorConstruction::ConstructAMoREPilot() {
         PhotonDetZ   = cmocell_h[nn] + PhotonDet_zsize + zCell[nn];
         PosPhotonDet = G4ThreeVector(0, 0, PhotonDetZ);
 
-        sprintf(nameMotEpoxy, "MotEpoxy_%d", nn);
+        snprintf(nameMotEpoxy, sizeof(nameMotEpoxy), "MotEpoxy_%d", nn);
         physMotEpoxy = new G4PVPlacement(
             0, G4ThreeVector(-1.45 * cm / 2 - 2 * mm, 15.3, PhotonDetZ + 7.1 * mm - 0.058 * cm),
             lMotEpoxy, nameMotEpoxy, logiTargetRoom, false, copyNo);
         (void)physMotEpoxy;
     }
 
-    sprintf(namePCB2, "PCB2");
+    snprintf(namePCB2, sizeof(namePCB2), "PCB2");
     new G4PVPlacement(0, G4ThreeVector(0, -5, -0.079), lPCB2, namePCB2, lMotEpoxy, false, copyNo);
 
-    sprintf(nameEpoxy3, "Epoxy3");
+    snprintf(nameEpoxy3, sizeof(nameEpoxy3), "Epoxy3");
     new G4PVPlacement(0, G4ThreeVector(1.5, -11, 0.268 * mm), lEpoxy3, nameEpoxy3, lMotEpoxy, false,
                       copyNo);
 
-    sprintf(nameEpoxy2, "Epoxy2");
+    snprintf(nameEpoxy2, sizeof(nameEpoxy2), "Epoxy2");
     new G4PVPlacement(0, G4ThreeVector(-4.1, -15, 0.268 * mm), lEpoxy2, nameEpoxy2, lMotEpoxy,
                       false, copyNo);
 
-    sprintf(nameSolder3, "Solder3");
+    snprintf(nameSolder3, sizeof(nameSolder3), "Solder3");
     new G4PVPlacement(0, G4ThreeVector(3.5, 0, -0.256 * mm), lSolder3, nameSolder3, lMotEpoxy,
                       false, copyNo);
 
-    sprintf(nameSolder4, "Solder4");
+    snprintf(nameSolder4, sizeof(nameSolder4), "Solder4");
     new G4PVPlacement(0, G4ThreeVector(-3.5, 3, -0.256 * mm), lSolder4, nameSolder4, lMotEpoxy,
                       false, copyNo);
 
@@ -2024,16 +2024,16 @@ void AmoreDetectorConstruction::ConstructAMoREPilot() {
         PhotonDetZ   = cmocell_h[nn] + PhotonDet_zsize + zCell[nn];
         PosPhotonDet = G4ThreeVector(0, 0, PhotonDetZ);
 
-        sprintf(nameMSH, "mSH_%d", nn);
+        snprintf(nameMSH, sizeof(nameMSH), "mSH_%d", nn);
         physmSH = new G4PVPlacement(0, G4ThreeVector(0, 15.5, PhotonDetZ + 9.1 * mm), lmSH, nameMSH,
                                     logiTargetRoom, false, copyNo);
         (void)physmSH;
     }
 
-    sprintf(nameSH, "SH");
+    snprintf(nameSH, sizeof(nameSH), "SH");
     new G4PVPlacement(0, G4ThreeVector(0, 0, 0.054), lSH, nameSH, lmSH, false, copyNo);
 
-    sprintf(nameESH, "eSH");
+    snprintf(nameESH, sizeof(nameESH), "eSH");
     new G4PVPlacement(0, G4ThreeVector(0.26 * mm / 2, 0, -0.137), leSH, nameESH, lmSH, false,
                       copyNo);
     new G4PVPlacement(0, G4ThreeVector(-0.26 * mm / 2, 0, -0.137), leSH, nameESH, lmSH, false,
@@ -2106,7 +2106,7 @@ void AmoreDetectorConstruction::ConstructAMoREPilot() {
         copyNo       = nn;
         PhotonDetZ   = cmocell_h[nn] + PhotonDet_zsize + zCell[nn];
         PosPhotonDet = G4ThreeVector(0, 0, PhotonDetZ);
-        sprintf(nameClamp, "Clamp_%d", nn);
+        snprintf(nameClamp, sizeof(nameClamp), "Clamp_%d", nn);
         new G4PVPlacement(ClampRotation, G4ThreeVector(19.5, -26.5, PhotonDetZ - 1.), lClamp,
                           nameClamp, logiTargetRoom, false, copyNo);
     }
@@ -2115,7 +2115,7 @@ void AmoreDetectorConstruction::ConstructAMoREPilot() {
         copyNo       = nn;
         PhotonDetZ   = cmocell_h[nn] + PhotonDet_zsize + zCell[nn];
         PosPhotonDet = G4ThreeVector(0, 0, PhotonDetZ);
-        sprintf(nameClamp_a, "ClampA_%d", nn);
+        snprintf(nameClamp_a, sizeof(nameClamp_a), "ClampA_%d", nn);
         new G4PVPlacement(ClampRotation, G4ThreeVector(-19.5, 26.5, PhotonDetZ - 1.), lClamp_a,
                           nameClamp_a, logiTargetRoom, false, copyNo);
     }
@@ -2160,7 +2160,7 @@ void AmoreDetectorConstruction::ConstructAMoREPilot() {
         copyNo       = nn;
         PhotonDetZ   = cmocell_h[nn] + PhotonDet_zsize + zCell[nn];
         PosPhotonDet = G4ThreeVector(0, 0, PhotonDetZ);
-        sprintf(nameTClamp, "TClamp_%d", nn);
+        snprintf(nameTClamp, sizeof(nameTClamp), "TClamp_%d", nn);
         new G4PVPlacement(TClampRotation, G4ThreeVector(19.5, 26.5, PhotonDetZ - 1.), lTClamp,
                           nameTClamp, logiTargetRoom, false, copyNo);
     }
@@ -2169,7 +2169,7 @@ void AmoreDetectorConstruction::ConstructAMoREPilot() {
         copyNo       = nn;
         PhotonDetZ   = cmocell_h[nn] + PhotonDet_zsize + zCell[nn];
         PosPhotonDet = G4ThreeVector(0, 0, PhotonDetZ);
-        sprintf(nameTClamp_a, "TClampA_%d", nn);
+        snprintf(nameTClamp_a, sizeof(nameTClamp_a), "TClampA_%d", nn);
         new G4PVPlacement(TClampRotation, G4ThreeVector(-19.5, -26.5, PhotonDetZ - 1.), lTClamp_a,
                           nameTClamp_a, logiTargetRoom, false, copyNo);
     }
@@ -2209,7 +2209,7 @@ void AmoreDetectorConstruction::ConstructAMoREPilot() {
 
     for (int nn = 1; nn < 7; nn++) {
         copyNo = nn + 23;
-        sprintf(nameGOLDsb, "GOLDsb_%d", nn);
+        snprintf(nameGOLDsb, sizeof(nameGOLDsb), "GOLDsb_%d", nn);
 
         PhotonDetZ   = cmocell_h[nn] + PhotonDet_zsize + zCell[nn];
         PosPhotonDet = G4ThreeVector(0, 0, PhotonDetZ);
@@ -2235,7 +2235,7 @@ void AmoreDetectorConstruction::ConstructAMoREPilot() {
 
     for (int nn = 0; nn < 6; nn++) {
         copyNo = 6 + nn;
-        sprintf(nameGOLDsa, "GOLDsa_%d", nn);
+        snprintf(nameGOLDsa, sizeof(nameGOLDsa), "GOLDsa_%d", nn);
 
         PhotonDetZ   = cmocell_h[nn] + PhotonDet_zsize + zCell[nn];
         PosPhotonDet = G4ThreeVector(0, 0, PhotonDetZ);
@@ -2274,7 +2274,7 @@ void AmoreDetectorConstruction::ConstructAMoREPilot() {
     G4Tubs *Reflector_h;
 
     for (int nn = 0; nn < 6; nn++) {
-        sprintf(namerefl, "Reflector%d", nn);
+        snprintf(namerefl, sizeof(namerefl), "Reflector%d", nn);
 
         Reflector_in[nn] = new G4Box(namerefl, reflector_inx, reflector_iny,
                                      cmocell_h[nn] + 0.7 * mm); // not Top cover Ver.
@@ -2292,12 +2292,12 @@ void AmoreDetectorConstruction::ConstructAMoREPilot() {
             "Reflector_out - Reflector_in", Reflector_b[nn], Reflector_d, 0,
             G4ThreeVector(0, 0, -cmocell_h[nn] - 0.5 * mm - reflector_thick / 2 + 0.0001 * cm));
 
-        sprintf(namerefl, "logiReflector%d", nn);
+        snprintf(namerefl, sizeof(namerefl), "logiReflector%d", nn);
         logiReflector[nn]    = new G4LogicalVolume(Reflector[nn], _vm2000, namerefl);
         logiReflectorVis[nn] = new G4VisAttributes(G4Colour(0.75, 0.0, 0.75, 0.3));
 
         if (nn == 1) {
-            sprintf(namerefl, "Reflector%d", nn);
+            snprintf(namerefl, sizeof(namerefl), "Reflector%d", nn);
 
             Reflector_in[nn] = new G4Box(namerefl, reflector_inx2, reflector_iny2,
                                          cmocell_h[nn] + 1.5 * mm); // not Top cover Ver.
@@ -2317,13 +2317,13 @@ void AmoreDetectorConstruction::ConstructAMoREPilot() {
                 G4ThreeVector(0, 0,
                               -cmocell_h[nn] - 0.5 * mm - reflector_thick2 / 4 + 0.0001 * cm));
 
-            sprintf(namerefl, "logiReflector%d", nn);
+            snprintf(namerefl, sizeof(namerefl), "logiReflector%d", nn);
             logiReflector[nn]    = new G4LogicalVolume(Reflector[nn], _teflon2, namerefl);
             logiReflectorVis[nn] = new G4VisAttributes(G4Colour::White());
         }
 
         PosRef = G4ThreeVector(xCell[nn], yCell[nn], zCell[nn]);
-        sprintf(namerefl, "physReflector%d", nn);
+        snprintf(namerefl, sizeof(namerefl), "physReflector%d", nn);
         new G4PVPlacement(nullptr, PosRef, logiReflector[nn], namerefl, logiTargetRoom, false, 0);
         G4cout << "###   " << logiReflector[nn]->GetName() << "  "
                << logiReflector[nn]->GetMass() / kg << G4endl;

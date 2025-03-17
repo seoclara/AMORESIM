@@ -31,6 +31,8 @@ execute_process(
 #----------------------------------------------------------------------------
 # Add essential subdirectories
 #----------------------------------------------------------------------------
+add_compile_options(-Wno-shadow)
+
 add_subdirectory(MCObjs EXCLUDE_FROM_ALL)
 
 add_subdirectory(CupSim EXCLUDE_FROM_ALL)

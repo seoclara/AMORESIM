@@ -319,7 +319,7 @@ void CupDetectorConstruction::ConstructMaterials() {
     for (int i = 0; i < 6; i++) {
         num_C = i + 15;
         num_H = 2 * (i + 9) + 6;
-        sprintf(Name, "LAB_n=%i", i + 9);
+        snprintf(Name, sizeof(Name), "LAB_n=%i", i + 9);
         LAB[i] = new G4Material(Name, density, nelements);
         LAB[i]->AddElement(_elementC, num_C);
         LAB[i]->AddElement(_elementH, num_H);

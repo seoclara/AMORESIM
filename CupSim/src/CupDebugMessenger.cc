@@ -129,18 +129,18 @@ CupDebugMessenger::~CupDebugMessenger() {
 #endif
 }
 
-static void DumpGeom(G4VPhysicalVolume *pv, const char *s) {
+static void DumpGeom(G4VPhysicalVolume *pv, const char *pvname) {
     G4cout << "*******************************\n";
-    G4cout << "Physical volume dump for " << s << G4endl;
+    G4cout << "Physical volume dump for " << pvname << G4endl;
     G4cout << " Name: " << pv->GetName() << G4endl;
 
     G4LogicalVolume *lv = pv->GetLogicalVolume();
     G4cout << " Logical volume name: " << lv->GetName() << G4endl;
     G4cout << " Solid name: " << lv->GetSolid()->GetName() << G4endl;
 
-    G4Material *m = lv->GetMaterial();
-    G4cout << " Material: " << m->GetName() << G4endl;
-    G4cout << (*m) << G4endl;
+    G4Material *lvmat = lv->GetMaterial();
+    G4cout << " Material: " << lvmat->GetName() << G4endl;
+    G4cout << (*lvmat) << G4endl;
 
     ///  G4PhysicalVolume::GetMother() was removed in Geant4 version 06.
     // G4VPhysicalVolume* mother= pv->GetMother();
@@ -256,13 +256,13 @@ void CupDebugMessenger::SetNewValue(G4UIcommand *command, G4String newValues) {
         if (newValues == "") {
             G4cout << *(G4Material::GetMaterialTable()) << G4endl;
         } else {
-            G4Material *m = G4Material::GetMaterial(newValues);
-            if (m == NULL) {
+            G4Material *lvmat = G4Material::GetMaterial(newValues);
+            if (lvmat == NULL) {
                 G4cerr << "Unknown material " << newValues << G4endl << std::flush;
                 return;
             }
-            G4cout << (*m) << G4endl;
-            G4MaterialPropertiesTable *mpt = m->GetMaterialPropertiesTable();
+            G4cout << (*lvmat) << G4endl;
+            G4MaterialPropertiesTable *mpt = lvmat->GetMaterialPropertiesTable();
             if (mpt == NULL) {
                 G4cout << "This material has no material properties table." << G4endl;
             } else {

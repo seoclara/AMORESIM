@@ -734,11 +734,11 @@ G4String CupPMTOpticalModel::GetCurrentValue(G4UIcommand *command) {
     G4String commandName = command->GetCommandName();
     if (commandName == "verbose") {
         char outbuff[64];
-        sprintf(outbuff, "%d", _verbosity);
+        snprintf(outbuff, sizeof(outbuff), "%d", _verbosity);
         return G4String(outbuff);
     } else if (commandName == "luxlevel") {
         char outbuff[64];
-        sprintf(outbuff, "%d", _luxlevel);
+        snprintf(outbuff, sizeof(outbuff), "%d", _luxlevel);
         return G4String(outbuff);
     } else {
         return (commandName + " is not a valid PMTOpticalModel command");

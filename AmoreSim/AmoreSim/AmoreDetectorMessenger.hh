@@ -37,7 +37,7 @@ class AmoreDetectorMessenger : public G4UImessenger {
     G4UIcommand *AMoRE200SimTypeSelectCmd;
     G4UIcommand *AMoRE200NSDesignSelectCmd;
 
-		G4UIcommand *HatSizeSelectCmd;
+		// G4UIcommand *HatSizeSelectCmd;
     // G4UIcommand *CavernTypeSelectCmd;
     G4UIcommand *NeutronModeCmd;
 		// G4UIcommand *RockgammaModeCmd;
@@ -60,7 +60,7 @@ class AmoreDetectorMessenger : public G4UImessenger {
     G4UIcommand *EnableTargRoomCmd;
     G4UIcommand *EnableRealConfCmd;
 
-    class AmoreDetectorMessenger *myMessenger;
+    // class AmoreDetectorMessenger *myMessenger;
 };
 
 #endif

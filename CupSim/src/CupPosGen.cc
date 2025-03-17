@@ -35,19 +35,19 @@ void CupVPosGen::GenerateVertexPositions(G4PrimaryVertex *argVertex, double max_
     }
 }
 
-void CupVPosGen::Strip(G4String &s, const char *stripchars) {
-    int i = s.find_first_not_of(stripchars);
-    if (i < 0 || i >= (int)s.length()) {
-        s = "";
+void CupVPosGen::Strip(G4String &sname, const char *stripchars) {
+    int i = sname.find_first_not_of(stripchars);
+    if (i < 0 || i >= (int)sname.length()) {
+        sname = "";
         return;
     }
-    s = s.substr(i);
-    i = s.find_last_not_of(stripchars);
-    if (i < 0 || i >= (int)s.length()) {
-        s = "";
+    sname = sname.substr(i);
+    i = sname.find_last_not_of(stripchars);
+    if (i < 0 || i >= (int)sname.length()) {
+        sname = "";
         return;
     }
-    s.resize(i + 1);
+    sname.resize(i + 1);
 }
 
 ////////////////////////////////////////////////////////////////

@@ -169,7 +169,7 @@ void AmoreParallelWorldConstruction::ConstructAMoRE200_ParallelWorldForWCMD()
 		WCPMTno = region_c;
 
 		// name this PMT
-		sprintf(PMTname, "physWCPMT%d", WCPMTno);
+		snprintf(PMTname, sizeof(PMTname), "physWCPMT%d", WCPMTno);
 
 		// calculate angles and positions
 		// we want PMTS to point normal to the surface they're mounted on
@@ -193,9 +193,9 @@ void AmoreParallelWorldConstruction::ConstructAMoRE200_ParallelWorldForWCMD()
 		_rotWCPMT->rotateZ(angle_z);
 		_rotWCPMT->rotateX(M_PI / 2.0 - angle_x);
 
-		cood_x = cood_x;
-		cood_y = cood_y;
-		cood_z = cood_z;
+		// cood_x = cood_x;
+		// cood_y = cood_y;
+		// cood_z = cood_z;
 
 		G4ThreeVector pmtpos(cood_x, cood_y, cood_z);
 

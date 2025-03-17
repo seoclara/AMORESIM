@@ -546,9 +546,9 @@ void AmoreRootNtuple::RecordET(const G4Track *a_track) {
 	char volname[100];
 	char prcsname[100];
 
-	sprintf(partname, "%s", (char *)pname.data());
-	sprintf(volname, "%s", (char *)volume.data());
-	sprintf(prcsname, "%s", (char *)procname.data());
+	snprintf(partname, sizeof(partname), "%s", (char *)pname.data());
+	snprintf(volname, sizeof(volname), "%s", (char *)volume.data());
+	snprintf(prcsname, sizeof(prcsname), "%s", (char *)procname.data());
 
 	G4ParticleDefinition *pdef = a_track->GetDefinition();
 	if (G4IonTable::IsIon(pdef)) {
@@ -614,13 +614,13 @@ void AmoreRootNtuple::RecordTrack(const G4Track *a_track) {
 	char volname[100];
 	char prcsname[100];
 
-	sprintf(partname, "%s", (char *)pname.data());
-	sprintf(volname, "%s", (char *)volume.data());
-	sprintf(prcsname, "%s", (char *)procname.data());
+	snprintf(partname, sizeof(partname), "%s", (char *)pname.data());
+	snprintf(volname, sizeof(volname), "%s", (char *)volume.data());
+	snprintf(prcsname, sizeof(prcsname), "%s", (char *)procname.data());
 
 	if (!strcmp(volname, "physCMOCell")) {
 		motherCopyNo = a_track->GetTouchableHandle()->GetCopyNumber(1);
-		sprintf(volname, "%s%d", "physCMOCell", motherCopyNo);
+		snprintf(volname, sizeof(volname), "%s%d", "physCMOCell", motherCopyNo);
 	}
 
 	G4ParticleDefinition *pdef = a_track->GetDefinition();
@@ -689,20 +689,20 @@ void AmoreRootNtuple::RecordStep(const G4Step *a_step) {
 		theTouchable->GetVolume()->GetLogicalVolume()->GetRegion()->GetRootLogicalVolumeIterator().
 		operator*();
 
-	sprintf(volname, "%s", (char *)volume.data());
+	snprintf(volname, sizeof(volname), "%s", (char *)volume.data());
 
 	if (!isWorldRegion) {
 		switch (AmoreDetectorConstruction::GetDetGeometryType()) {
 			case eDetGeometry::kDetector_AMoRE200:
 				if (!strcmp(volname, "physCrystalCell")) {
 					motherCopyNo = theTouchable->GetCopyNumber(1);
-					sprintf(volname, "%s%d", "physCrystalCell", motherCopyNo);
+					snprintf(volname, sizeof(volname), "%s%d", "physCrystalCell", motherCopyNo);
 				}
 				break;
 			case eDetGeometry::kDetector_MyDetector:
 				if (!strcmp(volname, "LMOCell_PV")){
 					motherCopyNo = theTouchable->GetCopyNumber(1);
-					sprintf(volname, "%s%d","LMOCell_PV", motherCopyNo);
+					snprintf(volname, sizeof(volname), "%s%d","LMOCell_PV", motherCopyNo);
 				}
 				break;
 			case eDetGeometry::kDetector_AMoRE_I:{
@@ -728,7 +728,7 @@ void AmoreRootNtuple::RecordStep(const G4Step *a_step) {
 
 														 volume.insert(checkerIndex, "_");
 														 volume.insert(checkerIndex + 1, std::to_string(envelopeCopyNo));
-														 sprintf(volname, "%s", (char *)volume.data());
+														 snprintf(volname, sizeof(volname), "%s", (char *)volume.data());
 													 }
 												 }break;
 			default: break;
@@ -766,7 +766,7 @@ void AmoreRootNtuple::RecordStep(const G4Step *a_step) {
 
     // Access physical volume where primary particles generated
     if (istep == 1 && prntid == 0 && trid == 1) {
-        sprintf(volumeName, "%s", (char *)volume.data());
+        snprintf(volumeName, sizeof(volumeName), "%s", (char *)volume.data());
         copyNo = motherCopyNo;
         G4String motherVolName;
     }

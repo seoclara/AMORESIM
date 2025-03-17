@@ -49,7 +49,7 @@ class AmoreTrackingAction : public CupTrackingAction {
   private:
     unsigned long tracknum;
     AmoreRootNtuple *recorder;
-    G4TrackingManager *fManager;
+    // G4TrackingManager *fManager;
 };
 
 #endif

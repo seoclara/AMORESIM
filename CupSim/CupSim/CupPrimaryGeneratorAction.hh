@@ -87,7 +87,7 @@ class CupPrimaryGeneratorAction : public G4VUserPrimaryGeneratorAction {
     };
 
   private:
-    CupDetectorConstruction *myDetector;
+    // CupDetectorConstruction *myDetector;
     CupPrimaryGeneratorMessenger *myMessenger;
 
     double myUniversalTime;
