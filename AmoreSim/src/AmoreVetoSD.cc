@@ -70,7 +70,6 @@ G4bool AmoreVetoSD::ProcessHits(G4Step *aStep, G4TouchableHistory * /*ROhist*/)
     // G4cout << "JW: AmoreVetoSD::ProcessHits ---> VolName= " << VolName << G4endl;
     // G4cout << "JW: AmoreVetoSD::ProcessHits ---> motherVolName= " << motherVolName << G4endl;
     // G4cout << "JW: AmoreVetoSD::ProcessHits ---> envelopeVolName= " << envelopeVolName << G4endl;
-    int maxPSNo;
     switch(AmoreDetectorConstruction::GetDetGeometryType()){
         case eDetGeometry::kDetector_AMoRE200:{
             ifstream wherePS;
@@ -95,6 +94,7 @@ G4bool AmoreVetoSD::ProcessHits(G4Step *aStep, G4TouchableHistory * /*ROhist*/)
                 G4Exception(" ", " ", JustWarning, "Error, ps coordinates file could not be opened.\n");
             }
             // read max number of ps
+            int maxPSNo;
             wherePS >> maxPSNo;
 
             copyNo = (strstr(VolName, "PlasticScintO")) ? envelopeCopyNo : envelopeCopyNo + maxPSNo;

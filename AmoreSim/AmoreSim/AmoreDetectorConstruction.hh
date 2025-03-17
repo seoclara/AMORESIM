@@ -361,37 +361,39 @@ class AmoreDetectorConstruction : public CupDetectorConstruction {
 
 		void ConstructMaterials();
 		void ConstructAmoreDetector();
-		void ConstructAMoRE10();  ///< make the AMoRE10 detector
 
-		void ConstructAMoRE200(); ///< make the AMoRE200 detector
+		// MyDetector (user defined detector) construction
+		void ConstructMyDetector();           
+		void ConstructMyDetector_SDandField(); 
+
+		// AMoRE-10 detector construction (test)
+		void ConstructAMoRE10();  
+		void ConstructAMoRE10_SDandField(); 
+
+		// AMoRE-II detector construction
+		void ConstructAMoRE200(); 
 		void ConstructAMoRE200_ID(G4LogicalVolume *aWorkAreaLV);       ///< make the AMoRE200 inner detector (cryostat)
 		G4LogicalVolume *MakeModule(G4Material *towerMat, G4Material *crystalMat, G4Material *reflectorMat, 
 				G4Material *frameMat, G4Material *frameMat1, G4Material *clampMat, G4Material *waferMat, 
 				G4Material *filmMat, G4int TowerNum, G4int ModuleNum);
-		G4LogicalVolume *MakeTower_phase2(G4Material *towerMat, G4Material *crystalMat, G4Material *reflectorMat, 
-				G4Material *frameMat, G4Material *clampMat, G4Material *waferMat, G4Material *filmMat, G4int TowerNum);
 		G4LogicalVolume *MakeSource(G4Material *sourceMat, G4Material *sourceHousingMat,
 				G4int nSegments, G4double source_length, G4double inner_radius, G4double outer_radius);
+		//G4LogicalVolume *MakeTower_phase2(G4Material *towerMat, G4Material *crystalMat, G4Material *reflectorMat, 
+				//G4Material *frameMat, G4Material *clampMat, G4Material *waferMat, G4Material *filmMat, G4int TowerNum);
 		G4LogicalVolume *ConstructAMoRE200_OD(); ///< make the AMoRE200 outer detector
 		void ConstructAMoRE200_PSMD(); ///< make the AMoRE200 plastic scintillator muon detector
 		G4LogicalVolume *MakePS(const G4String &type, G4VSensitiveDetector *SD);
 		void ConstructAMoRE200_WCMD(); ///< make the AMoRE200 water cerenkov muon detector
+		void ConstructAMoRE200_SDandField();
 
-		void ConstructMyDetector();              ///< make the MyDetector
-
+		// AMoRE-Pilot detector construction
 		void ConstructAMoREPilot(); ///< make the AMoRE-Pilot detector RUN6 setting
 		void ConstructAMoREPilotRUN5(); ///< make the AMoRE-Pilot detector RUN6 setting
-
-		void ConstructAMoRE_I();    ///< make the AMoRE10 detector
-
-		void ConstructAMoRE10_SDandField(); // make the AMoRE200 detector
-		void ConstructAMoRE200_SDandField();
-		void ConstructMyDetector_SDandField(); // make the MyDetector
-
 		void ConstructAMoREPilot_SDandField(); // make the AMoRE-Pilot detector
 		void ConstructAMoREPilotRUN5_SDandField(); // make the AMoRE-Pilot detector
 
-		// For AMoRE I (can be moved to common section in the future)
+		// AMoRE-I detector construction
+		void ConstructAMoRE_I();    ///< make the AMoRE10 detector
 		G4LogicalVolume *Build_I_DetectorArrayUpperPanel(G4bool aRealistic, G4Material *aFrameMaterial,
 				G4Material *aSpaceMaterial);
 		G4LogicalVolume *Build_I_DetectorArrayBottomPanel(G4bool aRealistic, G4Material *aFrameMaterial,
