@@ -122,12 +122,12 @@ void AmoreParallelWorldConstruction::ConstructSD(){
             G4LogicalVolume* PMT8_inner1_log = PMT8_inner1_phys->GetLogicalVolume();
             PMT8_inner1_log->SetSensitiveDetector(pmtSDWC);
 
-            G4Region *PmtRegion = new G4Region("WCPMT");
-            PmtRegion->AddRootLogicalVolume(PMT10_body_log);
-            PmtRegion->AddRootLogicalVolume(PMT8_body_log);
-            new CupPMTOpticalModel("WCPMT_optical_model", PMT10_body_phys);
-            new CupPMTOpticalModel("WCPMT_optical_model", PMT8_body_phys);
-            G4cout << "PMT Optical Model done" << G4endl;
+            // G4Region *PmtRegion = new G4Region("WCPMT");
+            // PmtRegion->AddRootLogicalVolume(PMT10_body_log);
+            // PmtRegion->AddRootLogicalVolume(PMT8_body_log);
+            // new CupPMTOpticalModel("WCPMT_optical_model", PMT10_body_phys);
+            // new CupPMTOpticalModel("WCPMT_optical_model", PMT8_body_phys);
+            // G4cout << "PMT Optical Model done" << G4endl;
             break;
         }
         default: { break; }
