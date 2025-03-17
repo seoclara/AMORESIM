@@ -121,7 +121,7 @@ CupScintillation::GetCurrentValue(G4UIcommand * command)
    }
    else if (commandName == "verbose") {
      char outbuff[64];
-     sprintf(outbuff, "%d", verboseLevel);
+     snprintf(outbuff, sizeof(outbuff), "%d", verboseLevel);
      return G4String(outbuff);
    }
    else {

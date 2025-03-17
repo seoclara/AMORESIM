@@ -30,6 +30,7 @@ class AmoreParallelWorldConstruction : public G4VUserParallelWorld {
         G4Material *fStainless;
         G4Material *fPMT_Vac;
         G4Material *dummyMat;
+        G4OpticalSurface *fPhotocathode_opsurf;
 
     protected:
         using eDetGeometry  = AmoreDetectorConstruction::eDetGeometry;
