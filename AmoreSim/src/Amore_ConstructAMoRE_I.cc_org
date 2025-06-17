@@ -6601,19 +6601,15 @@ void AmoreDetectorConstruction::Place_I_RealNeutronShieldingAt(G4LogicalVolume *
 					 G4LogicalVolumeStore::GetInstance()->GetVolume("PolyEthylene_FB_LV", false);
 				 if (logicalVolumeChecker == nullptr) {
 					 polyEthylene_SideFB_Box =
-						//  new G4Box("PolyEthylene_FB_Box", PilotValues::polyEthylene_thickness1 / 2.,
-								//  2. * sideFBScint_boxWidth_half, sideFBScint_boxHeight_half);
-						 new G4Box("PolyEthylene_FB_Box", PilotValues::polyEthylene_thickness2 / 2.,
+						 new G4Box("PolyEthylene_FB_Box", PilotValues::polyEthylene_thickness1 / 2.,
 								 2. * sideFBScint_boxWidth_half, sideFBScint_boxHeight_half);
 					 polyEthylene_SideFB_BoxLogical = new G4LogicalVolume(
 							 polyEthylene_SideFB_Box, _polyethylene, "PolyEthylene_FB_LV");
 
 					 polyEthylene_SideLR1_Box = new G4Box(
 							 "PolyEthylene_LR1_Box", 2. * sideLRScint_boxWidth_half,
-							//  PilotValues::polyEthylene_thickness1 / 2.,
-							//  sideLRScint_boxHeight_half - PilotValues::polyEthylene_LRCuttingLength1 / 2.);
-							 PilotValues::polyEthylene_thickness2 / 2.,
-							 sideLRScint_boxHeight_half - PilotValues::polyEthylene_LRCuttingLength2 / 2.);
+							 PilotValues::polyEthylene_thickness1 / 2.,
+							 sideLRScint_boxHeight_half - PilotValues::polyEthylene_LRCuttingLength1 / 2.);
 					 polyEthylene_SideLR1_BoxLogical = new G4LogicalVolume(
 							 polyEthylene_SideLR1_Box, _polyethylene, "PolyEthylene_LR1_LV");
 
@@ -6713,8 +6709,7 @@ void AmoreDetectorConstruction::Place_I_RealNeutronShieldingAt(G4LogicalVolume *
 						 aTlate + FB_Trans +
 						 G4ThreeVector(leadBoxsize + (scint_Thick_half + scint_reflector_thick) * 2. +
 							 PilotValues::boratedPE_thickness +
-							//  PilotValues::polyEthylene_thickness1 / 2.,
-							 PilotValues::polyEthylene_thickness2 / 2.,
+							 PilotValues::polyEthylene_thickness1 / 2.,
 							 0, 0),
 						 polyEthylene_SideFB_BoxLogical, "PolyEthylene_SideFB_PV", aWhere, false, 0, OverlapCheck);
 
@@ -6723,8 +6718,7 @@ void AmoreDetectorConstruction::Place_I_RealNeutronShieldingAt(G4LogicalVolume *
 						 aTlate + FB_Trans -
 						 G4ThreeVector(leadBoxsize + (scint_Thick_half + scint_reflector_thick) * 2. +
 							 PilotValues::boratedPE_thickness +
-							//  PilotValues::polyEthylene_thickness1 / 2.,
-							 PilotValues::polyEthylene_thickness2 / 2.,
+							 PilotValues::polyEthylene_thickness1 / 2.,
 							 0, 0),
 						 polyEthylene_SideFB_BoxLogical, "PolyEthylene_SideFB_PV", aWhere, false, 1, OverlapCheck);
 
@@ -6736,8 +6730,7 @@ void AmoreDetectorConstruction::Place_I_RealNeutronShieldingAt(G4LogicalVolume *
 							 (scint_Thick_half + scint_reflector_thick) * 2. -
 							 PilotValues::boratedPE_thickness / 2.,
 							 0) +
-						//  G4ThreeVector(0, 0, -PilotValues::polyEthylene_LRCuttingLength1 / 2.
-						 G4ThreeVector(0, 0, -PilotValues::polyEthylene_LRCuttingLength2 / 2.
+						 G4ThreeVector(0, 0, -PilotValues::polyEthylene_LRCuttingLength1 / 2.
 							 +PilotValues::polyEthylene_LRCuttingLength2 / 2.)	,
 						 boratedPE_SideLR2_BoxLogical, "BoratedPE_SideLR2_PV", aWhere, false, 0, OverlapCheck);
 
@@ -6770,11 +6763,9 @@ void AmoreDetectorConstruction::Place_I_RealNeutronShieldingAt(G4LogicalVolume *
 							 -sideLRScint_YPos -
 							 (scint_Thick_half + scint_reflector_thick) * 2. -
 							 PilotValues::boratedPE_thickness -
-							 PilotValues::polyEthylene_thickness2 / 2.,
-							//  PilotValues::polyEthylene_thickness1 / 2.,
+							 PilotValues::polyEthylene_thickness1 / 2.,
 							 0) +
-						//  G4ThreeVector(0, 0, -PilotValues::polyEthylene_LRCuttingLength1 / 2.),
-						 G4ThreeVector(0, 0, -PilotValues::polyEthylene_LRCuttingLength2 / 2.),
+						 G4ThreeVector(0, 0, -PilotValues::polyEthylene_LRCuttingLength1 / 2.),
 						 polyEthylene_SideLR1_BoxLogical, "PolyEthylene_SideLR1_PV", aWhere, false, 0, OverlapCheck);
 
 				 /*
@@ -8387,7 +8378,7 @@ void AmoreDetectorConstruction::ConstructAMoRE_I() {
 		Place_I_RealNeutronShieldingAt(logiWorkArea, PosPbBox, 11);
 		Place_I_RealNeutronShieldingAt(logiWorkArea,
 				{0, 0, physTopPbBox1->GetTranslation().z()}, 12);
-		Place_I_RealNeutronShieldingAt(logiInnerDetector, PosSS, 5); // boric acid rubber
+		Place_I_RealNeutronShieldingAt(logiInnerDetector, PosSS, 5);
 
 		neutronShieldBuilt = true;
 	}

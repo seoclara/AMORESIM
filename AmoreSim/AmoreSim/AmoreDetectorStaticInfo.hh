@@ -207,7 +207,8 @@ namespace AmoreDetectorStaticInfo {
 		// constexpr G4double nShield_mufflerFB_DistY = 0.5 * m;
 
 		// Boric acid panel geometry
-		constexpr G4double thickness_BoricAcid        = 3. * mm;
+		// constexpr G4double thickness_BoricAcid        = 3. * mm;
+		constexpr G4double thickness_BoricAcid        = 10. * mm;
 		constexpr G4double thickness_BoricAcidHousing = 1. * mm;
 		constexpr G4double thickness_BoricAcidSpacing = 10. * mm;
 
