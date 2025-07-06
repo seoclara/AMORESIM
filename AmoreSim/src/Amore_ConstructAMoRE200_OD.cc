@@ -583,7 +583,8 @@ G4LogicalVolume *AmoreDetectorConstruction::ConstructAMoRE200_OD()
 
 	// Upper part positioning --------------------------
 	G4PVPlacement *shieldWaterHousingPV = nullptr;
-	// G4PVPlacement *shieldWaterTankAirPV = nullptr;
+	G4PVPlacement *shieldWaterReflectorPV = nullptr;
+	G4PVPlacement *shieldWaterTankAirPV = nullptr;
 	G4PVPlacement *shieldWaterTankPV = nullptr;
 	G4PVPlacement *HatAlPlatePV = nullptr;
 	G4PVPlacement *shieldHatBoricPV = nullptr;
@@ -637,14 +638,20 @@ G4LogicalVolume *AmoreDetectorConstruction::ConstructAMoRE200_OD()
 	shieldWaterHousingPV = new G4PVPlacement(nullptr, 
 									hatTlate + G4ThreeVector(0,0,shieldWaterHousingBox->GetZHalfLength()+solidBooleanTol),
 									shieldWaterHousingLV, "HatWaterHousing_PV", logiCavern, false, 0, OverlapCheck);
-	new G4PVPlacement(nullptr, {0, 0, 0},
+	shieldWaterReflectorPV = new G4PVPlacement(nullptr, {0, 0, 0},
 			shieldWaterReflectorLV, "HatWaterReflector_PV", shieldWaterHousingLV, false, 0, OverlapCheck);
-	new G4PVPlacement(nullptr, {0, 0, 0},
+	shieldWaterTankAirPV = new G4PVPlacement(nullptr, {0, 0, 0},
 			shieldWaterTankAirLV, "HatWaterTankAir_PV", shieldWaterReflectorLV, false, 0, OverlapCheck);
 	shieldWaterTankPV = new G4PVPlacement(nullptr, {0, 0,
 								-shieldWaterHousingBox->GetZHalfLength() + waterhousing_thickness 
 									+ shieldWaterTankBox->GetZHalfLength()},
 								shieldWaterTankLV, "HatWaterTank_PV", shieldWaterTankAirLV, false, 0, OverlapCheck);
+
+	new G4LogicalBorderSurface("wcair_bsurf1", shieldWaterReflectorPV, shieldWaterTankAirPV, Tyvek_opsurf);
+	new G4LogicalBorderSurface("wcair_bsurf2", shieldWaterTankAirPV, shieldWaterReflectorPV, Tyvek_opsurf);
+	new G4LogicalBorderSurface("wctank_bsurf1", shieldWaterReflectorPV, shieldWaterTankPV, Tyvek_opsurf);
+	new G4LogicalBorderSurface("wctank_bsurf2", shieldWaterTankPV, shieldWaterReflectorPV, Tyvek_opsurf);
+
 	// Hat Aluminium plate -------------------
 	HatAlPlatePV = new G4PVPlacement(nullptr,
 							hatTlate + G4ThreeVector(0, 0, HatBeamHousingInBox->GetZHalfLength()),
@@ -1535,7 +1542,7 @@ G4LogicalVolume *AmoreDetectorConstruction::ConstructAMoRE200_OD()
 						addPEPos[1] -= (len[j] - HBeam_size * 3) / 4.;
 					}
 					addPEPos[1] -= (len[j] - HBeam_size) / 4.;
-					AddPE_PV[pvid] =  new G4PVPlacement(nullptr, addPEPos, addPE1LV, "additionalPE1_PV", HbeamHousingLV, false, 0, OverlapCheck);
+					AddPE_PV[pvid] =  new G4PVPlacement(nullptr, addPEPos, addPE1LV, "additionalPE1_PV", HbeamHousingLV, false, 0, false);
 					pvid++;
 					addPEPos[1] -= (len[j] + HBeam_size * 3) / 4.;
 				}
@@ -1552,7 +1559,7 @@ G4LogicalVolume *AmoreDetectorConstruction::ConstructAMoRE200_OD()
 					addPEPos[1] -= len[j] / 2.;
 					if (i != 2 && i != 3)
 					{
-						AddPE_PV[pvid] =  new G4PVPlacement(nullptr, addPEPos, addPE2LV, "additionalPE2_PV", HbeamHousingLV, false, 0, OverlapCheck);
+						AddPE_PV[pvid] =  new G4PVPlacement(nullptr, addPEPos, addPE2LV, "additionalPE2_PV", HbeamHousingLV, false, 0, false);
 						pvid++;
 					}
 					addPEPos[1] -= len[j] / 2. + HBeam_size;
@@ -1564,7 +1571,12 @@ G4LogicalVolume *AmoreDetectorConstruction::ConstructAMoRE200_OD()
 			for (int ipv = 0; ipv < 12; ipv++){
 				AddPE_PV[ipv]->SetTranslation(AddPE_PV[ipv]->GetTranslation() + G4ThreeVector(-HBeam_housingDist,0,0));
 			}
+		}
 
+		if(OverlapCheck){
+			for (int ipv = 0; ipv < 12; ipv++){
+				AddPE_PV[ipv]->CheckOverlaps(1000, 0, true);
+			}
 		}
 	}
 
@@ -1668,7 +1680,7 @@ G4LogicalVolume *AmoreDetectorConstruction::ConstructAMoRE200_OD()
 							  2860, // ParallelPEOnly_measuredsize
 							  1104 - (-len[2] / 2. + HBeam_size / 2. - HBeam_thickness - solidBooleanTol + ParPEBox3_y) + 250,
 							  HbeamHousingOut->GetZHalfLength() - HBeam_size / 2.),
-						  ParBoru3LV, "ParallelBoru3_PV", HbeamHousingLV, false, 0, OverlapCheck);
+						  ParBoru3LV, "ParallelBoru3_PV", HbeamHousingLV, false, 0, false);
 		new G4PVPlacement(nullptr, G4ThreeVector(ParBoruBox3_x - ParPEBox3_x, 0, -ParBoruBox3_z + ParPEBox3_z), ParPE3LV, "ParallelPE3_PV", ParBoru3LV, false, 0, OverlapCheck);
 
 		G4PVPlacement *AddPE2_PV =  new G4PVPlacement(nullptr,
@@ -1677,7 +1689,7 @@ G4LogicalVolume *AmoreDetectorConstruction::ConstructAMoRE200_OD()
 							  -1220 - 30, // ParallelPEOnly_measuredsize
 							  1104,
 							  HbeamHousingOut->GetZHalfLength() - HBeam_size / 2.),
-						  ParBoru4LV, "ParallelBoru4_PV", HbeamHousingLV, false, 0, OverlapCheck);
+						  ParBoru4LV, "ParallelBoru4_PV", HbeamHousingLV, false, 0, false);
 		new G4PVPlacement(nullptr, G4ThreeVector(-ParBoruBox4_x + ParPEBox4_x, 0, -ParBoruBox4_z + ParPEBox4_z), ParPE4LV, "ParallelPE4_PV", ParBoru4LV, false, 0, OverlapCheck);
 
 		G4PVPlacement *AddPE3_PV =  new G4PVPlacement(nullptr,
@@ -1686,17 +1698,17 @@ G4LogicalVolume *AmoreDetectorConstruction::ConstructAMoRE200_OD()
 							  -1220 - 30, // ParallelPEOnly_measuredsize
 							  -1104 - 300,
 							  HbeamHousingOut->GetZHalfLength() - HBeam_size / 2.),
-						  ParBoru5LV, "ParallelBoru5_PV", HbeamHousingLV, false, 0, OverlapCheck);
+						  ParBoru5LV, "ParallelBoru5_PV", HbeamHousingLV, false, 0, false);
 		new G4PVPlacement(nullptr, G4ThreeVector(-ParBoruBox4_x + ParPEBox4_x, 0, -ParBoruBox4_z + ParPEBox4_z), ParPE5LV, "ParallelPE5_PV", ParBoru5LV, false, 0, OverlapCheck);
 
 		G4PVPlacement *AddPE4_PV =  new G4PVPlacement(nullptr,
 						  G4ThreeVector(740, 2000, HbeamHousingOut->GetZHalfLength() - HBeam_size / 2.),
-						  FrontBoruLV, "FrontBoru_PV", HbeamHousingLV, false, 0, OverlapCheck);
+						  FrontBoruLV, "FrontBoru_PV", HbeamHousingLV, false, 0, false);
 		new G4PVPlacement(nullptr, G4ThreeVector(0, FrontBoruBox_y - FrontPEBox_y, -FNBBoruBox_z + FNBPEBox_z), FrontPELV, "FrontPE_PV", FrontBoruLV, false, 0, OverlapCheck);
 
 		G4PVPlacement *AddPE5_PV =  new G4PVPlacement(nullptr,
 						  G4ThreeVector(740, -2200, HbeamHousingOut->GetZHalfLength() - HBeam_size / 2.),
-						  BackBoruLV, "BackBoru_PV", HbeamHousingLV, false, 0, OverlapCheck);
+						  BackBoruLV, "BackBoru_PV", HbeamHousingLV, false, 0, false);
 		new G4PVPlacement(nullptr, G4ThreeVector(0, -BackBoruBox_y + BackPEBox_y, -FNBBoruBox_z + FNBPEBox_z), BackPELV, "BackPE_PV", BackBoruLV, false, 0, OverlapCheck);
 		
 		if(whichSimType==kRockGammaMode){
@@ -1705,6 +1717,17 @@ G4LogicalVolume *AmoreDetectorConstruction::ConstructAMoRE200_OD()
 			AddPE3_PV->SetTranslation(AddPE3_PV->GetTranslation() + G4ThreeVector(-HBeam_housingDist,0,0));
 			AddPE4_PV->SetTranslation(AddPE4_PV->GetTranslation() + G4ThreeVector(-HBeam_housingDist,0,0));
 			AddPE5_PV->SetTranslation(AddPE5_PV->GetTranslation() + G4ThreeVector(-HBeam_housingDist,0,0));
+		}
+		if(OverlapCheck){
+			AddPE1_PV->CheckOverlaps(1000, 0, true);
+			AddPE2_PV->CheckOverlaps(1000, 0, true);
+			AddPE3_PV->CheckOverlaps(1000, 0, true);
+			AddPE4_PV->CheckOverlaps(1000, 0, true);
+			AddPE5_PV->CheckOverlaps(1000, 0, true);
+			// AddBackPE1_PV->CheckOverlaps(1000, 0, true);
+			// AddBackPE2_PV->CheckOverlaps(1000, 0, true);
+			// AddFrontPE1_PV->CheckOverlaps(1000, 0, true);
+			// AddFrontPE2_PV->CheckOverlaps(1000, 0, true);
 		}
 	}
 
