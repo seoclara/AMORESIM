@@ -373,6 +373,7 @@ class AmoreDetectorConstruction : public CupDetectorConstruction {
 		// AMoRE-II detector construction
 		void ConstructAMoRE200(); 
 		void ConstructAMoRE200_ID(G4LogicalVolume *aWorkAreaLV);       ///< make the AMoRE200 inner detector (cryostat)
+		G4LogicalVolume *MakeSCconnector(G4Material *connectorMat);
 		G4LogicalVolume *MakeModule(G4Material *towerMat, G4Material *crystalMat, G4Material *reflectorMat, 
 				G4Material *frameMat, G4Material *frameMat1, G4Material *clampMat, G4Material *waferMat, 
 				G4Material *filmMat, G4int TowerNum, G4int ModuleNum);
