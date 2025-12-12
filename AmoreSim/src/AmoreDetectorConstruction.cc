@@ -422,6 +422,19 @@ void AmoreDetectorConstruction::ConstructMaterials() {
 
 
 	//////////////////////////////////
+	// Urethane (Ethyl carbamate) (C3H7NO2, density = 1.056 g/cm3)
+	// For AMoRE-II radon air balloon
+	name      = "Urethane";
+	density   = 1.056 * g / cm3;
+	nelements = 4;
+	_urethane = new G4Material(name, density, nelements);
+	_urethane->AddElement(_elementC, natoms = 3);
+	_urethane->AddElement(_elementH, natoms = 7);
+	_urethane->AddElement(_elementN, natoms = 1);
+	_urethane->AddElement(_elementO, natoms = 2);
+
+
+	//////////////////////////////////
 	// Sillicon rubber
 	name      = "Silicon rubber";
 	density   = 1.64 * g / cm3;

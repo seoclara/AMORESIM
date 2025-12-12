@@ -872,6 +872,9 @@ namespace AmoreDetectorStaticInfo {
 		constexpr G4double cavern_pizza_angle_tol   = 0. * deg;
 
 		// InnerDetector ------
+		// RadonAir
+		constexpr G4double balloon_thickness = 0.3 * mm;
+
 		// SSOVC
 		constexpr G4double sst_zsize_half = 5.* cm / 2.; //3. * cm / 2.;
 		constexpr G4double sst_xsize_half = 1800. * mm / 2.; //2500. * mm / 2.;
@@ -928,7 +931,7 @@ namespace AmoreDetectorStaticInfo {
 
 		// Crystal Tower
 		constexpr G4int nModuleInTower = 9;
-		constexpr G4int maxNumOfTower  = 70;
+		constexpr G4int maxNumOfTower  = 76;
 		extern const AMoRE200CrystalModuleInfo crystalModuleInfoList[maxNumOfTower];
 
 		constexpr G4double Module_gap         = 20. * mm / 2.;

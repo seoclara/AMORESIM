@@ -342,6 +342,7 @@ class AmoreDetectorConstruction : public CupDetectorConstruction {
 		G4Material *_iron2;
 		G4Material *_rebar;
 		G4Material *_polyurethane;
+		G4Material *_urethane;
 		G4Material *_ThRubber;
 
 		G4Element *_elementB;
