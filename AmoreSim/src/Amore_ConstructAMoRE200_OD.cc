@@ -400,7 +400,8 @@ G4LogicalVolume *AmoreDetectorConstruction::ConstructAMoRE200_OD()
 
 	// Detector supporting H-beam
 	G4Box *DetHbeamHousingBox = new G4Box("DetHbeamHousingBox",
-										  shieldHatSpaceBox->GetXHalfLength(), shieldHatSpaceBox->GetYHalfLength(), shieldHatSpaceBox->GetZHalfLength() - DetHbeam_size / 2.);
+										//   shieldHatSpaceBox->GetXHalfLength(), shieldHatSpaceBox->GetYHalfLength(), shieldHatSpaceBox->GetZHalfLength() - DetHbeam_size / 2.);
+										  shieldHatSpaceBox->GetXHalfLength()*1/3, shieldHatSpaceBox->GetYHalfLength()*1/3, shieldHatSpaceBox->GetZHalfLength() - DetHbeam_size / 2.);
 	G4LogicalVolume *DetHbeamHousingLV = new G4LogicalVolume(DetHbeamHousingBox, _air, "DetHbeamHousing_LV");
 	DetHbeamHousingLV->SetVisAttributes(G4VisAttributes::Invisible);
 
@@ -799,7 +800,8 @@ G4LogicalVolume *AmoreDetectorConstruction::ConstructAMoRE200_OD()
 		new G4PVPlacement(G4Transform3D(*detbeamRotMtx, hatTlate
 												+ G4ThreeVector(
 													-DetHbeam_height / 2. - DetHbeam_size / 2.,
-													-DetHbeamHousingBox->GetYHalfLength() + DetHbeam_size / 2.,
+													// -DetHbeamHousingBox->GetYHalfLength() + DetHbeam_size / 2.,
+													- shieldHatSpaceBox->GetYHalfLength() + DetHbeam_size / 2.,
 													-DetHbeamVBox->GetZHalfLength())
 												+ G4ThreeVector(0, 0,
 													-DetHbeamHousingBox->GetZHalfLength() - DetHbeam_size/2. - HBeam_size
@@ -808,7 +810,8 @@ G4LogicalVolume *AmoreDetectorConstruction::ConstructAMoRE200_OD()
 		new G4PVPlacement(G4Transform3D(*detbeamRotMtx, hatTlate 
 												+ G4ThreeVector(
 													-DetHbeam_height / 2. + DetHbeam_size / 2.,
-													DetHbeamHousingBox->GetYHalfLength() - DetHbeam_size / 2.,
+													// DetHbeamHousingBox->GetYHalfLength() - DetHbeam_size / 2.,
+													shieldHatSpaceBox->GetYHalfLength() - DetHbeam_size / 2.,
 													-DetHbeamVBox->GetZHalfLength())
 												+ G4ThreeVector(0, 0,
 													-DetHbeamHousingBox->GetZHalfLength() - DetHbeam_size/2. - HBeam_size
@@ -817,7 +820,8 @@ G4LogicalVolume *AmoreDetectorConstruction::ConstructAMoRE200_OD()
 		new G4PVPlacement(G4Transform3D(*detbeamRotMtx, hatTlate 
 												+ G4ThreeVector(
 													+DetHbeam_height / 2. + DetHbeam_size / 2.,
-													-DetHbeamHousingBox->GetYHalfLength() + DetHbeam_size / 2.,
+													// -DetHbeamHousingBox->GetYHalfLength() + DetHbeam_size / 2.,
+													- shieldHatSpaceBox->GetYHalfLength() + DetHbeam_size / 2.,
 													-DetHbeamVBox->GetZHalfLength())
 												+ G4ThreeVector(0, 0,
 													-DetHbeamHousingBox->GetZHalfLength() - DetHbeam_size/2. - HBeam_size
@@ -826,7 +830,8 @@ G4LogicalVolume *AmoreDetectorConstruction::ConstructAMoRE200_OD()
 		new G4PVPlacement(G4Transform3D(*detbeamRotMtx, hatTlate
 												+ G4ThreeVector(
 														+DetHbeam_height / 2. - DetHbeam_size / 2.,
-													DetHbeamHousingBox->GetYHalfLength() - DetHbeam_size / 2.,
+													// DetHbeamHousingBox->GetYHalfLength() - DetHbeam_size / 2.,
+													shieldHatSpaceBox->GetYHalfLength() - DetHbeam_size / 2.,
 													-DetHbeamVBox->GetZHalfLength())
 												+ G4ThreeVector(0, 0,
 													-DetHbeamHousingBox->GetZHalfLength() - DetHbeam_size/2. - HBeam_size
@@ -835,7 +840,7 @@ G4LogicalVolume *AmoreDetectorConstruction::ConstructAMoRE200_OD()
 		new G4PVPlacement(G4Transform3D(*detbeamRotMtx, hatTlate
 												+ G4ThreeVector(
 													-DetHbeam_height / 2. - DetHbeam_size / 2.,
-													-DetHbeamHousingBox->GetYHalfLength() + DetHbeam_size / 2. 
+													- shieldHatSpaceBox->GetYHalfLength() + DetHbeam_size / 2. 
 														- DetHbeamS_height,
 													-DetHbeamVBox->GetZHalfLength())
 												+ G4ThreeVector(0, 0,
@@ -845,7 +850,8 @@ G4LogicalVolume *AmoreDetectorConstruction::ConstructAMoRE200_OD()
 		new G4PVPlacement(G4Transform3D(*detbeamRotMtx, hatTlate
 												+ G4ThreeVector(
 													-DetHbeam_height / 2. + DetHbeam_size / 2.,
-													DetHbeamHousingBox->GetYHalfLength() - DetHbeam_size / 2. 
+													// DetHbeamHousingBox->GetYHalfLength() - DetHbeam_size / 2. 
+													shieldHatSpaceBox->GetYHalfLength() - DetHbeam_size / 2.
 														+ DetHbeamS_height,
 													-DetHbeamVBox->GetZHalfLength())
 												+ G4ThreeVector(0, 0,
@@ -855,7 +861,8 @@ G4LogicalVolume *AmoreDetectorConstruction::ConstructAMoRE200_OD()
 		new G4PVPlacement(G4Transform3D(*detbeamRotMtx, hatTlate
 												+ G4ThreeVector(
 													+DetHbeam_height / 2. + DetHbeam_size / 2.,
-													-DetHbeamHousingBox->GetYHalfLength() + DetHbeam_size / 2. 
+													// -DetHbeamHousingBox->GetYHalfLength() + DetHbeam_size / 2. 
+													- shieldHatSpaceBox->GetYHalfLength() + DetHbeam_size / 2. 
 														- DetHbeamS_height,
 													-DetHbeamVBox->GetZHalfLength())
 												+ G4ThreeVector(0, 0,
@@ -865,7 +872,8 @@ G4LogicalVolume *AmoreDetectorConstruction::ConstructAMoRE200_OD()
 		new G4PVPlacement(G4Transform3D(*detbeamRotMtx, hatTlate
 												+ G4ThreeVector( 
 													+DetHbeam_height / 2. - DetHbeam_size / 2.,
-													DetHbeamHousingBox->GetYHalfLength() - DetHbeam_size / 2. 
+													// DetHbeamHousingBox->GetYHalfLength() - DetHbeam_size / 2. 
+													shieldHatSpaceBox->GetYHalfLength() - DetHbeam_size / 2. 
 														+ DetHbeamS_height,
 													-DetHbeamVBox->GetZHalfLength())
 												+ G4ThreeVector(0, 0,
@@ -1662,6 +1670,14 @@ G4LogicalVolume *AmoreDetectorConstruction::ConstructAMoRE200_OD()
 	G4Box *BackBoruBox = new G4Box("BackBoruBox", FNBBoruBox_x, BackBoruBox_y, FNBBoruBox_z);
 	G4Box *BackPEBox = new G4Box("BackPEBox", FNBPEBox_x, BackPEBox_y, FNBPEBox_z);
 
+	// Additional PE (Adding PE above the H-beam) by jeewon
+	G4double AddPE_height = 30. / 2. * cm;
+	G4double AddPE_x = 100. / 2. * cm;
+	G4double AddPE_y = FrontBoruBox_y;
+	// G4double AddPE_width = FrontBoruBox_y; // 60. / 2. * cm;
+	// G4double AddPE_width = 80. / 2. * cm;
+	G4Box *AddPEBox = new G4Box("AddPEBox", AddPE_x, AddPE_y, AddPE_height);
+
 	G4LogicalVolume *FrontBoruLV = new G4LogicalVolume(FrontBoruBox, _BoricAcidRubber, "FrontBoru_LV");
 	G4LogicalVolume *FrontPELV = new G4LogicalVolume(FrontPEBox, _polyethylene, "FrontPE_LV");
 	FrontBoruLV->SetVisAttributes(boricAcidVisAttr);
@@ -1671,6 +1687,9 @@ G4LogicalVolume *AmoreDetectorConstruction::ConstructAMoRE200_OD()
 	G4LogicalVolume *BackPELV = new G4LogicalVolume(BackPEBox, _polyethylene, "BackPE_LV");
 	BackBoruLV->SetVisAttributes(boricAcidVisAttr);
 	BackPELV->SetVisAttributes(shieldPE_VisAttr);
+
+	G4LogicalVolume *AddPELV = new G4LogicalVolume(AddPEBox, _polyethylene, "AddPE_LV");
+	AddPELV->SetVisAttributes(shieldPE_VisAttr);
 	
 	if (fAdditionalPE)
 	{
@@ -1710,6 +1729,12 @@ G4LogicalVolume *AmoreDetectorConstruction::ConstructAMoRE200_OD()
 						  G4ThreeVector(740, -2200, HbeamHousingOut->GetZHalfLength() - HBeam_size / 2.),
 						  BackBoruLV, "BackBoru_PV", HbeamHousingLV, false, 0, false);
 		new G4PVPlacement(nullptr, G4ThreeVector(0, -BackBoruBox_y + BackPEBox_y, -FNBBoruBox_z + FNBPEBox_z), BackPELV, "BackPE_PV", BackBoruLV, false, 0, OverlapCheck);
+
+		// Another additional PE --- from Jeewon
+		G4PVPlacement *AddBackPE1_PV = new G4PVPlacement(nullptr, hatTlate + G4ThreeVector(-FNBBoruBox_x - 300, -2020, AddPE_height), AddPELV, "AddBackPE1_PV", logiCavern, false, 0, 0);
+		G4PVPlacement *AddBackPE2_PV = new G4PVPlacement(nullptr, hatTlate + G4ThreeVector(FNBBoruBox_x + 300, -2020, AddPE_height), AddPELV, "AddBackPE2_PV", logiCavern, false, 0, 0);
+		G4PVPlacement *AddFrontPE1_PV = new G4PVPlacement(nullptr, hatTlate + G4ThreeVector(-FNBBoruBox_x - 300, 2000, AddPE_height), AddPELV, "AddFrontPE1_PV", logiCavern, false, 0, 0);
+		G4PVPlacement *AddFrontPE2_PV = new G4PVPlacement(nullptr, hatTlate + G4ThreeVector(FNBBoruBox_x + 300, 2000, AddPE_height), AddPELV, "AddFrontPE2_PV", logiCavern, false, 0, 0);
 		
 		if(whichSimType==kRockGammaMode){
 			AddPE1_PV->SetTranslation(AddPE1_PV->GetTranslation() + G4ThreeVector(-HBeam_housingDist,0,0));
@@ -1724,10 +1749,10 @@ G4LogicalVolume *AmoreDetectorConstruction::ConstructAMoRE200_OD()
 			AddPE3_PV->CheckOverlaps(1000, 0, true);
 			AddPE4_PV->CheckOverlaps(1000, 0, true);
 			AddPE5_PV->CheckOverlaps(1000, 0, true);
-			// AddBackPE1_PV->CheckOverlaps(1000, 0, true);
-			// AddBackPE2_PV->CheckOverlaps(1000, 0, true);
-			// AddFrontPE1_PV->CheckOverlaps(1000, 0, true);
-			// AddFrontPE2_PV->CheckOverlaps(1000, 0, true);
+			AddBackPE1_PV->CheckOverlaps(1000, 0, true);
+			AddBackPE2_PV->CheckOverlaps(1000, 0, true);
+			AddFrontPE1_PV->CheckOverlaps(1000, 0, true);
+			AddFrontPE2_PV->CheckOverlaps(1000, 0, true);
 		}
 	}
 
@@ -1944,7 +1969,7 @@ G4LogicalVolume *AmoreDetectorConstruction::ConstructAMoRE200_OD()
 	}
 	// }
 
-	cout << " end " << endl;
+	// cout << " end " << endl;
 
 	retvalLV = logiCavern;
 	return retvalLV;

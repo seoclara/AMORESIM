@@ -1238,11 +1238,35 @@ G4LogicalVolume *AmoreDetectorConstruction::MakeModule(G4Material *towerMat, G4M
     /// POSTs
     ///-----------------------------------------------
     G4double post_h = cell_h - 0.9;
-    G4VSolid *Post = new G4Tubs("Post", post_bolt_r, post_radius - solidBooleanTol * 2, (post_h - post_top_h) / 2., 0, 360. * deg);
-    G4Tubs *PostTop = new G4Tubs("PostTop1", post_bolt_r, post_top_r, post_top_h / 2., 0, 360. * deg);
-    Post = new G4UnionSolid("Post", Post, PostTop, nullptr, {0, 0, (post_h - post_top_h) / 2 + post_top_h / 2});
+    G4double post_cut_h = post_h - 16; // Post real shape (without threaded part)
+    // G4VSolid *Post = new G4Tubs("Post", post_bolt_r, post_radius - solidBooleanTol * 2, (post_h - post_top_h) / 2., 0, 360. * deg);
+    // G4Tubs *PostTop = new G4Tubs("PostTop1", post_bolt_r, post_top_r, post_top_h / 2., 0, 360. * deg);
+    G4VSolid *Post = new G4Tubs("Post", 0, post_radius - solidBooleanTol * 2, (post_h - post_top_h) / 2., 0, 360. * deg);
+    G4Tubs *PostTop = new G4Tubs("PostTop1", 0, post_top_r, post_top_h / 2., 0, 360. * deg);
+    G4Tubs *PostHallL = new G4Tubs("PostHallL", 0, post_bolt_r, 10, 0, 360. * deg);
+    G4Tubs *PostHallS = new G4Tubs("PostHallS", 0, post_bolt_r-0.3, 14, 0, 360. * deg);
+    G4Box *PostCut = new G4Box("PostCut", post_radius, post_radius, post_cut_h/2.);
+    Post = new G4UnionSolid("Post1", Post, PostTop, nullptr, {0, 0, (post_h - post_top_h) / 2 + post_top_h / 2});
+    Post = new G4SubtractionSolid("Post2", Post, PostHallL, nullptr, {0, 0, post_h/2});
+    Post = new G4SubtractionSolid("Post3", Post, PostHallL, nullptr, {0, 0, -post_h/2});
+    Post = new G4SubtractionSolid("Post4", Post, PostHallS, nullptr, {0, 0, post_h/2});
+    Post = new G4SubtractionSolid("Post5", Post, PostHallS, nullptr, {0, 0, -post_h/2});
+    Post = new G4SubtractionSolid("Post", Post, PostCut, nullptr, {post_radius + 1.5, 0, 0});
+
+    // Post = new G4UnionSolid("Post", Post, PostTop, nullptr, {0, 0, (post_h - post_top_h) / 2 + post_top_h / 2});
     G4LogicalVolume *logiPost = new G4LogicalVolume(Post, frameMat, "PostLV");
     logiPost->SetVisAttributes(logiFrameVis);
+
+    // Post threaded part (not screwed.)
+    G4Tubs *PostThreadL = new G4Tubs("PostThreadL", post_bolt_r, post_bolt_r+0.1, 5, 0, 360. * deg);
+    G4Tubs *PostThreadS = new G4Tubs("PostThreadS", post_bolt_r-0.3, post_bolt_r - 0.3 + 0.1, 2, 0, 360. * deg);
+    G4VSolid *PostThread = new G4UnionSolid("PostThread1", PostThreadL, PostThreadS, nullptr, {0, 0, -5-2});
+    PostThread = new G4UnionSolid("PostThread2", PostThread, PostThreadL, nullptr, {0, 0, 5-post_h+post_top_h/2+5});
+    PostThread = new G4UnionSolid("PostThread3", PostThread, PostThreadS, nullptr, {0, 0, 5-post_h+post_top_h/2+10+2});
+    PostThread = new G4SubtractionSolid("PostThread", PostThread, PostCut, nullptr, {post_radius + 1.5, 0, 5-(post_h-post_top_h)/2-post_top_h/2});
+    G4LogicalVolume *logiPostThread = new G4LogicalVolume(PostThread, frameMat, "PostThreadLV");
+    logiPostThread->SetVisAttributes(logiFrameVis);
+    new G4PVPlacement(nullptr, {0, 0, post_h/2-5}, logiPostThread, "physPostThread", logiPost, false, 0, OverlapCheck);
 
     ///_______________________________________________
     // Top module teflon sheets
@@ -1539,6 +1563,7 @@ G4LogicalVolume *AmoreDetectorConstruction::MakeModule(G4Material *towerMat, G4M
     postPos[0] += module_r - frame_hole_depth;
     postPos[2] -= Module_thick / 2. + post_top_h + (post_h - post_top_h) / 2.;
     postPos.rotateZ(360. / 24 * deg);
+    G4RotationMatrix *postMtx = new G4RotationMatrix();
 
     /// Clamp top ///
     clamptopPos[0] += -clamp_top_w / 2. + 4.5 + module_r - frame_hole_depth;
@@ -1579,8 +1604,10 @@ G4LogicalVolume *AmoreDetectorConstruction::MakeModule(G4Material *towerMat, G4M
     boltsClampPos[2] += post_top_h / 2. + M4_height / 2.;
 
     for (int j = 0; j < 3; j++){
-        new G4PVPlacement(0, postPos, logiPost, ("physPost" + to_string(CrystalIndex)).c_str(), resultLV, false, 0, OverlapCheck);
+        // new G4PVPlacement(0, postPos, logiPost, ("physPost" + to_string(CrystalIndex)).c_str(), resultLV, false, 0, OverlapCheck);
+        new G4PVPlacement(G4Transform3D(*postMtx, postPos), logiPost, ("physPost" + to_string(CrystalIndex)).c_str(), resultLV, false, 0, OverlapCheck);
         postPos.rotateZ(120. * deg);
+        postMtx->rotateZ(120. * deg);
 
         new G4PVPlacement(G4Transform3D(*clamptopMtx, clamptopPos), logiClampTop, ("physClampTop" + to_string(CrystalIndex)).c_str(), resultLV, false, 0, OverlapCheck);
         clamptopPos.rotateZ(120. * deg);
