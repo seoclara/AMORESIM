@@ -292,6 +292,21 @@ void AmoreDetectorConstruction::ConstructAMoRE200_ID(G4LogicalVolume *aWorkAreaL
             G4ThreeVector(0, 0, -SSOVC1->GetZHalfLength() + cu4_height + Cu4GapFromBot),
             logiCu4, "physCu4", logiSSOVCIn, false, 0, OverlapCheck);
 
+    // G11 between ovc and cu4
+    G4double g11_height4 = SSOVC1->GetZHalfLength() - Cu4Cylinder->GetZHalfLength() - Cu4GapFromBot;
+    G4Tubs *G11Tubs_cu4 = new G4Tubs("G11Tubs_cu4", 0, g11_radius, g11_height4-solidBooleanTol, 0, 360.*deg);
+    G4LogicalVolume *logiG11_cu4 = new G4LogicalVolume(G11Tubs_cu4, g10material, "logiG11_cu4");
+    G4ThreeVector G11Pos = G4ThreeVector(0, cu1_radius - g11_radius*2, SSOVC1->GetZHalfLength() - G11Tubs_cu4->GetZHalfLength() - solidBooleanTol);
+    G4ThreeVector G11Pos2 = G4ThreeVector(0, cu1_radius - g11_radius*4, SSOVC1->GetZHalfLength() - G11Tubs_cu4->GetZHalfLength() - solidBooleanTol);
+    G11Pos2.rotateZ(60*deg);
+    for(int ig11 = 0; ig11<3; ig11++){
+        G11Pos.rotateZ(120*deg);
+        new G4PVPlacement(0, G11Pos, logiG11_cu4, "physG11_cu4", logiSSOVCIn, false, 0, OverlapCheck);
+        G11Pos2.rotateZ(120*deg);
+        new G4PVPlacement(0, G11Pos2, logiG11_cu4, "physG11_cu4", logiSSOVCIn, false, 0, OverlapCheck);
+    }
+
+    // gu4 inner space
     G4Tubs *Cu4CylIn = new G4Tubs("Cu4CylinderInSol", 0, cu4_radius - cu4thick,
             // cu4_height - cu4zthick, 0, 360 * deg);
             cu4_height - cu4thickB / 2., 0, 360 * deg);
@@ -306,12 +321,24 @@ void AmoreDetectorConstruction::ConstructAMoRE200_ID(G4LogicalVolume *aWorkAreaL
     // G4double cu3zthick = cu3thick/2.;
     G4Tubs *Cu3Cylinder = new G4Tubs("Cu3Cylinder", 0, cu3_radius, cu3_height, 0, 360. * deg);
     G4LogicalVolume *logiCu3 = new G4LogicalVolume(Cu3Cylinder, _copper, "logiCu3", 0, 0, 0);
-    G4Tubs *Cu3CylIn = new G4Tubs("Cu3CylinderInSol", 0,
-            cu3_radius - cu3thick, cu3_height - cu3thickB / 2., 0, 360 * deg);
-    G4LogicalVolume *logiCu3In = new G4LogicalVolume(Cu3CylIn, WA_mat, "Cu3CylinderInLV");
     new G4PVPlacement(0, // no rotation
             G4ThreeVector(0, 0, -Cu4CylIn->GetZHalfLength() + cu3_height + Cu3GapFromBot),
             logiCu3, "physCu3", logiCu4In, false, 0, OverlapCheck);
+        
+    // G11 between cu4 and cu3
+    G4double g11_height3 = Cu4CylIn->GetZHalfLength() - Cu3Cylinder->GetZHalfLength() - Cu3GapFromBot;
+    G4Tubs *G11Tubs_cu3 = new G4Tubs("G11Tubs_cu3", 0, g11_radius, g11_height3-solidBooleanTol, 0, 360.*deg);
+    G4LogicalVolume *logiG11_cu3 = new G4LogicalVolume(G11Tubs_cu3, g10material, "logiG11_cu3");
+    G11Pos = G4ThreeVector(0, cu1_radius - g11_radius*2, Cu4CylIn->GetZHalfLength() - G11Tubs_cu3->GetZHalfLength() - solidBooleanTol);
+    for(int ig11 = 0; ig11<3; ig11++){
+        G11Pos.rotateZ(120*deg);
+        new G4PVPlacement(0, G11Pos, logiG11_cu3, "physG11_cu3", logiCu4In, false, 0, OverlapCheck);
+    }
+
+    // cu3 inner space
+    G4Tubs *Cu3CylIn = new G4Tubs("Cu3CylinderInSol", 0,
+            cu3_radius - cu3thick, cu3_height - cu3thickB / 2., 0, 360 * deg);
+    G4LogicalVolume *logiCu3In = new G4LogicalVolume(Cu3CylIn, WA_mat, "Cu3CylinderInLV");
     // new G4PVPlacement(0, G4ThreeVector(0, 0, cu3thick/2.),
     new G4PVPlacement(0, G4ThreeVector(0, 0, cu3thickB / 2.),
             logiCu3In, "physCu3In", logiCu3, false, 0, OverlapCheck);
@@ -322,13 +349,25 @@ void AmoreDetectorConstruction::ConstructAMoRE200_ID(G4LogicalVolume *aWorkAreaL
     // G4double cu2zthick = cu2thick/2.;
     G4Tubs *Cu2Cylinder = new G4Tubs("Cu2Cylinder", 0, cu2_radius, cu2_height, 0, 360. * deg);
     G4LogicalVolume *logiCu2 = new G4LogicalVolume(Cu2Cylinder, _copper, "logiCu2", 0, 0, 0);
+    new G4PVPlacement(0, // no rotation
+            G4ThreeVector(0, 0, -Cu3CylIn->GetZHalfLength() + cu2_height + Cu2GapFromBot),
+            logiCu2, "physCu2", logiCu3In, false, 0, OverlapCheck);
+    
+    // G11 between cu3 and cu2
+    G4double g11_height2 = Cu3CylIn->GetZHalfLength() - Cu2Cylinder->GetZHalfLength() - Cu2GapFromBot;
+    G4Tubs *G11Tubs_cu2 = new G4Tubs("G11Tubs_cu2", 0, g11_radius, g11_height2-solidBooleanTol, 0, 360.*deg);
+    G4LogicalVolume *logiG11_cu2 = new G4LogicalVolume(G11Tubs_cu2, g10material, "logiG11_cu2");
+    G11Pos = G4ThreeVector(0, cu1_radius - g11_radius*2, Cu3CylIn->GetZHalfLength() - G11Tubs_cu2->GetZHalfLength() - solidBooleanTol);
+    for(int ig11 = 0; ig11<3; ig11++){
+        G11Pos.rotateZ(120*deg);
+        new G4PVPlacement(0, G11Pos, logiG11_cu2, "physG11_cu2", logiCu3In, false, 0, OverlapCheck);
+    }
+
+    // cu2 inner space
     G4Tubs *Cu2CylIn = new G4Tubs("Cu2CylinderInSol", 0,
             // cu2_radius - cu2thick, cu2_height - cu2zthick, 0, 360 * deg);
             cu2_radius - cu2thick, cu2_height - cu2thickB / 2., 0, 360 * deg);
     G4LogicalVolume *logiCu2In = new G4LogicalVolume(Cu2CylIn, WA_mat, "Cu2CylinderInLV");
-    new G4PVPlacement(0, // no rotation
-            G4ThreeVector(0, 0, -Cu3CylIn->GetZHalfLength() + cu2_height + Cu2GapFromBot),
-            logiCu2, "physCu2", logiCu3In, false, 0, OverlapCheck);
     // new G4PVPlacement(0, G4ThreeVector(0, 0, cu2thick/2.),
     new G4PVPlacement(0, G4ThreeVector(0, 0, cu2thickB / 2.),
             logiCu2In, "physCu2In", logiCu2, false, 0, OverlapCheck);
@@ -339,13 +378,25 @@ void AmoreDetectorConstruction::ConstructAMoRE200_ID(G4LogicalVolume *aWorkAreaL
     // G4double cu1zthick = cu1thick/2.;
     G4Tubs *Cu1Cylinder = new G4Tubs("Cu1Cylinder", 0, cu1_radius, cu1_height, 0, 360. * deg);
     G4LogicalVolume *logiCu1 = new G4LogicalVolume(Cu1Cylinder, _copper, "logiCu1", 0, 0, 0);
+    new G4PVPlacement(0, // no rotation
+            G4ThreeVector(0, 0, -Cu2CylIn->GetZHalfLength() + cu1_height + Cu1GapFromBot),
+            logiCu1, "physCu1", logiCu2In, false, 0, OverlapCheck);
+    
+    // G11 between cu2 and cu1
+    G4double g11_height1 = Cu2CylIn->GetZHalfLength() - Cu1Cylinder->GetZHalfLength() - Cu1GapFromBot;
+    G4Tubs *G11Tubs_cu1 = new G4Tubs("G11Tubs_cu1", 0, g11_radius, g11_height1-solidBooleanTol, 0, 360.*deg);
+    G4LogicalVolume *logiG11_cu1 = new G4LogicalVolume(G11Tubs_cu1, g10material, "logiG11_cu1");
+    G11Pos = G4ThreeVector(0, cu1_radius - g11_radius*2, Cu2CylIn->GetZHalfLength() - G11Tubs_cu1->GetZHalfLength() - solidBooleanTol);
+    for(int ig11 = 0; ig11<3; ig11++){
+        G11Pos.rotateZ(120*deg);
+        new G4PVPlacement(0, G11Pos, logiG11_cu1, "physG11_cu1", logiCu2In, false, 0, OverlapCheck);
+    }
+
+    // cu1 inner space
     G4Tubs *Cu1CylIn = new G4Tubs("Cu1CylInSol", 0,
             // cu1_radius - cu1thick, cu1_height - cu1zthick, 0, 360 * deg);
             cu1_radius - cu1thick, cu1_height - cu1thickB / 2., 0, 360 * deg);
     G4LogicalVolume *logiCu1In = new G4LogicalVolume(Cu1CylIn, WA_mat, "Cu1CylinderInLV");
-    new G4PVPlacement(0, // no rotation
-            G4ThreeVector(0, 0, -Cu2CylIn->GetZHalfLength() + cu1_height + Cu1GapFromBot),
-            logiCu1, "physCu1", logiCu2In, false, 0, OverlapCheck);
     // new G4PVPlacement(0, G4ThreeVector(0, 0, cu1thick/2.),
     new G4PVPlacement(0, G4ThreeVector(0, 0, cu1thickB / 2.),
             logiCu1In, "physCu1In", logiCu1, false, 0, OverlapCheck);
@@ -797,6 +848,7 @@ void AmoreDetectorConstruction::ConstructAMoRE200_ID(G4LogicalVolume *aWorkAreaL
     G4VisAttributes *logiPbP2Vis = new G4VisAttributes(lgrey);
     G4VisAttributes *logiBalloonVis = new G4VisAttributes(white);
     G4VisAttributes *logiAirVis = new G4VisAttributes(bluel);
+    G4VisAttributes *logiG11Vis = new G4VisAttributes(yellow);
 
     if (flagInvisible || flagOneCell){
         logiSSOVC->SetVisAttributes(G4VisAttributes::Invisible);
@@ -826,9 +878,15 @@ void AmoreDetectorConstruction::ConstructAMoRE200_ID(G4LogicalVolume *aWorkAreaL
         logiPbP2Vis->SetForceSolid(true);
         logiAirVis->SetForceSolid(true);
         logiBalloonVis->SetForceSolid(true);
+        logiG11Vis->SetForceSolid(true);
 
         // logiAirBalloon->SetVisAttributes(logiBalloonVis);
         logiRadonAir->SetVisAttributes(logiAirVis);
+        logiG11_cu4->SetVisAttributes(logiG11Vis);
+        logiG11_cu3->SetVisAttributes(logiG11Vis);
+        logiG11_cu2->SetVisAttributes(logiG11Vis);
+        logiG11_cu1->SetVisAttributes(logiG11Vis);
+
         logiSSOVC->SetVisAttributes(logiSSOVCVis);
         logiSSOVCTop->SetVisAttributes(logiSSOVCVis);
         // logiSSOVCIn->SetVisAttributes(logiTargetRoomVis);

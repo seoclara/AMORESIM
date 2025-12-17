@@ -875,6 +875,9 @@ namespace AmoreDetectorStaticInfo {
 		// RadonAir
 		constexpr G4double balloon_thickness = 0.3 * mm;
 
+		// G11
+		constexpr G4double g11_radius = 15 * mm;
+
 		// SSOVC
 		constexpr G4double sst_zsize_half = 5.* cm / 2.; //3. * cm / 2.;
 		constexpr G4double sst_xsize_half = 1800. * mm / 2.; //2500. * mm / 2.;
