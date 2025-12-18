@@ -24,12 +24,12 @@
 #include "CupSim/CupVetoSD.hh"
 
 // Include files for ROOT.
-#include "Rtypes.h"
-#include "TBranch.h"
-#include "TFile.h"
-#include "TROOT.h"
-#include "TStopwatch.h"
-#include "TTree.h"
+// #include "Rtypes.h"
+// #include "TBranch.h"
+// #include "TFile.h"
+// #include "TROOT.h"
+// #include "TStopwatch.h"
+// #include "TTree.h"
 
 // Include files for the G4 classes
 #include "G4Event.hh"
@@ -167,7 +167,7 @@ void CupRootNtuple::CreateTree() {
     if (StatusStep) fROOTOutputTree->Branch("STEP", &(Cstep), 256000, 2);
     if (StatusPhoton) fROOTOutputTree->Branch("PHOTONHIT", &(Cphoton), 256000, 2);
     if (StatusScint) fROOTOutputTree->Branch("SCINT", &(Cscint), 256000, 2);
-    if (StatusMuon) fROOTOutputTree->Branch("MuonSD", &(CMuSD), 256000, 2);
+    // if (StatusMuon) fROOTOutputTree->Branch("MuonSD", &(CMuSD), 256000, 2);
 
     // TG Sensitive Detector
     sdman = G4SDManager::GetSDMpointer();
@@ -176,6 +176,11 @@ void CupRootNtuple::CreateTree() {
       if (tgsd) {
       fROOTOutputTree->Branch("TGSD", &(Ctgsd), 256000, 2);
       }
+
+    CupVetoSD* vetosd = (CupVetoSD*)(sdman->FindSensitiveDetector("/cupdet/MuonVetoSD"));
+    if (StatusMuon && vetosd) {
+        fROOTOutputTree->Branch("MuonVetoSD", &(CMuSD), 256000, 2);
+    }
 
     AddPMTSD();
 }
@@ -651,6 +656,7 @@ void CupRootNtuple::SetPhoton() {
     G4cout << "n_op_cerenkov= " << n_op_cerenkov << ", n_op_scint= " << n_op_scint
            << ", n_op_reem= " << n_op_reem << G4endl;
     G4cout << "n_op_scint_test= " << n_op_scint_test << ", n_op_other= " << n_op_other << G4endl; // JW (2023.12.14) for debugging
+    G4cout << "" << G4endl;
 }
 
 void CupRootNtuple::SetScintillation() {
@@ -739,7 +745,7 @@ void CupRootNtuple::SetTGSD(const G4Event *a_event) {
     CupScintHitsCollection *ECHC = 0;
     if (HCE) ECHC = (CupScintHitsCollection *)(HCE->GetHC(TGSDHCID));
 
-    int iHit                 = 0;
+    // int iHit                 = 0;
     double totalE            = 0.;
     double totalEquenched    = 0.;
     int nTotCell             = 0;
@@ -774,7 +780,7 @@ void CupRootNtuple::SetTGSD(const G4Event *a_event) {
                 tcell.SetEdep(eDep);
                 tcell.SetEdepQuenched(eDepQuenched);
                 if (eDep > 0.) {
-                    iHit++;
+                    // iHit++;
                     totalE += eDep;
                     totalEquenched += eDepQuenched;
                 }

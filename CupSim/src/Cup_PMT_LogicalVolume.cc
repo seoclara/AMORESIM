@@ -174,7 +174,7 @@ Cup_17inch_LogicalVolume::Cup_17inch_LogicalVolume(
                           plabel + "_mask_phys",                                // name
                           this,                                                 // mother volume
                           false,                                                // no boolean ops
-                          0);                                                   // copy number
+                          0, true);                                                   // copy number
 
         // mask is black
         //    G4VisAttributes * visAtt= new G4VisAttributes(G4Color(0.0,0.0,0.0,1.0));
@@ -215,7 +215,7 @@ Cup_17inch_LogicalVolume::Cup_17inch_LogicalVolume(
                           plabel + "_facemask_phys",        // name
                           this,                             // mother volume
                           false,                            // no boolean ops
-                          0);                               // copy number
+                          0, true);                               // copy number
 
         // facemask is same color as annular mask
         facemask_log->SetVisAttributes(visAtt);
@@ -294,7 +294,7 @@ Cup_20inch_LogicalVolume::Cup_20inch_LogicalVolume(
                           plabel + "_mask_phys",                                // name
                           this,                                                 // mother volume
                           false,                                                // no boolean ops
-                          0);                                                   // copy number
+                          0, true);                                                   // copy number
 
         // mask is black
         //    G4VisAttributes * visAtt= new G4VisAttributes(G4Color(0.0,0.0,0.0,1.0));
@@ -374,7 +374,7 @@ Cup_10inch_LogicalVolume::Cup_10inch_LogicalVolume(
             plabel + "_mask_phys",                                        // name
             this,                                                         // mother volume
             false,                                                        // no boolean ops
-            0);                                                           // copy number
+            0, true);                                                           // copy number
     }
 }
 
@@ -449,7 +449,7 @@ Cup_8inch_LogicalVolume::Cup_8inch_LogicalVolume(
             plabel + "_mask_phys",                                        // name
             this,                                                         // mother volume
             false,                                                        // no boolean ops
-            0);                                                           // copy number
+            0, true);                                                           // copy number
     }
 }
 
@@ -523,7 +523,7 @@ Cup_5inch_LogicalVolume::Cup_5inch_LogicalVolume(
                           plabel + "_mask_phys",                                 // name
                           this,                                                  // mother volume
                           false,                                                 // no boolean ops
-                          0);                                                    // copy number
+                          0, true);                                                    // copy number
     }
 }
 
@@ -597,7 +597,7 @@ Cup_2inch_LogicalVolume::Cup_2inch_LogicalVolume(
                           plabel + "_mask_phys",                                 // name
                           this,                                                  // mother volume
                           false,                                                 // no boolean ops
-                          0);                                                    // copy number
+                          0, true);                                                    // copy number
     }
 }
 
@@ -769,11 +769,11 @@ void Cup_PMT_LogicalVolume::ConstructPMT_UsingTorusStack(
     // FastSimulationModel
     ////
     /**  CupPMTOpticalModel * pmtOpticalModel =  **/
-    // EJ: start
+    /*
     G4Region *PmtRegion = new G4Region(GetName());
     PmtRegion->AddRootLogicalVolume(body_log);
-    // EJ: end
     new CupPMTOpticalModel(GetName() + "_optical_model", body_phys);
+    */
 
     ////////////////////////////////////////////////////////////////
     // Set colors and visibility
@@ -914,7 +914,7 @@ void Cup_PMT_LogicalVolume::ConstructPMT_UsingEllipsoid(
                           GetName() + "_face_phys", // a name for this physical volume
                           this,                     // the mother volume
                           false,                    // no boolean ops
-                          0);                       // copy number
+                          0, true);                       // copy number
     G4PVPlacement *back_phys =
         new G4PVPlacement(0,                        // no rotation
                           equatorTranslation,       // puts back equator in right place
@@ -922,7 +922,7 @@ void Cup_PMT_LogicalVolume::ConstructPMT_UsingEllipsoid(
                           GetName() + "_back_phys", // a name for this physical volume
                           this,                     // the mother volume
                           false,                    // no boolean ops
-                          0);                       // copy number
+                          0, true);                       // copy number
     G4PVPlacement *stem_phys =
         new G4PVPlacement(0,                        // no rotation
                           stemTranslation,          // puts stem in right place
@@ -930,7 +930,7 @@ void Cup_PMT_LogicalVolume::ConstructPMT_UsingEllipsoid(
                           GetName() + "_stem_phys", // a name for this physical volume
                           this,                     // the mother volume
                           false,                    // no boolean ops
-                          0);                       // copy number
+                          0, true);                       // copy number
 
     // place inner solids in outer solids (vacuum)
     G4PVPlacement *face_interior_phys =
@@ -940,7 +940,7 @@ void Cup_PMT_LogicalVolume::ConstructPMT_UsingEllipsoid(
                           face_interior_log,                 // the logical volume
                           face_phys,                         // the mother volume
                           false,                             // no boolean ops
-                          0);                                // copy number
+                          0, true);                                // copy number
     G4PVPlacement *back_interior_phys =
         new G4PVPlacement(0,                                 // no rotation
                           noTranslation,                     // puts equator in right place
@@ -948,7 +948,7 @@ void Cup_PMT_LogicalVolume::ConstructPMT_UsingEllipsoid(
                           back_interior_log,                 // the logical volume
                           back_phys,                         // the mother volume
                           false,                             // no boolean ops
-                          0);                                // copy number
+                          0, true);                                // copy number
     G4PVPlacement *stem_interior_phys =
         new G4PVPlacement(0,                                 // no rotation
                           noTranslation,                     // puts equator in right place
@@ -956,18 +956,18 @@ void Cup_PMT_LogicalVolume::ConstructPMT_UsingEllipsoid(
                           stem_interior_log,                 // the logical volume
                           stem_phys,                         // the mother volume
                           false,                             // no boolean ops
-                          0);                                // copy number
+                          0, true);                                // copy number
 
     // place dynode in stem/back
     /**  G4PVPlacement* dynode1_phys = 0;  **/
     if (dynode1_log) {
         /**  dynode1_phys =  **/
         new G4PVPlacement(0, G4ThreeVector(0., 0., z_dynode - dynode1_solid->GetZHalfLength()),
-                          GetName() + "_dynode1_phys", dynode1_log, back_interior_phys, false, 0);
+                          GetName() + "_dynode1_phys", dynode1_log, back_interior_phys, false, 0, true);
     }
     /**  G4PVPlacement* dynode2_phys =  **/
     new G4PVPlacement(0, noTranslation, GetName() + "_dynode2_phys", dynode2_log,
-                      stem_interior_phys, false, 0);
+                      stem_interior_phys, false, 0, true);
 
     ////////////////////////////////////////////////////////////////
     // Create optical surfaces

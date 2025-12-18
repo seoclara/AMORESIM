@@ -56,11 +56,11 @@ void AmoreParallelWorldConstruction::Construct(){
             fGlass = G4Material::GetMaterial("Glass");
             fStainless = G4Material::GetMaterial("StainlessSteel");
             fPMT_Vac = G4Material::GetMaterial("PMT_Vac");
-	    // Create optical surface for photocathode
-            fPhotocathode_opsurf = new G4OpticalSurface("Photocathode_opsurf");
-            fPhotocathode_opsurf->SetType(dielectric_metal); // ignored if RINDEX defined
-            fPhotocathode_opsurf->SetMaterialPropertiesTable(
-                G4Material::GetMaterial("photocathode")->GetMaterialPropertiesTable());
+	    // // Create optical surface for photocathode
+        //     fPhotocathode_opsurf = new G4OpticalSurface("Photocathode_opsurf");
+        //     fPhotocathode_opsurf->SetType(dielectric_metal); // ignored if RINDEX defined
+        //     fPhotocathode_opsurf->SetMaterialPropertiesTable(
+        //         G4Material::GetMaterial("photocathode")->GetMaterialPropertiesTable());
 
             // Create Para volume
             G4Box* paraBox = new G4Box("paraBox", 6600./2.*mm, 6600./2.*mm, 3300./2.*mm);
@@ -122,12 +122,12 @@ void AmoreParallelWorldConstruction::ConstructSD(){
             G4LogicalVolume* PMT8_inner1_log = PMT8_inner1_phys->GetLogicalVolume();
             PMT8_inner1_log->SetSensitiveDetector(pmtSDWC);
 
-            // G4Region *PmtRegion = new G4Region("WCPMT");
-            // PmtRegion->AddRootLogicalVolume(PMT10_body_log);
-            // PmtRegion->AddRootLogicalVolume(PMT8_body_log);
-            // new CupPMTOpticalModel("WCPMT_optical_model", PMT10_body_phys);
-            // new CupPMTOpticalModel("WCPMT_optical_model", PMT8_body_phys);
-            // G4cout << "PMT Optical Model done" << G4endl;
+            G4Region *PmtRegion = new G4Region("WCPMT");
+            PmtRegion->AddRootLogicalVolume(PMT10_body_log);
+            PmtRegion->AddRootLogicalVolume(PMT8_body_log);
+            new CupPMTOpticalModel("WCPMT_optical_model", PMT10_body_phys);
+            new CupPMTOpticalModel("WCPMT_optical_model", PMT8_body_phys);
+            G4cout << "PMT Optical Model done" << G4endl;
             break;
         }
         default: { break; }

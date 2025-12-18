@@ -68,7 +68,7 @@ void AmorePhysicsOp::ConstructProcess() {
         G4ParticleDefinition *particle = theParticleIterator->value();
         G4ProcessManager *pmanager     = particle->GetProcessManager();
         G4String particleName          = particle->GetParticleName();
-	if (!pmanager) continue;
+	    if (!pmanager) continue;
 
         if (theScintProcessDef->IsApplicable(*particle)) {
             pmanager->AddProcess(theScintProcessDef);

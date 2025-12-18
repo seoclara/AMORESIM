@@ -1,4 +1,6 @@
-// Written by Jeewon Seo (2024.02.13.)
+// AMORESIM_g4.11.1.3
+// Written by Jeewon Seo (2024.02.13.) for AMoRE-200 PSMD
+// Modified by Jeewon Seo (2025.12.18.) for Bottom PS placement 
 
 #include "AmoreSim/AmoreDetectorConstruction.hh" // the DetectorConstruction class header
 #include "AmoreSim/AmoreDetectorStaticInfo.hh"
@@ -176,6 +178,7 @@ void AmoreDetectorConstruction::ConstructAMoRE200_PSMD()
 		if (region < 9){ // side PS
 			new G4PVPlacement(G4Transform3D(*psRotMtx, pos), PSname, logi_longPS, VetoHousingSide_PV, false, ith, OverlapCheck);
 		} else if (region < 11){ // bottom PS
+			pos[0] = pos[0] + 155*mm; // to fit the housing
 			new G4PVPlacement(G4Transform3D(*bpsRotMtx, pos), PSname, logi_longPS, VetoHousingBottom_PV, false, ith, OverlapCheck);
 		} else if (ps_size == longPSlength) { // vertical side PS
 			new G4PVPlacement(G4Transform3D(*vpsRotMtx, pos), PSname, logi_longPS, VetoHousingSide_PV, false, ith, OverlapCheck);
