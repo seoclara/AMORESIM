@@ -1,4 +1,5 @@
-// Written by Jeewon Seo (2024.02.13.)
+// AMORESIM_g4.10.7.3
+// Written by Jeewon Seo (2024.02.13.) for AMoRE-200 PSMD
 
 #include "AmoreSim/AmoreDetectorConstruction.hh" // the DetectorConstruction class header
 #include "AmoreSim/AmoreDetectorStaticInfo.hh"

@@ -1,5 +1,6 @@
 /*
-   AmoreDetectorConstruction
+   AmoreDetectorConstruction for AMORESIM_g4.10.7.3
+   Modified by Jeewon Seo (2025/12/17)
    */
 
 #include "AmoreSim/AmoreDetectorConstruction.hh"

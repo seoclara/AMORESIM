@@ -1,4 +1,4 @@
-//
+//  AMORESIM_g4.10.7.3
 //  Original by G. Horton-Smith 2004/12/02
 //
 //  Modified by E.J.Jeon 2007/06/14

@@ -1,7 +1,6 @@
 /**
- * @file AmoreDetectorStaticInfo.hh
- * @author BaseHardware
- * @date 190315
+ * @file AmoreDetectorStaticInfo.hh for AMORESIM_g4.10.7.3
+ * @date 251217
  * @brief Header files for static variable definitions
  * @details This file contains static variables for geometric dimenstions. If you want to define
  * dimensional variables which can be changed in run time, please set them in the data/settings*

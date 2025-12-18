@@ -1,10 +1,7 @@
-/**@file AmoreDetectorConstruction.hh
- * @brief A source code file of AmoreDetectorConstruction main class for AMoRE simulation
- * @detail Original by Glenn Horton-Smith, December 2004.  (Based on earlier work first written Dec
- 1999.) Some more materials and their classification by Dario Motta, Jan 2005.
- */
-
-/**
+/** 
+ * @file AmoreDetectorConstruction.hh
+ * @version g4.10.7.3
+ * @date 2025-12-17
  * @brief A class for initialization and controlling of AMoRE-specific geometries
  * @details This class provides various methods for constructing geometries for AMoRE simulation,
  * judging methods of incident into border and so on.

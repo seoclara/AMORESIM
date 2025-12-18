@@ -131,6 +131,7 @@ file(MAKE_DIRECTORY ${PROJECT_BINARY_DIR}/output/root)
 # Locate sources and headers for this project
 #----------------------------------------------------------------------------
 file(GLOB AmoreSim_EXEC_SOURCE ${PROJECT_SOURCE_DIR}/test/amoresim.cc)
+file(GLOB NeutGen_EXEC_SOURCE ${PROJECT_SOURCE_DIR}/test/neutgen.cc)
 file(GLOB AmoreSim_GitRev_SOURCE ${PROJECT_SOURCE_DIR}/src/AmoreSimGitRevision.cc)
 file(GLOB AmoreSim_LIB_SOURCES ${PROJECT_SOURCE_DIR}/src/*.cc)
 file(GLOB AmoreSim_LIB_HEADERS ${PROJECT_SOURCE_DIR}/AmoreSim/*.hh)
@@ -151,6 +152,8 @@ add_library(AmoreSimL SHARED ${AmoreSim_LIB_SOURCES})
 target_link_libraries(AmoreSimL CupSimL ${Geant4_LIBRARIES} ${ROOT_LIBRARIES})
 add_executable(amoresim ${AmoreSim_EXEC_SOURCE})
 target_link_libraries(amoresim AmoreSimL CupSimL ${Geant4_LIBRARIES} ${ROOT_LIBRARIES})
+add_executable(neutgen ${NeutGen_EXEC_SOURCE})
+target_link_libraries(neutgen AmoreSimL CupSimL ${Geant4_LIBRARIES} ${ROOT_LIBRARIES})
 
 #----------------------------------------------------------------------------
 # Check dependencies for this project and set include directories and libraries

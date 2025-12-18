@@ -1,9 +1,9 @@
-//
+//  AMORESIM_g4.10.7.3
 //  Original by G. Horton-Smith 2004/12/02
 //
 //  Modified by E.J.Jeon 2007/06/14
 //  Modified by Y.S.Yoon 2015/06/15
-//  Updated by J.Seo 2025/07/06
+//  Updated by J.Seo 2025/12/17
 
 #include "globals.hh"
 
