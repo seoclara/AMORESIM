@@ -1,5 +1,6 @@
 /*
-   AmoreDetectorConstruction
+   AmoreDetectorConstruction for AMORESIM_g4.11.1.3 
+   Modified by Jeewon Seo (2025/12/18)
    */
 
 #include "AmoreSim/AmoreDetectorConstruction.hh"
@@ -419,6 +420,19 @@ void AmoreDetectorConstruction::ConstructMaterials() {
 	_polyurethane->AddElement(_elementH, natoms = 42);
 	_polyurethane->AddElement(_elementN, natoms = 2);
 	_polyurethane->AddElement(_elementO, natoms = 6);
+
+
+	//////////////////////////////////
+	// Urethane (Ethyl carbamate) (C3H7NO2, density = 1.056 g/cm3)
+	// For AMoRE-II radon air balloon
+	name      = "Urethane";
+	density   = 1.056 * g / cm3;
+	nelements = 4;
+	_urethane = new G4Material(name, density, nelements);
+	_urethane->AddElement(_elementC, natoms = 3);
+	_urethane->AddElement(_elementH, natoms = 7);
+	_urethane->AddElement(_elementN, natoms = 1);
+	_urethane->AddElement(_elementO, natoms = 2);
 
 
 	//////////////////////////////////

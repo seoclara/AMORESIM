@@ -1,7 +1,6 @@
 /**
- * @file AmoreDetectorStaticInfo.hh
- * @author BaseHardware
- * @date 190315
+ * @file AmoreDetectorStaticInfo.hh for AMORESIM_g4.11.1.3
+ * @date 251218
  * @brief Header files for static variable definitions
  * @details This file contains static variables for geometric dimenstions. If you want to define
  * dimensional variables which can be changed in run time, please set them in the data/settings*
@@ -207,8 +206,7 @@ namespace AmoreDetectorStaticInfo {
 		// constexpr G4double nShield_mufflerFB_DistY = 0.5 * m;
 
 		// Boric acid panel geometry
-		// constexpr G4double thickness_BoricAcid        = 3. * mm;
-		constexpr G4double thickness_BoricAcid        = 10. * mm;
+		constexpr G4double thickness_BoricAcid        = 3. * mm;
 		constexpr G4double thickness_BoricAcidHousing = 1. * mm;
 		constexpr G4double thickness_BoricAcidSpacing = 10. * mm;
 
@@ -873,9 +871,69 @@ namespace AmoreDetectorStaticInfo {
 		constexpr G4double cavern_pizza_angle_tol   = 0. * deg;
 
 		// InnerDetector ------
+		// RadonAir
+		constexpr G4double balloon_thickness = 0.3 * mm;
+
+		// G11
+		constexpr G4double g11_radius = 15 * mm;
+
+		// SSOVC
+		constexpr G4double sst_zsize_half = 5.* cm / 2.; //3. * cm / 2.;
+		constexpr G4double sst_xsize_half = 1800. * mm / 2.; //2500. * mm / 2.;
+		constexpr G4double sst_ysize_half = 1500. * mm / 2.; //2000. * mm / 2.;
+
+		constexpr G4double OVCthick  = 0.5 * cm; 
+		constexpr G4double OVCthickB = 15. * mm;
+		constexpr G4double ovc_gap   = 30 * mm;
+		constexpr G4double ss_radius = 1270. * mm /2.; 
+		constexpr G4double ss_inner_height_half = 2890.* mm /2.;
+
+		// Cu 1,2,3,4
+		constexpr G4double cu4thick   = 4. * mm; 
+		constexpr G4double cu4thickB  = 6. * mm;
+		constexpr G4double cu4_radius = 1206. * mm /2.;
+		constexpr G4double cu4_height = 2706. * mm /2.; 
+
+		constexpr G4double cu3thick   = 6. * mm; 
+		constexpr G4double cu3thickB  = 27.* mm;
+		constexpr G4double cu3_radius = 1142. * mm / 2.;
+		constexpr G4double cu3_height = 2449. * mm/ 2.; 
+
+		constexpr G4double cu2thick  = 3 * mm; 
+		constexpr G4double cu2thickB = 4 * mm;
+		constexpr G4double cu2_radius = 1086. * mm / 2.; 
+		constexpr G4double cu2_height = 2163. * mm / 2.;
+
+		constexpr G4double cu1thick  = 3 * mm;
+		constexpr G4double cu1thickB = 6 * mm;
+		constexpr G4double cu1_radius = 1026. * mm / 2.; 
+		constexpr G4double cu1_height = 1907. * mm / 2.; 
+
+		constexpr G4double cumcp_radius = 1000. * mm / 2.;
+		constexpr G4double inlead_radius = 980. * mm / 2.;
+
+		constexpr G4double cu4to3diff = 124 * mm;
+		constexpr G4double cu3to2diff = 127.5 * mm;
+		constexpr G4double cu2to1diff = 124 * mm;
+
+		// Cu, Pb Plates
+		constexpr G4double plateGap     = 23. * cm; 
+		constexpr G4double plateGap2    = 101.892 * mm ; 
+		constexpr G4double cumcp_height = 30. * mm / 2; 
+		constexpr G4double cup1_zsize   = 30. * mm / 2.; 
+		constexpr G4double cup2_zsize   = 30. * mm / 2.;
+		constexpr G4double cup3_zsize   = 1. * mm / 2.; 
+		constexpr G4double detector_plate_zsize = 15. * mm / 2;
+		constexpr G4double detector_hole_radius = 50. * mm / 2;
+		constexpr G4double plate_supporter_radius = 30. * mm / 2;
+		constexpr G4double plate_supporter_zsize = 100. * mm / 2;
+		constexpr G4double pbp1_zsize   = 10. * cm / 2;
+		constexpr G4double pbp2_zsize   = 5. * cm / 2;
+		constexpr G4double pbp3_zsize   = 1. * cm / 2;
+
 		// Crystal Tower
 		constexpr G4int nModuleInTower = 9;
-		constexpr G4int maxNumOfTower  = 70;
+		constexpr G4int maxNumOfTower  = 76;
 		extern const AMoRE200CrystalModuleInfo crystalModuleInfoList[maxNumOfTower];
 
 		constexpr G4double Module_gap         = 20. * mm / 2.;
@@ -884,9 +942,27 @@ namespace AmoreDetectorStaticInfo {
 		constexpr G4double Module_base_thick  = 2. * mm; 
 		constexpr G4double Module_thick       = 2.5 * mm;
 		constexpr G4double Tower_height       = 700. * mm; //683. * mm;
-		constexpr G4double Array_radius       = 940. * mm / 2. + solidBooleanTol;
-		constexpr G4double Array_height       = 700. * mm + solidBooleanTol; 
+		constexpr G4double Tower_holder_thick = Module_thick;
 
+		constexpr G4double Array_radius       = 940. * mm / 2. + solidBooleanTol;
+		constexpr G4double Array_height       = Tower_height + solidBooleanTol; 
+
+		constexpr G4double SCconnector_height  = Module_thick*2;
+		constexpr G4double SCconnector_radius  = 80. * mm;
+		constexpr G4double SCconnector_hole_r1 = 40. * mm / 2.;
+		constexpr G4double SCconnector_hole_r2 = 25. * mm / 2.;
+		constexpr G4double SCconnector_hole_r3 = 6 * mm/2.; 
+
+		constexpr G4double TR_height          = Array_height + SCconnector_height + solidBooleanTol;
+		constexpr G4double TR_radius		  = inlead_radius;
+
+		// SC shield
+		constexpr G4double SC_thick     = 1 * mm;
+		constexpr G4double SC_overlap	= 150. * mm;
+		constexpr G4double SC_radius 	= inlead_radius + 5.5 + solidBooleanTol;
+		constexpr G4double SC_height    = plate_supporter_zsize + detector_plate_zsize + SC_thick + (TR_height + SC_overlap) / 2. + solidBooleanTol; 
+
+		// Crystal Module ------------
 		// Heater
 		constexpr G4double crystalHeaterSpacing = 0.5 * mm;
 		constexpr G4double crystalHeaterXDist   = 0. * mm;
@@ -1001,83 +1077,32 @@ namespace AmoreDetectorStaticInfo {
 		constexpr G4double M4_4_height  = 4;
 		constexpr G4double M4_6_height  = 6;
 
-		// CMO Module
-		constexpr G4double CMOcell_r         = 5.0 * cm / 2.;
-		constexpr G4double CMOcell_h         = 5. * cm / 2.;
+		// CMO Crystal
+		// constexpr G4double CMOcell_r         = 5.0 * cm / 2.;
+		// constexpr G4double CMOcell_h         = 5. * cm / 2.;
 
 		// CMOArray
-		constexpr G4double ArrayTargetMass = 183 * kg; //210. * kg;
-		constexpr G4double Tower_Ratio = 1.3;
-		constexpr G4double RSpacing = 1 * mm;
-		constexpr G4double ZSpacing = 0 * cm;
+		// constexpr G4double ArrayTargetMass = 183 * kg; //210. * kg;
+		// constexpr G4double Tower_Ratio = 1.3;
+		// constexpr G4double RSpacing = 1 * mm;
+		// constexpr G4double ZSpacing = 0 * cm;
 
 		// Copper Frame
-		constexpr G4double Copper_Fx      = 7.3 * cm;
-		constexpr G4double Copper_Fy      = 7.3 * cm;
-		constexpr G4double CopperFz      = 4.64 * mm;
-		constexpr G4double CopBoxAZ_half = 6 * mm / 2.;
+		// constexpr G4double Copper_Fx      = 7.3 * cm;
+		// constexpr G4double Copper_Fy      = 7.3 * cm;
+		// constexpr G4double CopperFz      = 4.64 * mm;
+		// constexpr G4double CopBoxAZ_half = 6 * mm / 2.;
 
 		// Stycast
-		constexpr G4double stycast_gap        = 0.2 * mm;
-		constexpr G4double stycast_thick_half = 0.13 * mm / 2.;
+		// constexpr G4double stycast_gap        = 0.2 * mm;
+		// constexpr G4double stycast_thick_half = 0.13 * mm / 2.;
 
 		// Photon Detector: Ge Wafer + Vaccum disk
-		constexpr G4double PhotonDet_r     = 2.54 * 2 * cm / 2.;
-		constexpr G4double PhotonDet_zsize = 0.6 * cm / 2.;
-		constexpr G4double GeWafer_r       = 2.54 * 2 * cm / 2.;
-		constexpr G4double GeWafer_zsize   = 0.004 * cm / 2.;   // 300 nm + 100 nm Vac
-		constexpr G4double VacDisk_zsize   = 0.00001 * cm / 2.; // 100 nm
-
-		// SSOVC
-		constexpr G4double sst_zsize_half = 5.* cm / 2.; //3. * cm / 2.;
-		constexpr G4double sst_xsize_half = 1800. * mm / 2.; //2500. * mm / 2.;
-		constexpr G4double sst_ysize_half = 1500. * mm / 2.; //2000. * mm / 2.;
-
-		constexpr G4double OVCthick  = 0.5 * cm; 
-		constexpr G4double OVCthickB = 15. * mm;
-		constexpr G4double ovc_gap   = 30 * mm;
-		constexpr G4double ss_radius = 1270. * mm /2.; 
-		constexpr G4double ss_inner_height_half = 2890.* mm /2.;
-
-		// Cu 1,2,3,4
-		constexpr G4double cu4thick   = 4. * mm; 
-		constexpr G4double cu4thickB  = 6. * mm;
-		constexpr G4double cu4_radius = 1206. * mm /2.;
-		constexpr G4double cu4_height = 2706. * mm /2.; 
-
-		constexpr G4double cu3thick   = 6. * mm; 
-		constexpr G4double cu3thickB  = 27.* mm;
-		constexpr G4double cu3_radius = 1142. * mm / 2.;
-		constexpr G4double cu3_height = 2449. * mm/ 2.; 
-
-		constexpr G4double cu2thick  = 3 * mm; 
-		constexpr G4double cu2thickB = 4 * mm;
-		constexpr G4double cu2_radius = 1086. * mm / 2.; 
-		constexpr G4double cu2_height = 2163. * mm / 2.;
-
-		constexpr G4double cu1thick  = 3 * mm;
-		constexpr G4double cu1thickB = 6 * mm;
-		constexpr G4double cu1_radius = 1026. * mm / 2.; 
-		constexpr G4double cu1_height = 1907. * mm / 2.; 
-
-		constexpr G4double cumcp_radius = 1000. * mm / 2.;
-		constexpr G4double inlead_radius = 980. * mm / 2.;
-
-		constexpr G4double cu4to3diff = 124 * mm;
-		constexpr G4double cu3to2diff = 127.5 * mm;
-		constexpr G4double cu2to1diff = 124 * mm;
-
-		// Cu, Pb Plates
-		constexpr G4double plateGap     = 23. * cm; //12. * cm;
-		constexpr G4double plateGap2    = 101.892 * mm ; //10. * cm; //5.0 * cm;
-		constexpr G4double cumcp_height = 27. * mm / 2; //3. * cm / 2;
-		constexpr G4double cup1_zsize   = 30. * mm / 2.; //2. * cm /2; //0.5 * cm / 2;
-		constexpr G4double cup2_zsize   = 25. * mm / 2.;
-		constexpr G4double cup3_zsize   = 3. * mm / 2.; //2. *cm /2; // 1. * cm / 2;
-		constexpr G4double pbp1_zsize   = 10. * cm / 2;
-		constexpr G4double pbp2_zsize   = 5. * cm / 2;
-		constexpr G4double pbp3_zsize   = 1. * cm / 2;
-
+		// constexpr G4double PhotonDet_r     = 2.54 * 2 * cm / 2.;
+		// constexpr G4double PhotonDet_zsize = 0.6 * cm / 2.;
+		// constexpr G4double GeWafer_r       = 2.54 * 2 * cm / 2.;
+		// constexpr G4double GeWafer_zsize   = 0.004 * cm / 2.;   // 300 nm + 100 nm Vac
+		// constexpr G4double VacDisk_zsize   = 0.00001 * cm / 2.; // 100 nm
 	} // namespace AMoRE_200
 } // namespace AmoreDetectorStaticInfo
 

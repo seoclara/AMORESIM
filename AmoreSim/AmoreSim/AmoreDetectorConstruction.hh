@@ -1,10 +1,7 @@
-/**@file AmoreDetectorConstruction.hh
- * @brief A source code file of AmoreDetectorConstruction main class for AMoRE simulation
- * @detail Original by Glenn Horton-Smith, December 2004.  (Based on earlier work first written Dec
- 1999.) Some more materials and their classification by Dario Motta, Jan 2005.
- */
-
-/**
+/** 
+ * @file AmoreDetectorConstruction.hh
+ * @version g4.11.1.3
+ * @date 2025-12-18
  * @brief A class for initialization and controlling of AMoRE-specific geometries
  * @details This class provides various methods for constructing geometries for AMoRE simulation,
  * judging methods of incident into border and so on.
@@ -342,6 +339,7 @@ class AmoreDetectorConstruction : public CupDetectorConstruction {
 		G4Material *_iron2;
 		G4Material *_rebar;
 		G4Material *_polyurethane;
+		G4Material *_urethane;
 		G4Material *_ThRubber;
 
 		G4Element *_elementB;
@@ -350,7 +348,6 @@ class AmoreDetectorConstruction : public CupDetectorConstruction {
 		G4Element *_elementAg;
 		G4Element *_elementW;
 		G4Element *_elementTh;
-		G4Element *_elementMo98;
 
 		//pilot RUN5 elements
 		//G4Element *Sn, *Pb, *Pd;
@@ -374,6 +371,7 @@ class AmoreDetectorConstruction : public CupDetectorConstruction {
 		// AMoRE-II detector construction
 		void ConstructAMoRE200(); 
 		void ConstructAMoRE200_ID(G4LogicalVolume *aWorkAreaLV);       ///< make the AMoRE200 inner detector (cryostat)
+		G4LogicalVolume *MakeSCconnector(G4Material *connectorMat);
 		G4LogicalVolume *MakeModule(G4Material *towerMat, G4Material *crystalMat, G4Material *reflectorMat, 
 									G4Material *frameMat, G4Material *frameMat1, G4Material *clampMat, G4Material *waferMat, 
 									G4Material *filmMat, G4int TowerNum, G4int ModuleNum);
